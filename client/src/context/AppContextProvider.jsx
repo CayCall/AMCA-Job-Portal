@@ -1,8 +1,16 @@
+import { useState } from 'react';
 import AppContext from './AppContext';
 
 const AppContextProvider = (props) => {
-  const value ={
+  const [searchFilter, setSearchFilter] = useState({
+    title:'',
+    location:'',
 
+  })
+  const[isSearched,setIsSearched] = useState(false)
+  const value ={
+    setSearchFilter,searchFilter, 
+    isSearched, setIsSearched
   }
 
   return (
