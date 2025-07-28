@@ -5,7 +5,6 @@ const AppContextProvider = (props) => {
   const [searchFilter, setSearchFilter] = useState({
     title:'',
     location:'',
-
   })
   const[isSearched,setIsSearched] = useState(false)
   const value ={

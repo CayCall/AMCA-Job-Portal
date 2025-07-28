@@ -11,11 +11,11 @@ const Hero = () => {
 
     const onSearch = () => {
         setSearchFilter({
-            title:titleRef.current.value,
-            location:locationRef.current.value
+            title: titleRef.current.value,
+            location: locationRef.current.value
         })
         setIsSearched(true)
-
+        console.log("searched.")
     }
     return (
         <div className='container 2x1:px-20 mx-auto my-10'>

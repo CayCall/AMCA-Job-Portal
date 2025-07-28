@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState, useRef } from 'react'
 import { assets } from "../assets/assets"
 import { useClerk, UserButton, useUser } from '@clerk/clerk-react'
 import { Link } from 'react-router-dom'
@@ -7,6 +7,24 @@ import { ChevronDown } from "lucide-react";
 const NavBar = () => {
     const { openSignIn } = useClerk();
     const { user } = useUser();
+
+    // drop down
+    const [dropdown, setDropDown] = useState(false);
+    const timeoutRef = useRef(null);
+    const handleMouseEnter = () => {
+        if (timeoutRef.current) {
+            clearTimeout(timeoutRef.current);
+            timeoutRef.current = null;
+        }
+        setDropDown(true);
+    };
+
+    const handleMouseLeave = () => {
+
+        timeoutRef.current = setTimeout(() => {
+            setDropDown(false);
+        }, 300);
+    };
 
     return (
         <div className='shadow py-4'>
@@ -41,15 +59,57 @@ const NavBar = () => {
                         )
                     }
 
-                    <button
-                        className="flex items-center gap-1 text-sm border border-black rounded-full px-4 py-2 bg-white text-black hover:bg-blue-600 hover:text-white hover:border-black transition-colors duration-200 ease-in-out"
-                        aria-haspopup="listbox"
-                        aria-expanded="false"
+
+                    <div
+                        className="relative inline-block"
+                        onMouseEnter={handleMouseEnter}
+                        onMouseLeave={handleMouseLeave}
                     >
-                        Language
-                        <ChevronDown size={16} className="text-inherit" />
-                    </button>
+                        <button
+                            className="flex items-center gap-1 text-sm border border-black rounded-full px-4 py-2 bg-white text-black hover:bg-blue-600 hover:text-white hover:border-black transition-colors duration-200 ease-in-out"
+                            aria-haspopup="listbox"
+                            aria-expanded={dropdown ? "true" : "false"}
+                        >
+                            Language
+                            <ChevronDown size={16} className="text-inherit" />
+                        </button>
+
+                        {dropdown && (
+                            <div className="absolute top-full mt-2 right-0 bg-white border rounded shadow p-3 text-sm z-10 min-w-[120px]">
+                                <p className="hover:bg-gray-100 p-2 rounded cursor-pointer">English</p>
+                                <p className="hover:bg-gray-100 p-2 rounded cursor-pointer">isiZulu</p>
+                                <p className="hover:bg-gray-100 p-2 rounded cursor-pointer">Afrikaans</p>
+                                <p className="hover:bg-gray-100 p-2 rounded cursor-pointer">Sesotho</p>
+                            </div>
+                        )}
+                    </div>
+                    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
                 </div>
+
             </div>
         </div>
     )
