@@ -52,7 +52,7 @@ const NavBar = () => {
                                 <button className='text-gray-600'>Recruiter Login</button>
                                 <button
                                     onClick={() => openSignIn()}
-                                    className='bg-blue-600 text-white px-6 sm:px-9 py-2 rounded-full'>
+                                    className='bg-blue-600 text-white px-6 sm:px-9 py-2 rounded-full hover:bg-black-600 hover:text-black hover:bg-white hover:border-black transition-colors'>
                                     Login
                                 </button>
                             </div>
@@ -66,7 +66,7 @@ const NavBar = () => {
                         onMouseLeave={handleMouseLeave}
                     >
                         <button
-                            className="flex items-center gap-1 text-sm border border-black rounded-full px-4 py-2 bg-white text-black hover:bg-blue-600 hover:text-white hover:border-black transition-colors duration-200 ease-in-out"
+                            className="flex items-center gap-1 text-sm border border-black rounded-full px-4 py-2 bg-white text-black hover:bg-blue-600 hover:text-white hover:border-black transition-colors duration-100 ease-in-out"
                             aria-haspopup="listbox"
                             aria-expanded={dropdown ? "true" : "false"}
                         >
@@ -83,30 +83,7 @@ const NavBar = () => {
                             </div>
                         )}
                     </div>
-                    
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+                
 
                 </div>
 
