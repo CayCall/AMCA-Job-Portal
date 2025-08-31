@@ -44,7 +44,7 @@ const NavBar = () => {
                             <div className='flex items-center gap-3'>
                                 <Link to={'/applications'}>Applied Jobs</Link>
                                 <p>|</p>
-                                <p>Hi, {user.firstName + " " + user.lastName}</p>
+                                <p className='max-sm:hidden'>Hi, {user.firstName + " " + user.lastName}</p>
                                 <UserButton />
                             </div>
                         ) : (
@@ -52,7 +52,7 @@ const NavBar = () => {
                                 <button className='text-gray-600'>Recruiter Login</button>
                                 <button
                                     onClick={() => openSignIn()}
-                                    className='bg-blue-600 text-white px-6 sm:px-9 py-2 rounded-full hover:bg-black-600 hover:text-black hover:bg-white hover:border-black transition-colors'>
+                                    className='bg-blue-600 text-white px-6 sm:px-9 py-2 rounded-full hover:bg-black-600 hover:text-black hover:bg-white hover:border-black transition-colors duration-100 ease-in-out'>
                                     Login
                                 </button>
                             </div>

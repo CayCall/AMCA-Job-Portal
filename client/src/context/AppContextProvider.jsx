@@ -1,16 +1,29 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import AppContext from './AppContext';
+import { jobsData} from "../assets/assets"
 
 const AppContextProvider = (props) => {
   const [searchFilter, setSearchFilter] = useState({
     title:'',
     location:'',
   })
-  const[isSearched,setIsSearched] = useState(false)
+  const[isSearched,setIsSearched] = useState(false);
+
+  const [jobs,setJobs] = useState([]);
+
   const value ={
     setSearchFilter,searchFilter, 
-    isSearched, setIsSearched
+    isSearched, setIsSearched,
+    jobs, setJobs
   }
+  //fetch jobs
+  const fetchJobs = async ()=>{
+    setJobs(jobsData)
+  }
+
+  useEffect(()=>{
+
+  })
 
   return (
     <AppContext.Provider value={value}>
