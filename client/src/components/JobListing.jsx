@@ -1,15 +1,23 @@
-import React, { useContext } from 'react'
+import React, { useContext, useState } from 'react'
 import AppContext from '../context/AppContext'
 import { assets, JobCategories, JobLocations, jobsData } from '../assets/assets';
 import JobCard from './JobCard';
 
 const JobListing = () => {
     const { isSearched, searchFilter, setSearchFilter } = useContext(AppContext)
+    const [showFilter, setShowFilter] = useState(false);
+
+    const [selectedCategories, setSelectedCategories] = useState([]);
+    const [selectedLocations, setSelectedLocations] = useState([]);
+
+
     return (
         <div className='container 2x2:px-20 mx-auto flex flex-col lg:flex-row max-lg:space-y-8 py-8'>
             {/* This will be for the side bar*/}
+
             <div className='w-full lg:w-1/4 bg-white px-4'>
                 {/* This will be for the Search Filter from the Hero component*/}
+
                 {
                     isSearched && (searchFilter.title !== "" || searchFilter.location !== "") && (
                         <>
@@ -24,7 +32,7 @@ const JobListing = () => {
                                     )}
                                 {
                                     searchFilter.location && (
-                                        <span className='inline-flex items-center gap-2.5 bg-red-50 border border-red-200 px-4 py-1.5 rounded'>
+                                        <span className='ml-3 inline-flex items-center gap-2.5 bg-red-50 border border-red-200 px-4 py-1.5 rounded'>
                                             {searchFilter.location}
                                             <img onClick={() => setSearchFilter(prev => ({ ...prev, location: "" }))} className='cursor-pointer' src={assets.cross_icon} alt='' />
                                         </span>
@@ -34,15 +42,42 @@ const JobListing = () => {
                     )
 
                 }
+                <div>
+                    <h3 className='font-medium text-lg py-1'>Filters</h3>
+                    <button className='px-6 py-1.5 rounded border border-gray-400 text-gray-500' onClick={() => setShowFilter(prev => !prev)} > {showFilter ? "Close" : "Show More"} </button>
+                    <button
+                        onClick={() => {
+                            setSearchFilter({ title: "", location: "" });
+                            setSelectedCategories([]);
+                            setSelectedLocations([]);
+                        }}
+                        className="mt-5 ml-2.5 text-sm text-blue-600 underline"
+                    >
+                        Clear filters
+                    </button>
+                </div>
+
                 {/* Job Category Filter*/}
                 {
-                    <div>
+                    <div className={showFilter ? "" : "max-lg:hidden"}>
                         <h4 className='font-medium text-lg py-4'>Search by Categories</h4>
-                        <ul className='space-y-4 text-gray-600'>
+                        <ul className='space-y-4 text -gray-600'>
                             {
                                 JobCategories.map((category, index) => (
                                     <li key={index} className='flex gap-3 items-center'>
-                                        <input type='checkbox' id={`category-${index}`} name={category} />
+                                        <input
+                                            type='checkbox'
+                                            id={`category-${index}`}
+                                            name={category}
+                                            checked={selectedCategories.includes(category)}
+                                            onChange={() => {
+                                                setSelectedCategories(prev =>
+                                                    prev.includes(category)
+                                                        ? prev.filter(item => item !== category)
+                                                        : [...prev, category]
+                                                );
+                                            }}
+                                        />
                                         <label htmlFor={`category-${index}`}>{category}</label>
                                     </li>
                                 ))
@@ -52,13 +87,25 @@ const JobListing = () => {
                 }
                 {/* Location search Filter*/}
                 {
-                    <div>
+                    <div className={showFilter ? "" : "lg:hidden"}>
                         <h4 className='font-medium text-lg py-4'>Search by Location</h4>
                         <ul className='space-y-4 text-gray-600'>
                             {
                                 JobLocations.map((location, index) => (
                                     <li key={index} className='flex gap-3 items-center'>
-                                        <input type='checkbox' id={`category-${index}`} name={location} />
+                                        <input
+                                            type='checkbox'
+                                            id={`category-${index}`}
+                                            name={location}
+                                            checked={selectedLocations.includes(location)}
+                                            onChange={() => {
+                                                setSelectedLocations(prev =>
+                                                    prev.includes(location)
+                                                        ? prev.filter(item => item !== location)
+                                                        : [...prev, location]
+                                                );
+                                            }}
+                                        />
                                         <label htmlFor={`category-${index}`}>{location}</label>
                                     </li>
                                 ))
@@ -70,13 +117,13 @@ const JobListing = () => {
             </div>
             {/* Job Listings*/}
             <section className='w-full lg:w-3/4 text-gray-800 max-lg:px-4'>
-                <h3 className='font-medium text-3xl pb-2 pt-3' id='job-list'>Latest Jobs</h3>
-                <p className='mb-8'>
+                <h3 className='font-medium text-3xl pb-2 pt-3 ml-3' id='job-list'>Latest Jobs</h3>
+                <p className='mb-8 ml-3'>
                     Get your desired job today
                 </p>
-                <div className='grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4'>
-                    {jobsData.map((job,index)=>(
-                        <JobCard key={index} job={job}/>
+                <div className='grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-1 gap-4'>
+                    {jobsData.map((job, index) => (
+                        <JobCard key={index} job={job} />
 
                     ))}
                 </div>

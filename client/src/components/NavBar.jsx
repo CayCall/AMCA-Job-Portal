@@ -26,47 +26,55 @@ const NavBar = () => {
         }, 300);
     };
 
+    //this is the hamburger menu for responsiveness
+    const toggleMenu = () => setMenuOpen(!menuOpen);
+    const [menuOpen, setMenuOpen] = useState(false);
     return (
         <div className='shadow py-4'>
             <div className='container px-4 2xl:px-12 mx-auto flex justify-between items-center'>
 
                 {/* Logo */}
                 <Link to={'/'}>
-                    <img src={assets.logo} alt='Site Logo' />
+                    <img
+                        src={assets.logo}
+                        alt='Site Logo'
+                        className="w-23 h-9"
+                    />
                 </Link>
 
-                {/* Right Side Nav (login/user + language button) */}
-                <div className='flex items-center gap-6'>
+                {/* Right Side Nav */}
+                <div className='flex flex-col sm:flex-row items-end sm:items-center gap-4 sm:gap-6'>
 
                     {/* Login or User Info */}
                     {
                         user ? (
-                            <div className='flex items-center gap-3'>
-                                <Link to={'/applications'}>Applied Jobs</Link>
-                                <p>|</p>
-                                <p className='max-sm:hidden'>Hi, {user.firstName + " " + user.lastName}</p>
+                            <div className='flex items-center gap-3 text-sm sm:text-base'>
+                                <Link to="/applications" className='hover:underline'>Applied Jobs</Link>
+                                <span className='hidden sm:inline'>|</span>
+                                <p className='hidden sm:inline'>Hi, {user.firstName} {user.lastName}</p>
                                 <UserButton />
                             </div>
                         ) : (
-                            <div className='flex items-center gap-4 max-sm:text-xs'>
-                                <button className='text-gray-600'>Recruiter Login</button>
+                            <div className='flex items-center gap-2 sm:gap-4 text-xs sm:text-sm'>
+                                <button className='text-gray-600 hover:underline'>Recruiter Login</button>
                                 <button
-                                    onClick={() => openSignIn()}
-                                    className='bg-blue-600 text-white px-6 sm:px-9 py-2 rounded-full hover:bg-black-600 hover:text-black hover:bg-white hover:border-black transition-colors duration-100 ease-in-out'>
+                                    onClick={openSignIn}
+                                    className='bg-blue-600 text-white px-4 sm:px-6 py-1.5 sm:py-2 rounded-full hover:bg-white hover:text-black hover:border hover:border-black transition'
+                                >
                                     Login
                                 </button>
                             </div>
                         )
                     }
 
-
+                    {/* Language Dropdown */}
                     <div
-                        className="relative inline-block"
+                        className="relative"
                         onMouseEnter={handleMouseEnter}
                         onMouseLeave={handleMouseLeave}
                     >
                         <button
-                            className="flex items-center gap-1 text-sm border border-black rounded-full px-4 py-2 bg-white text-black hover:bg-blue-600 hover:text-white hover:border-black transition-colors duration-100 ease-in-out"
+                            className="flex items-center gap-1 text-sm border border-black rounded-full px-3 sm:px-4 py-1.5 sm:py-2 bg-white text-black hover:bg-blue-600 hover:text-white transition"
                             aria-haspopup="listbox"
                             aria-expanded={dropdown ? "true" : "false"}
                         >
@@ -76,15 +84,14 @@ const NavBar = () => {
 
                         {dropdown && (
                             <div className="absolute top-full mt-2 right-0 bg-white border rounded shadow p-3 text-sm z-10 min-w-[120px]">
-                                <p className="hover:bg-gray-100 p-2 rounded cursor-pointer">English</p>
-                                <p className="hover:bg-gray-100 p-2 rounded cursor-pointer">isiZulu</p>
-                                <p className="hover:bg-gray-100 p-2 rounded cursor-pointer">Afrikaans</p>
-                                <p className="hover:bg-gray-100 p-2 rounded cursor-pointer">Sesotho</p>
+                                {["English", "isiZulu", "Afrikaans", "Sesotho"].map((lang) => (
+                                    <p key={lang} className="hover:bg-gray-100 p-2 rounded cursor-pointer">
+                                        {lang}
+                                    </p>
+                                ))}
                             </div>
                         )}
                     </div>
-                
-
                 </div>
 
             </div>

@@ -159,7 +159,7 @@ export const jobsData = [
             image: "company_icon",
         },
         description: `
-      <p>We are hiring a dedicated Construction Worker to join our team in Durban. This role requires a dependable and skilled individual capable of delivering high-quality work in a fast-paced environment.</p>
+      <p>We are hiring a dedicated Construction Worker to join our team in Durban. This role requires a dependable and skilled individual that is able to work in a fast-paced environment.<!-- more --> </p>
       <h2><strong>Key Responsibilities</strong></h2>
       <ol>
           <li>Perform assigned construction tasks safely and efficiently.</li>
@@ -193,7 +193,7 @@ export const jobsData = [
             image: "company_icon",
         },
         description: `
-      <p>We are hiring a dedicated Electrician to join our team in Johannesburg. This role requires a dependable and skilled individual capable of delivering high-quality work in a fast-paced environment.</p>
+      <p>We are hiring a dedicated Electrician to join our team in Johannesburg. This role requires a dependable and skilled individual capable of delivering high-quality work in a fast-paced environment. <!-- more --> </p>
       <h2><strong>Key Responsibilities</strong></h2>
       <ol>
           <li>Install, maintain and repair electrical systems.</li>
@@ -227,7 +227,7 @@ export const jobsData = [
             image: "company_icon",
         },
         description: `
-      <p>We are hiring a dedicated Plumber to join our team in Cape Town. This role requires a dependable and skilled individual capable of delivering high-quality work in a fast-paced environment.</p>
+      <p>We are hiring a dedicated Plumber to join our team in Cape Town. This role requires a dependable and skilled individual capable of delivering high-quality work in a fast-paced environment. <!-- more --> </p>
       <h2><strong>Key Responsibilities</strong></h2>
       <ol>
           <li>Install and repair plumbing systems.</li>
@@ -261,7 +261,7 @@ export const jobsData = [
             image: "company_icon",
         },
         description: `
-      <p>Seeking a skilled Welder for our Port Elizabeth branch. Candidate must be proficient with various welding techniques and safety procedures.</p>
+      <p>Seeking a skilled Welder for our Port Elizabeth branch. Candidate must be proficient with various welding techniques and safety procedures. <!-- more --> </p>
       <h2><strong>Key Responsibilities</strong></h2>
       <ol>
           <li>Perform welding tasks according to specifications.</li>
@@ -295,7 +295,7 @@ export const jobsData = [
             image: "company_icon",
         },
         description: `
-      <p>Experienced Carpenter needed for residential and commercial projects in Bloemfontein.</p>
+      <p>Experienced Carpenter needed for residential and commercial projects in Bloemfontein. <!-- more --> </p>
       <h2><strong>Key Responsibilities</strong></h2>
       <ol>
           <li>Measure, cut, and assemble wood materials.</li>
@@ -329,7 +329,7 @@ export const jobsData = [
             image: "company_icon",
         },
         description: `
-      <p>We are looking for a passionate Landscaper to help maintain and beautify outdoor spaces in Pretoria.</p>
+      <p>We are looking for a passionate Landscaper to help maintain and beautify outdoor spaces in Pretoria. <!-- more --> </p>
       <h2><strong>Key Responsibilities</strong></h2>
       <ol>
           <li>Plant, prune, and maintain shrubs, flowers, and trees.</li>
@@ -363,7 +363,7 @@ export const jobsData = [
             image: "company_icon",
         },
         description: `
-      <p>Join our manufacturing team as a Factory Worker in East London. Responsible for assembly line and quality checks.</p>
+      <p>Join our manufacturing team as a Factory Worker in East London. Responsible for assembly line and quality checks. <!-- more --> </p>
       <h2><strong>Key Responsibilities</strong></h2>
       <ol>
           <li>Operate machinery and perform assembly tasks.</li>
@@ -397,7 +397,7 @@ export const jobsData = [
             image: "company_icon",
         },
         description: `
-      <p>Experienced Truck Driver needed for local and long-distance deliveries in Limpopo province.</p>
+      <p>Experienced Truck Driver needed for local and long-distance deliveries in Limpopo province. <!-- more --></p>
       <h2><strong>Key Responsibilities</strong></h2>
       <ol>
           <li>Transport goods safely and on time.</li>
@@ -431,7 +431,7 @@ export const jobsData = [
             image: "company_icon",
         },
         description: `
-      <p>Looking for a skilled Painter to work on residential and commercial projects in Kimberley.</p>
+      <p>Looking for a skilled Painter to work on residential and commercial projects in Kimberley. <!-- more --> </p>
       <h2><strong>Key Responsibilities</strong></h2>
       <ol>
           <li>Prepare surfaces for painting.</li>
@@ -465,7 +465,7 @@ export const jobsData = [
             image: "company_icon",
         },
         description: `
-      <p>Entry-level Roofer wanted for residential roofing projects in Nelspruit.</p>
+      <p>Entry-level Roofer wanted for residential roofing projects in Nelspruit. <!-- more --> </p>
       <h2><strong>Key Responsibilities</strong></h2>
       <ol>
           <li>Assist in installation and repair of roofs.</li>
@@ -499,7 +499,7 @@ export const jobsData = [
             image: "company_icon",
         },
         description: `
-      <p>General laborer needed to assist in various manual tasks on construction and industrial sites in East Rand.</p>
+      <p>General laborer needed to assist in various manual tasks on construction and industrial sites in East Rand. <!-- more --> </p>
       <h2><strong>Key Responsibilities</strong></h2>
       <ol>
           <li>Load and unload materials.</li>
@@ -533,7 +533,7 @@ export const jobsData = [
             image: "company_icon",
         },
         description: `
-      <p>Seeking a Mason with experience in bricklaying and concrete work in George.</p>
+      <p>Seeking a Mason with experience in bricklaying and concrete work in George.  <!-- more --> </p>
       <h2><strong>Key Responsibilities</strong></h2>
       <ol>
           <li>Build and repair walls, foundations, and other structures.</li>
@@ -567,7 +567,7 @@ export const jobsData = [
             image: "company_icon",
         },
         description: `
-      <p>Experienced Heavy Equipment Operator required for mining and construction projects in Welkom.</p>
+      <p>Experienced Heavy Equipment Operator required for mining and construction projects in Welkom.  <!-- more -->  </p>
       <h2><strong>Key Responsibilities</strong></h2>
       <ol>
           <li>Operate bulldozers, excavators, and other heavy machinery.</li>
@@ -601,7 +601,7 @@ export const jobsData = [
             image: "company_icon",
         },
         description: `
-      <p>Looking for a skilled Bricklayer for residential construction projects in Pietermaritzburg.</p>
+      <p>Looking for a skilled Bricklayer for residential construction projects in Pietermaritzburg.  <!-- more -->  </p>
       <h2><strong>Key Responsibilities</strong></h2>
       <ol>
           <li>Lay bricks and blocks according to plans.</li>
@@ -635,7 +635,7 @@ export const jobsData = [
             image: "company_icon",
         },
         description: `
-      <p>Ironworker needed for structural steel installation projects in Mthatha.</p>
+      <p>Ironworker needed for structural steel installation projects in Mthatha.  <!-- more -->  </p>
       <h2><strong>Key Responsibilities</strong></h2>
       <ol>
           <li>Cut, shape, and install steel components.</li>
@@ -669,7 +669,7 @@ export const jobsData = [
             image: "company_icon",
         },
         description: `
-      <p>Skilled Scaffolder required for construction projects in Kimberley.</p>
+      <p>Skilled Scaffolder required for construction projects in Kimberley.  <!-- more -->  </p>
       <h2><strong>Key Responsibilities</strong></h2>
       <ol>
           <li>Assemble and dismantle scaffolding structures.</li>
@@ -703,7 +703,7 @@ export const jobsData = [
             image: "company_icon",
         },
         description: `
-      <p>Looking for an entry-level Drywall Installer to assist on commercial and residential projects.</p>
+      <p>Looking for an entry-level Drywall Installer to assist on commercial and residential projects.  <!-- more -->  </p>
       <h2><strong>Key Responsibilities</strong></h2>
       <ol>
           <li>Install drywall panels as directed.</li>
@@ -737,7 +737,7 @@ export const jobsData = [
             image: "company_icon",
         },
         description: `
-      <p>Experienced Roof Installer needed for high-end residential projects in Cape Town.</p>
+      <p>Experienced Roof Installer needed for high-end residential projects in Cape Town.  <!-- more -->  </p>
       <h2><strong>Key Responsibilities</strong></h2>
       <ol>
           <li>Install roofing materials to specifications.</li>
@@ -771,7 +771,7 @@ export const jobsData = [
             image: "company_icon",
         },
         description: `
-      <p>Seeking an Industrial Cleaner for factory and construction site cleaning.</p>
+      <p>Seeking an Industrial Cleaner for factory and construction site cleaning.  <!-- more -->  </p>
       <h2><strong>Key Responsibilities</strong></h2>
       <ol>
           <li>Clean industrial equipment and work areas.</li>
@@ -805,7 +805,7 @@ export const jobsData = [
             image: company_icon,
         },
         description: `
-    <p>Install ceramic, porcelain, and natural stone tiles for residential and commercial projects.</p>
+    <p>Install ceramic, porcelain, and natural stone tiles for residential and commercial projects.  <!-- more -->  </p>
     <h2><strong>Key Responsibilities</strong></h2>
     <ol>
       <li>Prepare surfaces for tile installation.</li>
@@ -839,7 +839,7 @@ export const jobsData = [
             image: company_icon,
         },
         description: `
-    <p>Perform welding operations on metal structures, machinery, and equipment following safety protocols.</p>
+    <p>Perform welding operations on metal structures, machinery, and equipment following safety protocols.  <!-- more -->  </p>
     <h2><strong>Key Responsibilities</strong></h2>
     <ol>
       <li>Read and interpret welding blueprints and schematics.</li>
@@ -873,7 +873,7 @@ export const jobsData = [
             image: company_icon,
         },
         description: `
-    <p>Operate cranes to lift, move, and position heavy materials and equipment safely on construction sites.</p>
+    <p>Operate cranes to lift, move, and position heavy materials and equipment safely on construction sites.  <!-- more -->  </p>
     <h2><strong>Key Responsibilities</strong></h2>
     <ol>
       <li>Inspect crane before operation to ensure safety and functionality.</li>
@@ -907,7 +907,7 @@ export const jobsData = [
             image: company_icon,
         },
         description: `
-    <p>Install, maintain, and repair electrical wiring, equipment, and fixtures in residential and commercial buildings.</p>
+    <p>Install, maintain, and repair electrical wiring, equipment, and fixtures in residential and commercial buildings.  <!-- more -->  </p>
     <h2><strong>Key Responsibilities</strong></h2>
     <ol>
       <li>Inspect electrical systems to identify hazards and malfunctions.</li>
