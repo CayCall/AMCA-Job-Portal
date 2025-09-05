@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import AppContext from '../context/AppContext'
 import { assets, JobCategories, JobLocations, jobsData } from '../assets/assets';
 import JobCard from './JobCard';
@@ -10,6 +10,40 @@ const JobListing = () => {
     const [selectedCategories, setSelectedCategories] = useState([]);
     const [selectedLocations, setSelectedLocations] = useState([]);
 
+    const [currentPage, setPage] = useState(1)
+
+
+    const [filteredJobs, setFilteredJobs] = useState(jobsData)
+
+    const handleCategoryChange = (category) => {
+        setSelectedCategories(
+            prev => prev.includes(category) ? prev.filter(c => c !== category) : [...prev, category]
+        )
+    }
+    const handleLocationChange = (location) => {
+        setSelectedLocations(
+            prev => prev.includes(location) ? prev.filter(c => c !== location) : [...prev, location]
+        )
+    }
+
+    useEffect (()=>{
+        const matchesCategory = job => selectedCategories.length === 0 || selectedCategories.includes(job.category)
+        const matchesLocation = job => selectedLocations.length === 0 || selectedLocations.includes(job.location)
+        
+        const MatchesTitle = job => searchFilter.title === "" || job.title.toLowerCase().includes(searchFilter.title.toLowerCase())
+        
+        const matchesSearchLocation = job =>  searchFilter.location  === ""  || job.location.toLowerCase().includes(searchFilter.location.toLowerCase());
+        
+        const newFilteredJobs = jobsData.slice().reverse().filter(
+            job => matchesCategory(job) && matchesLocation(job) && MatchesTitle(job) && matchesSearchLocation(job)
+        )
+        
+        setFilteredJobs(newFilteredJobs)
+        setPage(1)
+
+    }, [jobsData,selectedCategories,selectedLocations,searchFilter])
+    //store the data from the job card into a object that represents the data of the favourite job
+    const [userFavourites, setUserFavourites] = useState({});
 
     return (
         <div className='container 2x2:px-20 mx-auto flex flex-col lg:flex-row max-lg:space-y-8 py-8'>
@@ -70,13 +104,7 @@ const JobListing = () => {
                                             id={`category-${index}`}
                                             name={category}
                                             checked={selectedCategories.includes(category)}
-                                            onChange={() => {
-                                                setSelectedCategories(prev =>
-                                                    prev.includes(category)
-                                                        ? prev.filter(item => item !== category)
-                                                        : [...prev, category]
-                                                );
-                                            }}
+                                            onChange={() => handleCategoryChange(category)}
                                         />
                                         <label htmlFor={`category-${index}`}>{category}</label>
                                     </li>
@@ -98,13 +126,7 @@ const JobListing = () => {
                                             id={`category-${index}`}
                                             name={location}
                                             checked={selectedLocations.includes(location)}
-                                            onChange={() => {
-                                                setSelectedLocations(prev =>
-                                                    prev.includes(location)
-                                                        ? prev.filter(item => item !== location)
-                                                        : [...prev, location]
-                                                );
-                                            }}
+                                            onChange={() => handleLocationChange(location)}
                                         />
                                         <label htmlFor={`category-${index}`}>{location}</label>
                                     </li>
@@ -122,13 +144,39 @@ const JobListing = () => {
                     Get your desired job today
                 </p>
                 <div className='grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-1 gap-4'>
-                    {jobsData.map((job, index) => (
+                    {filteredJobs.slice((currentPage - 1) * 6, currentPage * 6).map((job, index) => (
                         <JobCard key={index} job={job} />
 
                     ))}
                 </div>
 
+                {/* Pages*/}
+                {
+                    filteredJobs.length > 0 && (
+                        <div className='flex items-center justify-center space-x-2 mt-10 '>
+                            <a href='#job-list'>
+                                <img onClick={() => setPage(Math.max(currentPage - 1), 1)} src={assets.left_arrow_icon} alt='' />
+                            </a>
+                            {
+                                Array.from({ length: Math.ceil(filteredJobs.length / 6) }).map((_, index) => (
+                                    <a href='#job-list' key={index}>
+                                        <button onClick={() => setPage(index + 1)} className={`w-10 h-10 flex items-center justify-center border border-gray-300 rounded ${currentPage === index + 1 ? 'bg-blue-100 text-blue-500' : 'text-gray-500'}`}>{index + 1}</button>
+                                    </a>
+                                ))
+                            }
+                            <a href='#job-list'>
+                                <img onClick={() => setPage(Math.min(currentPage + 1, Math.ceil(filteredJobs.length / 6)))} src={assets.right_arrow_icon} alt='' />
+                            </a>
+                        </div>
+                    )
+                }
+
+
+
+
+
             </section>
+
         </div>
     )
 }
