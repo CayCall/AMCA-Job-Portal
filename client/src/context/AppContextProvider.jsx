@@ -1,29 +1,30 @@
 import { useEffect, useState } from 'react';
 import AppContext from './AppContext';
-import { jobsData} from "../assets/assets"
+import { jobsData } from "../assets/assets"
 
 const AppContextProvider = (props) => {
   const [searchFilter, setSearchFilter] = useState({
-    title:'',
-    location:'',
+    title: '',
+    location: '',
   })
-  const[isSearched,setIsSearched] = useState(false);
+  const [isSearched, setIsSearched] = useState(false);
 
-  const [jobs,setJobs] = useState([]);
+  const [jobs, setJobs] = useState([]);
 
-  const value ={
-    setSearchFilter,searchFilter, 
+  const value = {
+    setSearchFilter, searchFilter,
     isSearched, setIsSearched,
     jobs, setJobs
   }
-  //fetch jobs
-  const fetchJobs = async ()=>{
-    setJobs(jobsData)
-  }
+  // fetch jobs
+  const fetchJobs = async () => {
+    setJobs(jobsData);
+  };
 
-  useEffect(()=>{
+  useEffect(() => {
+    fetchJobs();
+  }, []);
 
-  })
 
   return (
     <AppContext.Provider value={value}>
@@ -34,8 +35,8 @@ const AppContextProvider = (props) => {
 
 export default AppContextProvider;
 
-//allow me to make the context value avaible anywhere in my application 
-// value = {} is the data shared across components 
+//allow me to make the context value avaible anywhere in my application
+// value = {} is the data shared across components
 //Using the context provider (<AppContext.Provider>).
 //Passing in the value to share globally (value={value}).
 //Wrapping all children of this provider ({props.children}) so they can access the context.

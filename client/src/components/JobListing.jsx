@@ -10,10 +10,9 @@ const JobListing = () => {
     const [selectedCategories, setSelectedCategories] = useState([]);
     const [selectedLocations, setSelectedLocations] = useState([]);
 
-    const [currentPage, setPage] = useState(1)
+    const [currentPage, setPage] = useState(1);
 
-
-    const [filteredJobs, setFilteredJobs] = useState(jobsData)
+    const [filteredJobs, setFilteredJobs] = useState(jobsData);
 
     const handleCategoryChange = (category) => {
         setSelectedCategories(
@@ -26,23 +25,24 @@ const JobListing = () => {
         )
     }
 
-    useEffect (()=>{
+    useEffect(() => {
         const matchesCategory = job => selectedCategories.length === 0 || selectedCategories.includes(job.category)
         const matchesLocation = job => selectedLocations.length === 0 || selectedLocations.includes(job.location)
-        
+
         const MatchesTitle = job => searchFilter.title === "" || job.title.toLowerCase().includes(searchFilter.title.toLowerCase())
-        
-        const matchesSearchLocation = job =>  searchFilter.location  === ""  || job.location.toLowerCase().includes(searchFilter.location.toLowerCase());
-        
+
+        const matchesSearchLocation = job => searchFilter.location === "" || job.location.toLowerCase().includes(searchFilter.location.toLowerCase());
+
         const newFilteredJobs = jobsData.slice().reverse().filter(
             job => matchesCategory(job) && matchesLocation(job) && MatchesTitle(job) && matchesSearchLocation(job)
         )
-        
+
         setFilteredJobs(newFilteredJobs)
         setPage(1)
 
-    }, [jobsData,selectedCategories,selectedLocations,searchFilter])
-    //store the data from the job card into a object that represents the data of the favourite job
+    }, [jobsData, selectedCategories, selectedLocations, searchFilter])
+
+    //don't forget to store the data from the job card into a object that represents the data of the favourite job
     const [userFavourites, setUserFavourites] = useState({});
 
     return (
@@ -95,16 +95,17 @@ const JobListing = () => {
                 {
                     <div className={showFilter ? "" : "max-lg:hidden"}>
                         <h4 className='font-medium text-lg py-4'>Search by Categories</h4>
-                        <ul className='space-y-4 text -gray-600'>
+                        <ul className='space-y-4 text-gray-600'>
                             {
                                 JobCategories.map((category, index) => (
-                                    <li key={index} className='flex gap-3 items-center'>
+                                    <li key={index} className='flex gap-3 items-center '>
                                         <input
                                             type='checkbox'
                                             id={`category-${index}`}
                                             name={category}
                                             checked={selectedCategories.includes(category)}
                                             onChange={() => handleCategoryChange(category)}
+                                            className='cursor-pointer'
                                         />
                                         <label htmlFor={`category-${index}`}>{category}</label>
                                     </li>
@@ -127,6 +128,7 @@ const JobListing = () => {
                                             name={location}
                                             checked={selectedLocations.includes(location)}
                                             onChange={() => handleLocationChange(location)}
+                                            className='cursor-pointer'
                                         />
                                         <label htmlFor={`category-${index}`}>{location}</label>
                                     </li>
@@ -140,42 +142,96 @@ const JobListing = () => {
             {/* Job Listings*/}
             <section className='w-full lg:w-3/4 text-gray-800 max-lg:px-4'>
                 <h3 className='font-medium text-3xl pb-2 pt-3 ml-3' id='job-list'>Latest Jobs</h3>
-                <p className='mb-8 ml-3'>
-                    Get your desired job today
-                </p>
-                <div className='grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-1 gap-4'>
-                    {filteredJobs.slice((currentPage - 1) * 6, currentPage * 6).map((job, index) => (
-                        <JobCard key={index} job={job} />
+                <p className='mb-8 ml-3'>Get your desired job today</p>
 
-                    ))}
-                </div>
+                {filteredJobs.length === 0 ? (
 
-                {/* Pages*/}
-                {
-                    filteredJobs.length > 0 && (
-                        <div className='flex items-center justify-center space-x-2 mt-10 '>
+                    <div className="text-center text-gray-500 m-10">
+                        <p className="text-lg font-medium">No results found</p>
+                        <p className="text-sm">Try adjusting your filters or search terms</p>
+                    </div>
+                ) : (
+                    <>
+                        <div className='grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-1 gap-4'>
+                            {filteredJobs
+                                .slice((currentPage - 1) * 5, currentPage * 5)
+                                .map((job, index) => (
+                                    <JobCard key={index} job={job} />
+                                ))}
+                        </div>
+
+                        {/* Pagination */}
+                        <div className='flex items-center justify-center space-x-2 mt-10'>
                             <a href='#job-list'>
-                                <img onClick={() => setPage(Math.max(currentPage - 1), 1)} src={assets.left_arrow_icon} alt='' />
+                                <img
+                                    onClick={() => setPage(Math.max(currentPage - 1, 1))}
+                                    src={assets.left_arrow_icon}
+                                    alt=''
+                                />
                             </a>
-                            {
-                                Array.from({ length: Math.ceil(filteredJobs.length / 6) }).map((_, index) => (
-                                    <a href='#job-list' key={index}>
-                                        <button onClick={() => setPage(index + 1)} className={`w-10 h-10 flex items-center justify-center border border-gray-300 rounded ${currentPage === index + 1 ? 'bg-blue-100 text-blue-500' : 'text-gray-500'}`}>{index + 1}</button>
-                                    </a>
-                                ))
-                            }
+                            {Array.from({ length: Math.ceil(filteredJobs.length / 6) }).map((_, index) => (
+                                <a key={index} href='#job-list'>
+                                    <button
+                                        onClick={() => setPage(index + 1)}
+                                        className={`w-10 h-10 flex items-center justify-center border border-gray-300 rounded ${currentPage === index + 1
+                                                ? 'bg-blue-100 text-blue-500'
+                                                : 'text-gray-500'
+                                            }`}
+                                    >
+                                        {index + 1}
+                                    </button>
+                                </a>
+                            ))}
                             <a href='#job-list'>
-                                <img onClick={() => setPage(Math.min(currentPage + 1, Math.ceil(filteredJobs.length / 6)))} src={assets.right_arrow_icon} alt='' />
+                                <img
+                                    onClick={() =>
+                                        setPage(Math.min(currentPage + 1, Math.ceil(filteredJobs.length / 6)))
+                                    }
+                                    src={assets.right_arrow_icon}
+                                    alt=''
+                                />
                             </a>
                         </div>
-                    )
-                }
-
-
-
-
-
+                    </>
+                )}
             </section>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
         </div>
     )
