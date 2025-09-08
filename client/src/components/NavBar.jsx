@@ -27,6 +27,7 @@ const NavBar = () => {
     };
 
     //this is the hamburger menu for responsiveness
+
     const toggleMenu = () => setMenuOpen(!menuOpen);
     const [menuOpen, setMenuOpen] = useState(false);
     return (
