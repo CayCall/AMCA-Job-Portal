@@ -5,6 +5,8 @@ import NavBar from "../components/NavBar";
 import { assets } from "../assets/assets";
 import kconvert from 'k-convert';
 import moment from 'moment';
+import JobCard from "../components/JobCard";
+import Footer from "../components/Footer";
 
 const ApplyJob = () => {
   const { id } = useParams();
@@ -65,7 +67,7 @@ const ApplyJob = () => {
                     <img src={assets.location_icon} alt="location icon" />
                     {jobData.location}
                   </span>
-                  <span className="flex items-center gap-2"> 
+                  <span className="flex items-center gap-2">
                     <img src={assets.person_icon} alt="icon" />
                     {jobData.level}
                   </span>
@@ -77,22 +79,32 @@ const ApplyJob = () => {
               </div>
             </div>
             <div className="flex flex-col justify-center text-end text-sm max-md:mx-auto max-md:text-center">
-              <button className="bg-blue-600 p-2.5 px-10 text-white rounded border border-transparent hover:bg-white hover:text-black hover:border-gray-500 hover:text-gray-500"> Apply Now</button>
+              <button className="bg-blue-600 p-2.5 px-10 text-white rounded border border-transparent hover:bg-white  hover:border-gray-500 hover:text-gray-500"> Apply Now</button>
               <p className="mt-1 text-gray-600"> Posted {moment(jobData.date).fromNow()}</p>
             </div>
           </div>
           <div className="flex flex-col lg:flex-row justify-between items-start">
             <div className="w-full lg:w-2/3">
-              <h2 className="font-bold text-2xl mb-4">Job Description</h2>
-              <section className="rich-text" dangerouslySetInnerHTML={{__html:jobData.description}}>
+              <h2 className="font-bold text-2xl mb-4 ml-3 text-[#2e2e2e]">Job Description</h2>
+              <section className="rich-text" dangerouslySetInnerHTML={{ __html: jobData.description }}>
               </section>
-              <button className="bg-blue-600 p-2.5 px-10 text-white rounded mt-10 border border-transparent hover:bg-white hover:text-black hover:border-gray-500 hover:text-gray-500"> Apply Now</button>
+              <button className="ml-4 bg-blue-600 p-2.5 px-10 text-white rounded mt-10 border border-transparent hover:bg-white  hover:border-gray-500 hover:text-gray-500"> Apply Now</button>
+            </div>
+            {/* More Jobs */}
+            <div className="w-full lg:w-1/3 mt-8 lg:mt-0 lg:ml-8 space-y-5">
+              <h2 className="ml-2">More jobs from {jobData.companyId.name}</h2>
+              {
+                jobs.filter(job => job.id !== jobData._id && job.companyId._id === jobData.companyId._id).filter(job => true).slice(0, 4)
+                  .map((job, index) => <JobCard key={index} job={job} />)
+              }
             </div>
           </div>
 
         </div>
-      </div>
 
+      </div>
+      <hr class="border-t border my-4"></hr>
+      <Footer />
     </>
 
 

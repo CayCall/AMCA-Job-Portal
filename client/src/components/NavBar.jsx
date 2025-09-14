@@ -1,8 +1,10 @@
-import React, { useState, useRef } from 'react'
+import React, { useState, useRef, useContext } from 'react'
 import { assets } from "../assets/assets"
 import { useClerk, UserButton, useUser } from '@clerk/clerk-react'
 import { Link } from 'react-router-dom'
 import { ChevronDown } from "lucide-react";
+import AppContext from '../context/AppContext';
+import AppContextProvider from '../context/AppContextProvider';
 
 const NavBar = () => {
     const { openSignIn } = useClerk();
@@ -26,10 +28,14 @@ const NavBar = () => {
         }, 300);
     };
 
+
+    //Login Modal 
+    const { setRecruiterLogin } = useContext(AppContext)
     //this is the hamburger menu for responsiveness
 
     const toggleMenu = () => setMenuOpen(!menuOpen);
     const [menuOpen, setMenuOpen] = useState(false);
+
     return (
         <div className='shadow py-4'>
             <div className='container px-4 2xl:px-12 mx-auto flex justify-between items-center'>
@@ -57,10 +63,10 @@ const NavBar = () => {
                             </div>
                         ) : (
                             <div className='flex items-center gap-2 sm:gap-4 text-xs sm:text-sm'>
-                                <button className='text-gray-600 hover:underline'>Recruiter Login</button>
+                                <button onClick={() => setRecruiterLogin(true)} className='text-gray-600 hover:underline'>Recruiter Login</button>
                                 <button
                                     onClick={openSignIn}
-                                    className='bg-blue-600 text-white px-4 sm:px-6 py-1.5 sm:py-2 rounded-full hover:bg-white hover:text-black hover:border hover:border-black transition'
+                                    className='border bg-blue-600 text-white px-4 sm:px-6 py-1.5 sm:py-2 rounded-full hover:bg-white hover:text-black hover:border hover:border-black transition'
                                 >
                                     Login
                                 </button>
