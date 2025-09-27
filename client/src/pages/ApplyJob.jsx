@@ -7,6 +7,7 @@ import kconvert from 'k-convert';
 import moment from 'moment';
 import JobCard from "../components/JobCard";
 import Footer from "../components/Footer";
+import toast from 'react-hot-toast';
 
 const ApplyJob = () => {
   const { id } = useParams();
@@ -14,6 +15,7 @@ const ApplyJob = () => {
 
   const [jobData, setJobData] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [apply, setApply] = useState(true);
 
 
   useEffect(() => {
@@ -34,6 +36,17 @@ const ApplyJob = () => {
     }
   }, [id, jobs]);
 
+  const handleApply = () => {
+    setApply(true);
+    if (apply) {
+      toast.success('Application submitted successfully!');
+      scrollTo(0, 0);
+      console.log('succesfull')
+    }
+    setTimeout(()=>{
+      setApply(false)
+    },1000)
+  };
 
   if (loading) {
     return (
@@ -79,7 +92,7 @@ const ApplyJob = () => {
               </div>
             </div>
             <div className="flex flex-col justify-center text-end text-sm max-md:mx-auto max-md:text-center">
-              <button className="bg-blue-600 p-2.5 px-10 text-white rounded border border-transparent hover:bg-white  hover:border-gray-500 hover:text-gray-500"> Apply Now</button>
+              <button onClick={handleApply} className="bg-blue-600 p-2.5 px-10 text-white rounded border border-transparent hover:bg-white  hover:border-gray-500 hover:text-gray-500"> Apply Now</button>
               <p className="mt-1 text-gray-600"> Posted {moment(jobData.date).fromNow()}</p>
             </div>
           </div>
@@ -88,9 +101,9 @@ const ApplyJob = () => {
               <h2 className="font-bold text-2xl mb-4 ml-3 text-[#2e2e2e]">Job Description</h2>
               <section className="rich-text" dangerouslySetInnerHTML={{ __html: jobData.description }}>
               </section>
-              <button className="ml-4 bg-blue-600 p-2.5 px-10 text-white rounded mt-10 border border-transparent hover:bg-white  hover:border-gray-500 hover:text-gray-500"> Apply Now</button>
+              <button onClick={handleApply} className="ml-4 bg-blue-600 p-2.5 px-10 text-white rounded mt-10 border border-transparent hover:bg-white  hover:border-gray-500 hover:text-gray-500"> Apply Now</button>
             </div>
-            {/* More Jobs */}
+
             <div className="w-full lg:w-1/3 mt-8 lg:mt-0 lg:ml-8 space-y-5">
               <h2 className="ml-2">More jobs from {jobData.companyId.name}</h2>
               {

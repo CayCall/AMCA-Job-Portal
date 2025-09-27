@@ -17,7 +17,7 @@ const AppContextProvider = (props) => {
     setSearchFilter, searchFilter,
     isSearched, setIsSearched,
     jobs, setJobs,
-    showRecruiterLogin, setRecruiterLogin
+    showRecruiterLogin, setRecruiterLogin,
   }
   // fetch jobs
   const fetchJobs = async () => {

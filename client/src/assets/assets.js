@@ -27,7 +27,9 @@ import resume_download_icon from './resume_download_icon.svg'
 import delete_icon from './delete_icon.svg'
 import email_icon from './email_icon.svg'
 import lock_icon from './lock_icon.svg'
-
+import fakeCompanyOne from './fakeCompany1.jpeg'
+import fakeCompanyTwo from './fakeCompany2.jpeg'
+import fakeCompanyThree from './fakeCompany3.png'
 
 export const assets = {
     logo,
@@ -58,7 +60,10 @@ export const assets = {
     delete_icon,
     profile_upload_icon,
     email_icon,
-    lock_icon
+    lock_icon,
+    fakeCompanyOne,
+    fakeCompanyTwo,
+    fakeCompanyThree
 }
 
 export const JobCategories = [
@@ -190,7 +195,7 @@ export const jobsData = [
             _id: "1a2b3c4d-0002-0000-0000-000000000002",
             name: "Eskom Holdings",
             email: "hr@eskomholdings.co.za",
-            image: "company_icon",
+            image: "fakeCompanyOne",
         },
         description: `
       <p>We are hiring a dedicated Electrician to join our team in Johannesburg. This role requires a dependable and skilled individual capable of delivering high-quality work in a fast-paced environment. <!-- more --> </p>
@@ -802,7 +807,7 @@ export const jobsData = [
             _id: "671a9e45cf7c3a9e2bf367d4",
             name: "Free State Tiling",
             email: "info@freestatetiling.co.za",
-            image: company_icon,
+            image: fakeCompanyThree,
         },
         description: `
     <p>Install ceramic, porcelain, and natural stone tiles for residential and commercial projects.  <!-- more -->  </p>
@@ -836,7 +841,7 @@ export const jobsData = [
             _id: "671a9e45cf7c3a9e2bf367d5",
             name: "Eastern Cape Welders",
             email: "contact@ecwelders.co.za",
-            image: company_icon,
+            image: fakeCompanyOne,
         },
         description: `
     <p>Perform welding operations on metal structures, machinery, and equipment following safety protocols.  <!-- more -->  </p>
@@ -904,7 +909,7 @@ export const jobsData = [
             _id: "671a9e45cf7c3a9e2bf367d7",
             name: "Pretoria Electricals",
             email: "contact@pretoriaelectricals.co.za",
-            image: company_icon,
+            image: fakeCompanyTwo,
         },
         description: `
     <p>Install, maintain, and repair electrical wiring, equipment, and fixtures in residential and commercial buildings.  <!-- more -->  </p>

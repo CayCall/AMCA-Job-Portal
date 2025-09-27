@@ -10,20 +10,23 @@ import RecruiterManage from './components/RecruiterManage'
 import AddJob from './components/AddJob'
 import ViewApplications from './components/ViewApplications'
 import 'quill/dist/quill.snow.css'
+import { Toaster } from 'react-hot-toast';
+
 
 
 const App = () => {
   const { showRecruiterLogin } = useContext(AppContext)
   return (
     <div>
+      <Toaster position="top-right" reverseOrder={false} />
       {
         showRecruiterLogin && <RecruiterModal />
       }
       <Routes>
         <Route path='/' element={<Home />} />
-        <Route path='/apply-job/:id' element={<ApplyJob />}/>
-        <Route path='/applications' element={<Applications />}/>
-        <Route path='/dashboard' element={< RecruiterDashboard/>}>
+        <Route path='/apply-job/:id' element={<ApplyJob />} />
+        <Route path='/applications' element={<Applications />} />
+        <Route path='/dashboard' element={< RecruiterDashboard />}>
           <Route path='add-job' element={< AddJob />} />
           <Route path='manage-jobs' element={< RecruiterManage />} />
           <Route path='view-applications' element={< ViewApplications />} />
