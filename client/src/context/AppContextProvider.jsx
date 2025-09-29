@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import AppContext from './AppContext';
 import { jobsData } from "../assets/assets"
-
+import i18n from '../i18n';
 const AppContextProvider = (props) => {
   const [searchFilter, setSearchFilter] = useState({
     title: '',
@@ -11,14 +11,9 @@ const AppContextProvider = (props) => {
 
   const [jobs, setJobs] = useState([]);
 
-  const [showRecruiterLogin , setRecruiterLogin] = useState(false)
+  const [showRecruiterLogin, setRecruiterLogin] = useState(false)
 
-  const value = {
-    setSearchFilter, searchFilter,
-    isSearched, setIsSearched,
-    jobs, setJobs,
-    showRecruiterLogin, setRecruiterLogin,
-  }
+
   // fetch jobs
   const fetchJobs = async () => {
     setJobs(jobsData);
@@ -28,7 +23,23 @@ const AppContextProvider = (props) => {
     fetchJobs();
   }, []);
 
+  const handleLanguageChange = async (lang) => {
+    await i18n.changeLanguage(lang);
+    localStorage.setItem("language", lang);
+  };
 
+
+
+
+
+
+  const value = {
+    setSearchFilter, searchFilter,
+    isSearched, setIsSearched,
+    jobs, setJobs,
+    showRecruiterLogin, setRecruiterLogin,
+    handleLanguageChange
+  }
   return (
     <AppContext.Provider value={value}>
       {props.children}

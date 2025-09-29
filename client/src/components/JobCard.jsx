@@ -1,8 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { assets } from '../assets/assets';
 import { useNavigate } from 'react-router-dom';
 
+import { useTranslation } from 'react-i18next';
+
 const JobCard = ({ job }) => {
+    const { t, i18n } = useTranslation();
     const [bookmarked, setBookmarked] = useState(false);
 
     const getPreview = (description) => {
@@ -12,11 +15,8 @@ const JobCard = ({ job }) => {
             : description.slice(0, 150);
     };
 
-   
-   
-   
-   
-   
+
+
 
     const navigate = useNavigate()
     return (
@@ -28,7 +28,8 @@ const JobCard = ({ job }) => {
                 className="absolute top-10 right-10 text-blue-500 hover:text-blue-800"
                 title={bookmarked ? "Remove Bookmark" : "Add Bookmark"}
             >
-                {bookmarked ? "Favorited by you★" : "Mark As Favorite ☆"}
+                {bookmarked ? t("Favorited by you★") : t("Mark As Favorite ☆")}
+
             </button>
 
             <div>
@@ -58,10 +59,10 @@ const JobCard = ({ job }) => {
 
             <div className="mt-4 flex gap-4 text-sm">
                 <button onClick={() => { navigate(`/apply-job/${job._id}`); scrollTo(0, 0) }} className="bg-blue-600 text-white px-4 py-2 rounded border border-transparent hover:bg-white hover:text-black hover:border-gray-500 hover:text-gray-500">
-                    Apply Now
+                    {t('Apply Now')}
                 </button>
                 <button onClick={() => { navigate(`/apply-job/${job._id}`); scrollTo(0, 0) }} className="text-gray-500 border border-gray-500 px-4 py-2 rounded hover:bg-blue-600 hover:text-white">
-                    Learn More
+                    {t('Learn More')}
                 </button>
             </div>
         </div>

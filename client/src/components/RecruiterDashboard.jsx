@@ -22,6 +22,7 @@ const RecruiterDashboard = () => {
                                 </ul>
                             </div>
                         </div>
+                        
                     </div>
                 </div>
             </div>

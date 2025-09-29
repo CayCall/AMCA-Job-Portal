@@ -2,8 +2,10 @@ import React, { useContext, useEffect, useState } from 'react'
 import AppContext from '../context/AppContext'
 import { assets, JobCategories, JobLocations, jobsData } from '../assets/assets';
 import JobCard from './JobCard';
+import { useTranslation } from 'react-i18next';
 
 const JobListing = () => {
+    const { t, i18n} = useTranslation();
     const { isSearched, searchFilter, setSearchFilter } = useContext(AppContext)
     const [showFilter, setShowFilter] = useState(false);
 
@@ -55,7 +57,7 @@ const JobListing = () => {
                 {
                     isSearched && (searchFilter.title !== "" || searchFilter.location !== "") && (
                         <>
-                            <h3 className='font-medium text-lg mb-4'>Current Search</h3>
+                            <h3 className='font-medium text-lg mb-4'>{t('Current Search')}</h3>
                             <div className='mb-4 text-gray-600'>
                                 {
                                     searchFilter.title && (
@@ -77,8 +79,8 @@ const JobListing = () => {
 
                 }
                 <div>
-                    <h3 className='font-medium text-lg py-1'>Filters</h3>
-                    <button className='px-6 py-1.5 rounded border border-gray-400 text-gray-500' onClick={() => setShowFilter(prev => !prev)} > {showFilter ? "Close" : "Show More"} </button>
+                    <h3 className='font-medium text-lg py-1'>{t('Filters')}</h3>
+                    <button className='px-6 py-1.5 rounded border border-gray-400 text-gray-500' onClick={() => setShowFilter(prev => !prev)} > {showFilter ? t("Close") : t("Show More")} </button>
                     <button
                         onClick={() => {
                             setSearchFilter({ title: "", location: "" });
@@ -87,14 +89,14 @@ const JobListing = () => {
                         }}
                         className="mt-5 ml-2.5 text-sm text-blue-600 underline"
                     >
-                        Clear filters
+                       {t('Clear filters')}
                     </button>
                 </div>
 
                 {/* Job Category Filter*/}
                 {
                     <div className={showFilter ? "" : "max-lg:hidden"}>
-                        <h4 className='font-medium text-lg py-4'>Search by Categories</h4>
+                        <h4 className='font-medium text-lg py-4'>{t('Search by Categories')}</h4>
                         <ul className='space-y-4 text-gray-600'>
                             {
                                 JobCategories.map((category, index) => (
@@ -117,7 +119,7 @@ const JobListing = () => {
                 {/* Location search Filter*/}
                 {
                     <div className={showFilter ? "" : "lg:hidden"}>
-                        <h4 className='font-medium text-lg py-4'>Search by Location</h4>
+                        <h4 className='font-medium text-lg py-4'>{t('Search by Location')}</h4>
                         <ul className='space-y-4 text-gray-600'>
                             {
                                 JobLocations.map((location, index) => (
@@ -141,18 +143,18 @@ const JobListing = () => {
             </div>
             {/* Job Listings*/}
             <section className='w-full lg:w-3/4 text-gray-800 max-lg:px-4'>
-                <h3 className='font-medium text-3xl pb-2 pt-3 ml-3' id='job-list'>Latest Jobs</h3>
-                <p className='mb-8 ml-3'>Get your desired job today</p>
+                <h3 className='font-medium text-3xl pb-2 pt-3 ml-3' id='job-list'>{t('Latest Jobs')}</h3>
+                <p className='mb-8 ml-3'>{t('Get your desired job today')}</p>
 
                 {filteredJobs.length === 0 ? (
 
                     <div className="text-center text-gray-500 m-10">
-                        <p className="text-lg font-medium">No results found</p>
-                        <p className="text-sm">Try adjusting your filters or search terms</p>
+                        <p className="text-lg font-medium">{t('No results found')}</p>
+                        <p className="text-sm">{t('Try adjusting your filters or search terms')}</p>
                     </div>
                 ) : (
                     <>
-                        <div className='grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-1 gap-4'>
+                        <div className='grid grid-cols-1= sm:grid-cols-2 xl:grid-cols-1 gap-4'>
                             {filteredJobs
                                 .slice((currentPage - 1) * 5, currentPage * 5)
                                 .map((job, index) => (

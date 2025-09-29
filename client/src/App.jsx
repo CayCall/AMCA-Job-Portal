@@ -11,7 +11,7 @@ import AddJob from './components/AddJob'
 import ViewApplications from './components/ViewApplications'
 import 'quill/dist/quill.snow.css'
 import { Toaster } from 'react-hot-toast';
-
+import BackToTop from './components/BackToTop'
 
 
 const App = () => {
@@ -34,7 +34,7 @@ const App = () => {
 
 
       </Routes>
-
+      <BackToTop/>
     </div>
   )
 }

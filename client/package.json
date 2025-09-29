@@ -11,13 +11,15 @@
   },
   "dependencies": {
     "@clerk/clerk-react": "^5.37.0",
+    "i18next": "^25.5.2",
     "k-convert": "^1.0.6",
     "lucide-react": "^0.526.0",
     "moment": "^2.30.1",
     "quill": "^2.0.3",
-    "react": "^19.1.0",
-    "react-dom": "^19.1.0",
+    "react": "^19.1.1",
+    "react-dom": "^19.1.1",
     "react-hot-toast": "^2.6.0",
+    "react-i18next": "^16.0.0",
     "react-router-dom": "^6.30.1",
     "react-toastify": "^11.0.5",
     "toastify": "^2.0.1"
