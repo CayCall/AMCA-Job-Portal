@@ -2,12 +2,13 @@ import React from 'react'
 import { assets, viewApplicationsPageData } from '../assets/assets'
 
 import { useTranslation } from 'react-i18next';
-
+import Breadcrum from './Breadcrum';
 
 const ViewApplications = () => {
 
   const { t, i18n } = useTranslation();
   return (
+
     <div className='container mx-auto p-4'>
       <div >
         <table className='w-full max-w-4xl bg-white border border-gray-200 max-sm:text-sm '>

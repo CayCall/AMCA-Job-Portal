@@ -161,7 +161,7 @@ export const jobsData = [
             _id: "1a2b3c4d-0001-0000-0000-000000000001",
             name: "Mzansi Builders Ltd",
             email: "hr@mzansibuildersltd.co.za",
-            image: "company_icon",
+            image: "fakeCompanyTwo",
         },
         description: `
       <p>We are hiring a dedicated Construction Worker to join our team in Durban. This role requires a dependable and skilled individual that is able to work in a fast-paced environment.<!-- more --> </p>
@@ -195,7 +195,7 @@ export const jobsData = [
             _id: "1a2b3c4d-0002-0000-0000-000000000002",
             name: "Eskom Holdings",
             email: "hr@eskomholdings.co.za",
-            image: "fakeCompanyOne",
+            image: "fakeCompanyTwo",
         },
         description: `
       <p>We are hiring a dedicated Electrician to join our team in Johannesburg. This role requires a dependable and skilled individual capable of delivering high-quality work in a fast-paced environment. <!-- more --> </p>
@@ -297,7 +297,7 @@ export const jobsData = [
             _id: "1a2b3c4d-0005-0000-0000-000000000005",
             name: "Free State Carpentry",
             email: "hr@freestatecarpentry.co.za",
-            image: "company_icon",
+            image: "fakeCompanyOne",
         },
         description: `
       <p>Experienced Carpenter needed for residential and commercial projects in Bloemfontein. <!-- more --> </p>
@@ -365,7 +365,7 @@ export const jobsData = [
             _id: "1a2b3c4d-0007-0000-0000-000000000007",
             name: "East London Manufacturing",
             email: "hr@elm.co.za",
-            image: "company_icon",
+            image: "fakeCompanyTwo",
         },
         description: `
       <p>Join our manufacturing team as a Factory Worker in East London. Responsible for assembly line and quality checks. <!-- more --> </p>
@@ -399,7 +399,7 @@ export const jobsData = [
             _id: "1a2b3c4d-0008-0000-0000-000000000008",
             name: "Limpopo Logistics",
             email: "hr@limpopologistics.co.za",
-            image: "company_icon",
+            image: "fakeCompanyOne",
         },
         description: `
       <p>Experienced Truck Driver needed for local and long-distance deliveries in Limpopo province. <!-- more --></p>
@@ -433,7 +433,7 @@ export const jobsData = [
             _id: "1a2b3c4d-0009-0000-0000-000000000009",
             name: "Northern Cape Painters",
             email: "hr@ncpainters.co.za",
-            image: "company_icon",
+            image: "fakeCompanyOne",
         },
         description: `
       <p>Looking for a skilled Painter to work on residential and commercial projects in Kimberley. <!-- more --> </p>
@@ -467,7 +467,7 @@ export const jobsData = [
             _id: "1a2b3c4d-0010-0000-0000-000000000010",
             name: "Mpumalanga Roofing",
             email: "hr@mpumalangaroofing.co.za",
-            image: "company_icon",
+            image: "fakeCompanyOne",
         },
         description: `
       <p>Entry-level Roofer wanted for residential roofing projects in Nelspruit. <!-- more --> </p>
@@ -535,7 +535,7 @@ export const jobsData = [
             _id: "1a2b3c4d-0012-0000-0000-000000000012",
             name: "Garden Route Masons",
             email: "hr@gardenroutemasons.co.za",
-            image: "company_icon",
+            image: "fakeCompanyThree",
         },
         description: `
       <p>Seeking a Mason with experience in bricklaying and concrete work in George.  <!-- more --> </p>
@@ -637,7 +637,7 @@ export const jobsData = [
             _id: "1a2b3c4d-0015-0000-0000-000000000015",
             name: "Eastern Cape Ironworks",
             email: "hr@ecironworks.co.za",
-            image: "company_icon",
+            image: "fakeCompanyThree",
         },
         description: `
       <p>Ironworker needed for structural steel installation projects in Mthatha.  <!-- more -->  </p>
@@ -705,7 +705,7 @@ export const jobsData = [
             _id: "1a2b3c4d-0017-0000-0000-000000000017",
             name: "Joburg Interiors",
             email: "hr@joburginteriors.co.za",
-            image: "company_icon",
+            image: "fakeCompanyTwo",
         },
         description: `
       <p>Looking for an entry-level Drywall Installer to assist on commercial and residential projects.  <!-- more -->  </p>
@@ -739,7 +739,7 @@ export const jobsData = [
             _id: "1a2b3c4d-0018-0000-0000-000000000018",
             name: "Cape Roofers",
             email: "hr@caperoofers.co.za",
-            image: "company_icon",
+            image: "fakeCompanyOne",
         },
         description: `
       <p>Experienced Roof Installer needed for high-end residential projects in Cape Town.  <!-- more -->  </p>
@@ -773,7 +773,7 @@ export const jobsData = [
             _id: "1a2b3c4d-0019-0000-0000-000000000019",
             name: "Durban Industrial Cleaning",
             email: "hr@durbancleaning.co.za",
-            image: "company_icon",
+            image: "fakeCompanyThree",
         },
         description: `
       <p>Seeking an Industrial Cleaner for factory and construction site cleaning.  <!-- more -->  </p>
@@ -807,7 +807,7 @@ export const jobsData = [
             _id: "671a9e45cf7c3a9e2bf367d4",
             name: "Free State Tiling",
             email: "info@freestatetiling.co.za",
-            image: fakeCompanyThree,
+            image: "fakeCompanyThree",
         },
         description: `
     <p>Install ceramic, porcelain, and natural stone tiles for residential and commercial projects.  <!-- more -->  </p>
@@ -841,7 +841,7 @@ export const jobsData = [
             _id: "671a9e45cf7c3a9e2bf367d5",
             name: "Eastern Cape Welders",
             email: "contact@ecwelders.co.za",
-            image: fakeCompanyOne,
+            image: "fakeCompanyTwo",
         },
         description: `
     <p>Perform welding operations on metal structures, machinery, and equipment following safety protocols.  <!-- more -->  </p>
@@ -875,7 +875,7 @@ export const jobsData = [
             _id: "671a9e45cf7c3a9e2bf367d6",
             name: "Durban Heavy Lifting",
             email: "info@durbanhl.co.za",
-            image: company_icon,
+            image: "fakeCompanyOne",
         },
         description: `
     <p>Operate cranes to lift, move, and position heavy materials and equipment safely on construction sites.  <!-- more -->  </p>
@@ -909,7 +909,7 @@ export const jobsData = [
             _id: "671a9e45cf7c3a9e2bf367d7",
             name: "Pretoria Electricals",
             email: "contact@pretoriaelectricals.co.za",
-            image: fakeCompanyTwo,
+            image:"fakeCompanyTwo",
         },
         description: `
     <p>Install, maintain, and repair electrical wiring, equipment, and fixtures in residential and commercial buildings.  <!-- more -->  </p>

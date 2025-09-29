@@ -22,7 +22,7 @@ const Hero = () => {
         console.log("searched.")
     }
     return (
-        <div className='container 2x1:px-20 mx-auto my-10'>
+        <div className='container 2x1:px-20 mx-auto mb-10 mt-24'>
             <div className='bg-gradient-to-r from-slate-400 to-black text-white py-16 text-center mx-2 rounded-xl '>
                 <h2 className='text-2xl md:text-2xl lg:text-4xl font-medium mb-4'>
                     {t('Over 1 000+ Domestic jobs available')}

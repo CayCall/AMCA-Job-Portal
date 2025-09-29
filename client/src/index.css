@@ -35,3 +35,7 @@
 ::-webkit-scrollbar{
     font-display: none;
 }
+body{
+    background-color: #fefefefe;
+    margin-top: 80px;
+}

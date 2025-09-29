@@ -9,6 +9,8 @@ import JobCard from "../components/JobCard";
 import Footer from "../components/Footer";
 import toast from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
+import breadcrum from "../components/Breadcrum";
+import Breadcrum from "../components/Breadcrum";
 const ApplyJob = () => {
   const { t, i18n } = useTranslation();
   const { id } = useParams();
@@ -56,6 +58,10 @@ const ApplyJob = () => {
       </div>
     );
   }
+  const translatedDescription = jobData.description
+    .replace("t('Job Description')", t("Job Description"))
+    .replace("t('Skills Required')", t("Skills Required"))
+    .replace("t('Key Responsibilities')", t("Key Responsibilities"));
 
 
   if (!jobData) return <p>Job not found</p>;
@@ -64,6 +70,7 @@ const ApplyJob = () => {
   return (
     <>
       <NavBar />
+      <Breadcrum/>
       <div className='min-h-screen flex flex-col py-10 container px-4 2x1:px-20 mx-auto'>
         <div className="bg-white text-black rounded-lg w-full">
           <div className="flex justify-center md:justify-between flex-wrap gap-8 px-14 py-20 mb-6 bg-sky-50 border border-sky-400 rounded-xl">
@@ -100,13 +107,15 @@ const ApplyJob = () => {
           <div className="flex flex-col lg:flex-row justify-between items-start">
             <div className="w-full lg:w-2/3">
               <h2 className="font-bold text-2xl mb-4 ml-3 text-[#2e2e2e]">{t('Job Description')}</h2>
-              <section className="rich-text" dangerouslySetInnerHTML={{ __html: jobData.description }}>
+              <section className="rich-text"
+                dangerouslySetInnerHTML={{ __html: translatedDescription }}
+              >
               </section>
               <button onClick={handleApply} className="ml-4 bg-blue-600 p-2.5 px-10 text-white rounded mt-10 border border-transparent hover:bg-white  hover:border-gray-500 hover:text-gray-500"> {t('Apply Now')}</button>
             </div>
 
             <div className="w-full lg:w-1/3 mt-8 lg:mt-0 lg:ml-8 space-y-5">
-              <h2 className="ml-2">More jobs from {jobData.companyId.name}</h2>
+              <h2 className="ml-2">{t('More jobs from ')}{jobData.companyId.name}</h2>
               {
                 jobs.filter(job => job.id !== jobData._id && job.companyId._id === jobData.companyId._id).filter(job => true).slice(0, 4)
                   .map((job, index) => <JobCard key={index} job={job} />)

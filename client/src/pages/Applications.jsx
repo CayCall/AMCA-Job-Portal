@@ -4,7 +4,7 @@ import Footer from '../components/Footer'
 import { assets, jobsApplied } from '../assets/assets'
 import moment from 'moment'
 import { useTranslation } from 'react-i18next';
-
+import Breadcrum from '../components/Breadcrum'
 const Applications = () => {
   const [isEdited, setEdit] = useState(false)
   const [resume, setResume] = useState(null)
@@ -15,6 +15,7 @@ const Applications = () => {
 
     <>
       <NavBar />
+      <Breadcrum/>
       <div className='container px-4 min-h-[65vh] 2xl:px-20 mx-auto my-10'>
         <h2 className='text-xl font-semibold'>
           {t('Your Applications')}

@@ -55,7 +55,7 @@ const NavBar = () => {
         }
     };
     return (
-        <div className='shadow py-4'>
+        <div className='fixed top-0 left-0 w-full z-50 shadow py-4 bg-white'>
             <div className='container px-4 2xl:px-12 mx-auto flex justify-between items-center'>
 
                 {/* Logo */}
