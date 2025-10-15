@@ -16,7 +16,7 @@ export const clerkwebHook = async (req, res) => {
         await webhoook.verify(JSON.stringify(req.body), {
             "svix-id": req.headers["svix-id"],
             "svix-timestamp": req.headers["svix-timestamp"],
-            "svix-signature": req.headers["svix-signature"],
+            "svix-signature": req.headers["svix-signature"]
         })
 
 

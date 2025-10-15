@@ -23,7 +23,7 @@ app.use(express.json())
 
 
 //Route
-app.get('/', (req, res) => res.send("Working."))
+app.get('/', (req, res) => res.send("Api Working."))
 app.get('/debug-sentry', function mainHandler(req, res) {
     throw new Error("")
 });
