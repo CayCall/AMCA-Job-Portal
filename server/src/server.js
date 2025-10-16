@@ -15,6 +15,14 @@ import { clerkwebHook } from './controllers/webhooks.js'
 
 */
 
+/*
+    Server Architecture :
+    1. Front-End(Client) - to send requests (http intents(POST,GET)) to the server, e.g user signing up or conmpleting form
+    2. Back-End(Server) - talk to db, receive requests, return data
+    3. webhooks(third party)- like clerk telling the server to create a user for example.
+
+*/
+
 //this will initilise an express app 
 //will allows the app to process http requests, manage certain routes and incorporate middleware("transition layer" - DB, sign ins)
 const app = express()
