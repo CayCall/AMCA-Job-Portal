@@ -1,8 +1,8 @@
 import mongoose from "mongoose";
 
 const userSchema = new mongoose.Schema({
-    clerkId: { type: String, required: true, unique: true, index: true },
-    username: { type: String, required: true, trim: true, minlength: 2 },
+    _id: { type: String, required: true, unique: true, index: true },
+    name: { type: String, required: true, trim: true, minlength: 2 },
     email: {
         type: String, required: true, unique: true, trim: true, lowercase: true,
         validate: {
@@ -10,8 +10,8 @@ const userSchema = new mongoose.Schema({
             message: "Invalid email format"
         }
     },
-    imageUrl: { type: String, default: null, trim: true },
-    resumeUrl: { type: String, default: null, trim: true },
+    image: { type: String, default: null, trim: true },
+    resume: { type: String, default: null, trim: true },
 },
     {
         timestamps: true,
@@ -25,7 +25,7 @@ const userSchema = new mongoose.Schema({
     }
 )
 
-const User = mongoose.models.User || mongoose.model("User", userSchema);
+const User = mongoose.model("User", userSchema);
 
 export default User;
 
