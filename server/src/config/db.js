@@ -1,7 +1,8 @@
 import mongoose from 'mongoose'
 
 const connectDB = () => {
-    mongoose.connect(process.env.MONGO_URI)
+    const mongoURI = process.env.MONGO_URI;
+    mongoose.connect(mongoURI)
     .then(()=>{console.log("Database has been connected.")})
     .catch(err => console.error(`DB connection error: ${err}`))
 }
