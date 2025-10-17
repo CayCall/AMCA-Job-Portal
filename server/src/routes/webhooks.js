@@ -8,9 +8,9 @@ import { json } from 'express';
 export const clerkwebHook = async (req, res) => {
     try {
 
-        // this makes an instance of a webhook using the clerk webhook secret, which is a key that authenticates that clerk sent the
+        // this makes an instance of a webhook with the clerk webhook secret
         const webhoook = new Webhook(process.env.CLERK_WEBHOOK_SECRET)
-    
+
 
         // Verify all headers from user 
         await webhoook.verify(JSON.stringify(req.body), {
@@ -28,7 +28,7 @@ export const clerkwebHook = async (req, res) => {
         switch (type) {
             case 'user.created': {
                 const user = {
-                    _id: data.id,
+                    clerkId: data.id,
                     email: data.email_addresses[0].email_address,
                     name: data.first_name + " " + data.last_name,
                     image: data.image_url,
@@ -44,7 +44,7 @@ export const clerkwebHook = async (req, res) => {
                     name: data.first_name + " " + data.last_name,
                     image: data.image_url,
                 }
-                await User.findByIdAndUpdate(data.id, user)
+                await User.findByIdAndUpdate(data.id, userData)
                 res.json({})
                 break;
             }

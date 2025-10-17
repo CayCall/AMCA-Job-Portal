@@ -5,7 +5,7 @@ import connectDB from './config/db.js'
 import './config/instrument.js'
 import "./config/instrument.js";
 import * as Sentry from "@sentry/node";
-import { clerkwebHook } from './controllers/webhooks.js'
+import { clerkwebHook } from './routes/webhooks.js'
 
 /*
     Server Architecture :
