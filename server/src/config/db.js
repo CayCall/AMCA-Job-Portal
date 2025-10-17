@@ -1,7 +1,7 @@
 import mongoose from 'mongoose'
 
 const connectDB = () => {
-    mongoose.connect("mongodb+srv://calebcalvin9_db_user:lJX6NsXDUNWMR6cG@amca-job-portal.8gx8lax.mongodb.net/?retryWrites=true&w=majority&appName=amca-job-portal")
+    mongoose.connect(process.env.MONGO_URI)
     .then(()=>{console.log("Database has been connected.")})
     .catch(err => console.error(`DB connection error: ${err}`))
 }

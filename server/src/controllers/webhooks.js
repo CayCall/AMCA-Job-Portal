@@ -1,65 +1,72 @@
 import { Webhook } from 'svix';
-import User from '../models/user.js'
-import { json } from 'express';
+import User from '../models/user.js';
 
-// This will be an api controller to Manage Clerk user and the database
-// Send message to the server, that allows the user information to get stored in the DB
-// data user fills out must be "posted" - uploaded to DB and this must be the POST ENDPOINT
 export const clerkwebHook = async (req, res) => {
-    try {
+  try {
+    // 1) Build webhook verifier
+    const webhook = new Webhook(process.env.CLERK_WEBHOOK_SECRET);
 
-        // this makes an instance of a webhook using the clerk webhook secret, which is a key that authenticates that clerk sent the
-        const webhoook = new Webhook(process.env.CLERK_WEBHOOK_SECRET)
-    
+    // 2) Use RAW payload (Buffer) + required headers
+    const payload = req.body; // Buffer from express.raw
+    const headers = {
+      'svix-id': req.headers['svix-id'],
+      'svix-timestamp': req.headers['svix-timestamp'],
+      'svix-signature': req.headers['svix-signature'],
+    };
 
-        // Verify all headers from user 
-        await webhoook.verify(JSON.stringify(req.body), {
-            "svix-id": req.headers["svix-id"],
-            "svix-timestamp": req.headers["svix-timestamp"],
-            "svix-signature": req.headers["svix-signature"]
-        })
+    // 3) Verify & parse the trusted event
+    const evt = webhook.verify(payload, headers);
+    const { data, type } = evt;
 
+    // Helper: resolve primary email safely
+    const primaryEmail = (() => {
+      const primaryId = data.primary_email_address_id;
+      if (primaryId && Array.isArray(data.email_addresses)) {
+        const found = data.email_addresses.find(e => e.id === primaryId);
+        if (found?.email_address) return found.email_address;
+      }
+      // fallback to first if primary not present in test payloads
+      return data.email_addresses?.[0]?.email_address ?? null;
+    })();
 
-        //Get all the data from the request body
-        const { data, type } = req.body
+    // Map Clerk -> your schema (you’re using custom String _id)
+    const baseDoc = {
+      name: `${data.first_name ?? ''} ${data.last_name ?? ''}`.trim(),
+      email: primaryEmail,
+      image: data.image_url ?? null,
+      resume: null,
+    };
 
+    switch (type) {
+      case 'user.created': {
+        // Upsert by _id to avoid duplicate-key on retries
+        const result = await User.updateOne(
+          { _id: data.id },
+          { $setOnInsert: { _id: data.id, ...baseDoc } },
+          { upsert: true }
+        );
+        // 200 even if already existed
+        return res.status(200).json({ ok: true, upserted: !!result.upsertedId });
+      }
 
-        //Swtich if there is a different event that happens
-        switch (type) {
-            case 'user.created': {
-                const user = {
-                    _id: data.id,
-                    email: data.email_addresses[0].email_address,
-                    name: data.first_name + " " + data.last_name,
-                    image: data.image_url,
-                    resume: ''
-                }
-                await User.create(user)
-                res.json({})
-                break;
-            }
-            case 'user.updated': {
-                const user = {
-                    email: data.email_addresses[0].email_address,
-                    name: data.first_name + " " + data.last_name,
-                    image: data.image_url,
-                }
-                await User.findByIdAndUpdate(data.id, user)
-                res.json({})
-                break;
-            }
-            case 'user.deleted': {
-                await User.findByIdAndDelete(data.id)
-                res.json({})
-                break;
-            }
-            default:
-                break;
-        }
+      case 'user.updated': {
+        const result = await User.updateOne({ _id: data.id }, { $set: baseDoc });
+        return res.status(200).json({ ok: true, modified: result.modifiedCount });
+      }
 
+      case 'user.deleted': {
+        const result = await User.deleteOne({ _id: data.id });
+        return res.status(200).json({ ok: true, deleted: result.deletedCount });
+      }
+
+      default:
+        // Unhandled event types should still 204 quickly
+        return res.status(204).end();
     }
-    catch (error) {
-        console.log(error.message)
-        res.json({success:false, message: 'Clerk Webhook Error !'})
-    }
-}
+  } catch (err) {
+    // If verification failed, respond 401; otherwise 500
+    const isVerify = (err?.name || '').toLowerCase().includes('verification');
+    console.error('Webhook error:', err.message);
+    return res.status(isVerify ? 401 : 500).json({ ok: false, error: err.message });
+  }
+};

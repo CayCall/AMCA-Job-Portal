@@ -30,7 +30,7 @@ app.use(cors())
 
 
 //browser will send http request to webhook url, and run clerk webhook function 
-app.post('/webhooks', clerkwebHook)
+app.post('/webhooks', express.raw({ type: 'application/json' }), clerkwebHook)
 
 app.use(express.json())
 
@@ -40,6 +40,7 @@ app.use(express.json())
 
 
 app.get('/', (req, res) => res.send("Server is up and running.")) // getting the home('/') route to invoke a response that tells us the Server is working
+app.get('/health', (_req, res) => res.json({ ok: true }));
 app.get('/debug-sentry', function mainHandler(req, res) {
     throw new Error("")
 });
