@@ -6,7 +6,7 @@ import './config/instrument.js'
 import "./config/instrument.js";
 import * as Sentry from "@sentry/node";
 import { clerkwebHook } from './controllers/webhooks.js'
-
+import companyRoutes from './routes/companyRoutes.js'
 /*
     Server Architecture :
     1. Front-End(Client) - to send requests (http intents(POST,GET)) to the server, e.g user signing up or conmpleting form
@@ -20,7 +20,7 @@ import { clerkwebHook } from './controllers/webhooks.js'
 const app = express()
 
 
-//MONGO DB function to connnect database on mongodb server
+await connect
 
 
 
@@ -31,7 +31,6 @@ app.use(cors())
 
 //browser will send http request to webhook url, and run clerk webhook function 
 app.post('/webhooks', express.raw({ type: 'application/json' }), clerkwebHook)
-
 app.use(express.json())
 
 /* Routing is most important for the GET and POST intentions aka http requests, with the server.
@@ -46,7 +45,7 @@ app.get("/health", (_req, res) => res.json({ ok: true }));
 app.get("/debug-sentry", (_req, _res) => { throw new Error(""); });
 app.get("/db-disconnected", (_req, _res) => { throw new Error("Db disconnected!"); });
 
-
+app.post('/api/company' , companyRoutes)
 
 
 Sentry.setupExpressErrorHandler(app);
