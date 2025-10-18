@@ -8,6 +8,9 @@ import connectDB from '../config/db.js';
 export const clerkwebHook = async (req, res) => {
     try {
         await connectDB();
+        
+        console.log("[Mongo] connected to:", mongoose.connection.name);
+        console.log("[Mongo] host:", mongoose.connection.host);
         const rawBody = Buffer.isBuffer(req.body) ? req.body.toString("utf8") : req.body;
 
         // Verify all headers from clerk user 
