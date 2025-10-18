@@ -41,7 +41,7 @@ export const clerkwebHook = async (req, res) => {
                 res.json({ success: true });
                 break;
             }
-            
+
             case 'user.updated': {
                 const user = {
                     email: data.email_addresses[0].email_address,
@@ -63,7 +63,9 @@ export const clerkwebHook = async (req, res) => {
 
     }
     catch (error) {
-        console.log(error.message)
-        res.json({ success: false, message: 'Clerk Webhook Error !' })
+        console.error('Webhook error:', err.name, err.message);
+        const status =
+            (err?.name || '').toLowerCase().includes('verification') ? 401 : 500;
+ return res.status(status).json({ success: false, error: err.message });
     }
 }
