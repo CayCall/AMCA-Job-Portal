@@ -39,14 +39,14 @@ app.use(express.json())
        we will POST (.post()) to a route to send data */
 
 
-app.get('/', (req, res) => res.send("Server is up and running.")) // getting the home('/') route to invoke a response that tells us the Server is working
-app.get('/health', (_req, res) => res.json({ ok: true }));
-app.get('/debug-sentry', function mainHandler(req, res) {
-    throw new Error("")
-});
-app.get('/db-disconnected', function mainHandler(req, res) {
-    throw new Error("Db disconnected!")
-});
+
+// getting the home('/') route to invoke a response that tells us the Server is working
+app.get("/", (_req, res) => res.send("Server is up and running."));
+app.get("/health", (_req, res) => res.json({ ok: true }));
+app.get("/debug-sentry", (_req, _res) => { throw new Error(""); });
+app.get("/db-disconnected", (_req, _res) => { throw new Error("Db disconnected!"); });
+
+
 
 
 Sentry.setupExpressErrorHandler(app);
