@@ -9,20 +9,20 @@ export const clerkwebHook = async (req, res) => {
     try {
 
         // this makes an instance of a webhook using the clerk webhook secret, which is a key that authenticates that clerk sent the
-        const webhoook = new Webhook(process.env.CLERK_WEBHOOK_SECRET)
+        const webhook = new Webhook(process.env.CLERK_WEBHOOK_SECRET)
         const payload = req.body;
 
         // Verify all headers from user 
-    
-       const evt = webhoook.verify(payload, {
-         'svix-id': req.headers['svix-id'],
-         'svix-timestamp': req.headers['svix-timestamp'],
-         'svix-signature': req.headers['svix-signature'],
-       });
+
+        const evt = webhook.verify(payload, {
+            'svix-id': req.headers['svix-id'],
+            'svix-timestamp': req.headers['svix-timestamp'],
+            'svix-signature': req.headers['svix-signature'],
+        });
 
 
         //Get all the data from the request body
-        const { data, type } = evt; 
+        const { data, type } = evt;
 
 
         //Swtich if there is a different event that happens
@@ -35,7 +35,15 @@ export const clerkwebHook = async (req, res) => {
                     image: data.image_url,
                     resume: ''
                 }
-                await User.updateOne({ _id: data.id }, { $setOnInsert: user }, { upsert: true });
+                await User.updateOne({ _id: data.id }, {
+                    $setOnInsert: {
+                        _id: data.id,
+                        email: data.email_addresses?.[0]?.email_address ?? null,
+                        name: `${data.first_name ?? ''} ${data.last_name ?? ''}`.trim(),
+                        image: data.image_url ?? null,
+                        resume: null,
+                    }
+                }, { upsert: true });
                 res.json({})
                 break;
             }
@@ -50,7 +58,7 @@ export const clerkwebHook = async (req, res) => {
                 break;
             }
             case 'user.deleted': {
-                await User.findByIdAndDelete(data.id)
+                await User.deleteOne({ _id: data.id });
                 res.json({})
                 break;
             }
