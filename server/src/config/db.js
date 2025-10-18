@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-const MONGODB_URI = process.env.MONGO_URI;
+const MONGODB_URI = process.env.MONGODB_URI; 
 
 if (!MONGODB_URI) {
     throw new Error("MONGODB_URI is not set");
@@ -18,7 +18,7 @@ export default async function connectDB() {
             maxPoolSize: 5,
             serverSelectionTimeoutMS: 5000,
             socketTimeoutMS: 45000,
-            dbName:"amca_portal",
+            //dbName:"amca_portal",
         };
 
         cached.promise = mongoose.connect(MONGODB_URI, opts).then((m) => {
