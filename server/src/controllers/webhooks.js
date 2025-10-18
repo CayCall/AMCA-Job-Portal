@@ -7,6 +7,7 @@ import { json } from 'express';
 // data user fills out must be "posted" - uploaded to DB and this must be the POST ENDPOINT
 export const clerkwebHook = async (req, res) => {
     try {
+        await connectDB();
         const rawBody = Buffer.isBuffer(req.body) ? req.body.toString("utf8") : req.body;
 
         // Verify all headers from clerk user 
