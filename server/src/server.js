@@ -21,7 +21,7 @@ const app = express()
 
 
 //MONGO DB function to connnect database on mongodb server
-connectDB()
+
 
 
 //Middleware - transition layer (req(), res(), next())- sits between the http request and the response
