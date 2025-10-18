@@ -2,13 +2,14 @@ import { Webhook } from 'svix';
 import User from '../models/user.js'
 import { json } from 'express';
 import connectDB from '../config/db.js';
+import mongoose from "mongoose";
 // This will be an api controller to Manage Clerk user and the database
 // Send message to the server, that allows the user information to get stored in the DB
 // data user fills out must be "posted" - uploaded to DB and this must be the POST ENDPOINT
 export const clerkwebHook = async (req, res) => {
     try {
         await connectDB();
-        
+
         console.log("[Mongo] connected to:", mongoose.connection.name);
         console.log("[Mongo] host:", mongoose.connection.host);
         const rawBody = Buffer.isBuffer(req.body) ? req.body.toString("utf8") : req.body;
