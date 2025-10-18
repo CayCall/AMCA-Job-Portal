@@ -14,11 +14,7 @@ export const clerkwebHook = async (req, res) => {
 
         // Verify all headers from user 
 
-        const evt = webhook.verify(payload, {
-            'svix-id': req.headers['svix-id'],
-            'svix-timestamp': req.headers['svix-timestamp'],
-            'svix-signature': req.headers['svix-signature'],
-        });
+        const evt = webhook.verify(payload, header);
 
 
         //Get all the data from the request body
@@ -28,25 +24,24 @@ export const clerkwebHook = async (req, res) => {
         //Swtich if there is a different event that happens
         switch (type) {
             case 'user.created': {
+                const email =
+                    data.email_addresses?.[0]?.email_address ||
+                    data.primary_email_address_id ||
+                    'unknown@example.com';
+
                 const user = {
                     _id: data.id,
-                    email: data.email_addresses[0].email_address,
-                    name: data.first_name + " " + data.last_name,
-                    image: data.image_url,
-                    resume: ''
-                }
-                await User.updateOne({ _id: data.id }, {
-                    $setOnInsert: {
-                        _id: data.id,
-                        email: data.email_addresses?.[0]?.email_address ?? null,
-                        name: `${data.first_name ?? ''} ${data.last_name ?? ''}`.trim(),
-                        image: data.image_url ?? null,
-                        resume: null,
-                    }
-                }, { upsert: true });
-                res.json({})
+                    email,
+                    name: `${data.first_name ?? ''} ${data.last_name ?? ''}`.trim(),
+                    image: data.image_url || data.profile_image_url || null,
+                    resume: '',
+                };
+
+                await User.updateOne({ _id: data.id }, { $setOnInsert: user }, { upsert: true });
+                res.json({ success: true });
                 break;
             }
+            
             case 'user.updated': {
                 const user = {
                     email: data.email_addresses[0].email_address,
