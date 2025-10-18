@@ -7,15 +7,22 @@ import { json } from 'express';
 // data user fills out must be "posted" - uploaded to DB and this must be the POST ENDPOINT
 export const clerkwebHook = async (req, res) => {
     try {
-
+        console.log('hit /webhooks', {
+            isBuffer: Buffer.isBuffer(req.body),
+            len: Buffer.isBuffer(req.body) ? req.body.length : null
+        });
         // this makes an instance of a webhook using the clerk webhook secret, which is a key that authenticates that clerk sent the
-        const webhook = new Webhook(process.env.CLERK_WEBHOOK_SECRET)
+        const webhook = new Webhook(process.env.CLERK_WEBHOOK_SECRET);
         const payload = req.body;
 
         // Verify all headers from user 
 
-        const evt = webhook.verify(payload, header);
-
+        const evt = webhook.verify(payload, {
+            'svix-id': req.headers['svix-id'],
+            'svix-timestamp': req.headers['svix-timestamp'],
+            'svix-signature': req.headers['svix-signature'],
+        });
+        console.log('verified', { type, id: data?.id });
 
         //Get all the data from the request body
         const { data, type } = evt;
@@ -38,8 +45,9 @@ export const clerkwebHook = async (req, res) => {
                 };
 
                 await User.updateOne({ _id: data.id }, { $setOnInsert: user }, { upsert: true });
+                console.log('write ok', user);
                 res.json({ success: true });
-                break;
+
             }
 
             case 'user.updated': {
@@ -49,16 +57,19 @@ export const clerkwebHook = async (req, res) => {
                     image: data.image_url,
                 }
                 await User.findByIdAndUpdate(data.id, user)
-                res.json({})
-                break;
+                console.log('write ok (updated)', data.id);
+                res.json({ success: true });
+
             }
             case 'user.deleted': {
                 await User.deleteOne({ _id: data.id });
-                res.json({})
-                break;
+                console.log('write ok (deleted)', data.id);
+
+                return res.json({ success: true });
             }
             default:
-                break;
+                console.log('unhandled event type:', type);
+                return res.json({ success: true });
         }
 
     }
@@ -66,6 +77,6 @@ export const clerkwebHook = async (req, res) => {
         console.error('Webhook error:', err.name, err.message);
         const status =
             (err?.name || '').toLowerCase().includes('verification') ? 401 : 500;
- return res.status(status).json({ success: false, error: err.message });
+        return res.status(status).json({ success: false, error: err.message });
     }
 }
