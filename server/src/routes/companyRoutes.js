@@ -1,6 +1,6 @@
 import express from 'express';
-import { ChangeJobStatus, changeJobVisible, companyLogin, companyRegister, getCompanyData, postJob, retrieveJobApplicants, retrieveJobsPosted } from '../controllers/companyController';
-import upload from '../config/multer';
+import { ChangeJobStatus, changeJobVisible, companyLogin, companyRegister, getCompanyData, postJob, retrieveJobApplicants, retrieveJobsPosted } from '../controllers/companyController.js';
+import upload from '../config/multer.js';
 
 const router = express.Router();
 

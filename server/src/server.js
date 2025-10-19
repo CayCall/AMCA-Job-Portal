@@ -7,6 +7,7 @@ import "./config/instrument.js";
 import * as Sentry from "@sentry/node";
 import { clerkwebHook } from './controllers/webhooks.js'
 import companyRoutes from './routes/companyRoutes.js'
+import connectCloudinary from './config/cloudinary.js'
 /*
     Server Architecture :
     1. Front-End(Client) - to send requests (http intents(POST,GET)) to the server, e.g user signing up or conmpleting form
@@ -20,7 +21,7 @@ import companyRoutes from './routes/companyRoutes.js'
 const app = express()
 
 
-await connect
+await connectCloudinary();
 
 
 

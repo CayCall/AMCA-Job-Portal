@@ -20,6 +20,8 @@ export const companyRegister = async (request,response) =>{
 
         const salt = await bcrypt.genSalt(10);
         const hashPassword = await bcrypt.hash(password,salt);
+
+        
     } catch (error) {
         
     }
