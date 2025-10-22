@@ -22,8 +22,8 @@ import { clerkMiddleware } from '@clerk/express'
 const app = express()
 
 
+await connectDB();
 await connectCloudinary();
-
 
 
 //MIDDLEWARES

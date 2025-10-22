@@ -2,90 +2,81 @@ import CompanyUser from "../models/companyUser.js";
 import bcrypt from 'bcrypt';
 
 //this will be when a user registers a new company - a new recruiter
-export const companyRegister = async (request,response) =>{
-    const {name, email, password} = request.body;
+export const companyRegister = async (request, response) => {
+    const { name, email, password } = request.body;
 
     const imageFile = request.file;
 
-    if(!name || !email || !password || !imageFile){
-        return response.json({success:false, message:"Missing Details"})
+    if (!name || !email || !password || !imageFile) {
+        return response.json({ success: false, message: "Missing Details" })
     }
 
     try {
-        const companyExist = await CompanyUser.findOne({email})
+        const companyExist = await CompanyUser.findOne({ email })
 
-        if(companyExist){
-            return response.json({success:false, message:'Company has already been registered.'})
+        if (companyExist) {
+            return response.json({ success: false, message: 'Company has already been registered.' })
         }
 
         const salt = await bcrypt.genSalt(10);
-        const hashPassword = await bcrypt.hash(password,salt);
+        const hashPassword = await bcrypt.hash(password, salt);
 
-        
+
     } catch (error) {
-        
+
     }
 
 
 }
 
 // when a user logins as recruiter
-export const companyLogin = async (request,response) =>{
+export const companyLogin = async (request, response) => {
 
 }
 
 //this will get the companies information for us
-export const getCompanyData = async (request,response) =>{
+export const getCompanyData = async (request, response) => {
 
 }
 
 //when a recruiter decides to post a new job to the portal
-export const postJob = async (request,response) =>{
+export const postJob = async (request, response) => {
 
 }
 
 //this will get all the different applicants that applied for jobs
-export const retrieveJobApplicants = async (request,response) =>{
+export const retrieveJobApplicants = async (request, response) => {
 
 }
 
 //this will get all the different jobs the recruiter posted
-export const  retrieveJobsPosted = async (request,response) =>{
+export const retrieveJobsPosted = async (request, response) => {
 
 }
 
 //change the status of an applicants job
-<<<<<<< Updated upstream
-export const  ChangeJobStatus = async (request,response) =>{
-
-=======
 export const ChangeJobStatus = async (request, response) => {
-    
->>>>>>> Stashed changes
+
 }
 
 //for a recruiter to show or not show a job
-export const  changeJobVisible = async (request,response) =>{
-
-<<<<<<< Updated upstream
-=======
+export const changeJobVisible = async (request, response) => {
+    try {
         const companyId = request.company._id
 
         const job = await Job.findById(id)
 
-        if (companyId.toString() === job.companyId.toString())
-        {
+        if (companyId.toString() === job.companyId.toString()) {
             job.visible = !job.visible
         }
 
         await job.save()
 
-        response.json({ success: true, job})
+        response.json({ success: true, job })
 
     } catch (error) {
         response.json({ success: false, message: error.message })
     }
->>>>>>> Stashed changes
 }
 
 
