@@ -1,8 +1,8 @@
-import CompanyUser from "../models/companyUser.js";
+import CompanyUser from "../models/companySchema.js";
 import bcrypt from 'bcrypt';
 import { v2 as cloudinary } from 'cloudinary';
 import generateToken from "../utils/generateToken.js";
-import Job from "../models/Job.js";
+import Job from "../models/JobDataSchema.js";
 
 //this will be when a user registers a new company - a new recruiter
 export const companyRegister = async (request, response) => {

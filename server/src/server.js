@@ -1,7 +1,7 @@
 import cors from 'cors'
 import express from 'express'
 import 'dotenv/config'
-import connectDB from './config/db.js'
+import connectDB from './config/database.js'
 import './config/instrument.js'
 import "./config/instrument.js";
 import * as Sentry from "@sentry/node";
@@ -9,7 +9,9 @@ import { clerkwebHook } from './controllers/webhooks.js'
 import companyRoutes from './routes/companyRoutes.js'
 import jobRoutes from './routes/jobRoutes.js'
 import userRoutes from './routes/userRoutes.js'
+import languageRoutes from './routes/languageRoute.js';
 import connectCloudinary from './config/cloudinary.js'
+import {clerkMiddleware} from '@clerk/express'
 /*
     Server Architecture :
     1. Front-End(Client) - to send requests (http intents(POST,GET)) to the server, e.g user signing up or conmpleting form
@@ -34,6 +36,8 @@ app.post('/webhooks', express.raw({ type: 'application/json' }), clerkwebHook)
 //browser will send http request to webhook url, and run clerk webhook function 
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }));
+app.use(clerkMiddleware())
+
 /* Routing is most important for the GET and POST intentions aka http requests, with the server.
        we will GET (.get()) from a route to fetch data
        we will POST (.post()) to a route to send data */
@@ -50,6 +54,9 @@ app.use('/api/jobs', jobRoutes)
 
 //job seeker side & and job seeker functionality
 app.use('/api/users', userRoutes)
+
+
+
 
 Sentry.setupExpressErrorHandler(app);
 

@@ -1,5 +1,5 @@
 import { messageInRaw } from "svix";
-import Job from "../models/Job.js"
+import Job from "../models/JobDataSchema.js"
 
 // this will get all the jobs
 export const getAllJobs = async (request, response) => {

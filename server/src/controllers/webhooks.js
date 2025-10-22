@@ -1,7 +1,7 @@
 import { Webhook } from 'svix';
-import User from '../models/user.js'
+import User from '../models/userSchema.js'
 import { json } from 'express';
-import connectDB from '../config/db.js';
+import connectDB from '../config/database.js';
 import mongoose from "mongoose";
 
 // This will be an api controller to Manage Clerk user and the database
