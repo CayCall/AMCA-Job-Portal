@@ -7,6 +7,8 @@ import "./config/instrument.js";
 import * as Sentry from "@sentry/node";
 import { clerkwebHook } from './controllers/webhooks.js'
 import companyRoutes from './routes/companyRoutes.js'
+import jobRoutes from './routes/jobRoutes.js'
+import userRoutes from './routes/userRoutes.js'
 import connectCloudinary from './config/cloudinary.js'
 /*
     Server Architecture :
@@ -22,32 +24,32 @@ const app = express()
 
 
 await connectCloudinary();
-
+await connectDB();
 
 
 //Middleware - transition layer (req(), res(), next())- sits between the http request and the response
 //Runs after a request comes in but before the server sends a response.
 app.use(cors())
-
-
-//browser will send http request to webhook url, and run clerk webhook function 
 app.post('/webhooks', express.raw({ type: 'application/json' }), clerkwebHook)
+//browser will send http request to webhook url, and run clerk webhook function 
 app.use(express.json())
-
+app.use(express.urlencoded({ extended: true }));
 /* Routing is most important for the GET and POST intentions aka http requests, with the server.
        we will GET (.get()) from a route to fetch data
        we will POST (.post()) to a route to send data */
-
-
 
 // getting the home('/') route to invoke a response that tells us the Server is working
 app.get("/", (_req, res) => res.send("Server is up and running."));
 app.get("/health", (_req, res) => res.json({ ok: true }));
 app.get("/debug-sentry", (_req, _res) => { throw new Error(""); });
 app.get("/db-disconnected", (_req, _res) => { throw new Error("Db disconnected!"); });
+app.use('/api/company', companyRoutes)
 
-app.post('/api/company' , companyRoutes)
+//job seeker side routes for when application starts
+app.use('/api/jobs', jobRoutes)
 
+//job seeker side & and job seeker functionality
+app.use('/api/users', userRoutes)
 
 Sentry.setupExpressErrorHandler(app);
 
