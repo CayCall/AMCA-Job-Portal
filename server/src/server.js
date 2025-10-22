@@ -6,6 +6,8 @@ import './config/instrument.js'
 import "./config/instrument.js";
 import * as Sentry from "@sentry/node";
 import { clerkwebHook } from './controllers/webhooks.js'
+import jobRoutes from './routes/jobRoutes.js'
+import userRoutes from './routes/userRouter.js'
 import companyRoutes from './routes/companyRoutes.js'
 import connectCloudinary from './config/cloudinary.js'
 import { clerkMiddleware } from '@clerk/express'

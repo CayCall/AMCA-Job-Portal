@@ -16,7 +16,6 @@ export const companyRegister = async (request, response) => {
     if (!name || !email || !password || !imageFile) {
         return response.json({ success: false, message: "Missing Details" })
 
-
     }
 
     try {
