@@ -8,6 +8,7 @@ import * as Sentry from "@sentry/node";
 import { clerkwebHook } from './controllers/webhooks.js'
 import companyRoutes from './routes/companyRoutes.js'
 import connectCloudinary from './config/cloudinary.js'
+import { clerkMiddleware } from '@clerk/express'
 /*
     Server Architecture :
     1. Front-End(Client) - to send requests (http intents(POST,GET)) to the server, e.g user signing up or conmpleting form
@@ -25,7 +26,8 @@ await connectCloudinary();
 
 
 
-//Middleware - transition layer (req(), res(), next())- sits between the http request and the response
+//MIDDLEWARES
+//transition layer (req(), res(), next())- sits between the http request and the response
 //Runs after a request comes in but before the server sends a response.
 app.use(cors())
 
@@ -33,13 +35,24 @@ app.use(cors())
 //browser will send http request to webhook url, and run clerk webhook function 
 app.post('/webhooks', express.raw({ type: 'application/json' }), clerkwebHook)
 app.use(express.json())
+<<<<<<< Updated upstream
 
+=======
+app.use(express.urlencoded({ extended: true }));
+app.use(clerkMiddleware())
+
+
+//ROUTES
+>>>>>>> Stashed changes
 /* Routing is most important for the GET and POST intentions aka http requests, with the server.
        we will GET (.get()) from a route to fetch data
        we will POST (.post()) to a route to send data */
 
 
+<<<<<<< Updated upstream
 
+=======
+>>>>>>> Stashed changes
 // getting the home('/') route to invoke a response that tells us the Server is working
 app.get("/", (_req, res) => res.send("Server is up and running."));
 app.get("/health", (_req, res) => res.json({ ok: true }));
@@ -47,6 +60,9 @@ app.get("/debug-sentry", (_req, _res) => { throw new Error(""); });
 app.get("/db-disconnected", (_req, _res) => { throw new Error("Db disconnected!"); });
 
 app.post('/api/company' , companyRoutes)
+
+
+
 
 
 Sentry.setupExpressErrorHandler(app);

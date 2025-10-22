@@ -55,13 +55,37 @@ export const  retrieveJobsPosted = async (request,response) =>{
 }
 
 //change the status of an applicants job
+<<<<<<< Updated upstream
 export const  ChangeJobStatus = async (request,response) =>{
 
+=======
+export const ChangeJobStatus = async (request, response) => {
+    
+>>>>>>> Stashed changes
 }
 
 //for a recruiter to show or not show a job
 export const  changeJobVisible = async (request,response) =>{
 
+<<<<<<< Updated upstream
+=======
+        const companyId = request.company._id
+
+        const job = await Job.findById(id)
+
+        if (companyId.toString() === job.companyId.toString())
+        {
+            job.visible = !job.visible
+        }
+
+        await job.save()
+
+        response.json({ success: true, job})
+
+    } catch (error) {
+        response.json({ success: false, message: error.message })
+    }
+>>>>>>> Stashed changes
 }
 
 

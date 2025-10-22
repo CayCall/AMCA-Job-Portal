@@ -4,7 +4,7 @@ import upload from '../config/multer.js';
 
 const router = express.Router();
 
-//same order as company controller top to bottom
+//Recruiter Architectured routes - FrontEnd initaites request.eg(/post-job) -> Middleware()
 router.post('/register', upload.single('image') ,companyRegister)
 
 router.post('/login', companyLogin)
