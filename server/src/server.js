@@ -35,24 +35,16 @@ app.use(cors())
 //browser will send http request to webhook url, and run clerk webhook function 
 app.post('/webhooks', express.raw({ type: 'application/json' }), clerkwebHook)
 app.use(express.json())
-<<<<<<< Updated upstream
-
-=======
 app.use(express.urlencoded({ extended: true }));
 app.use(clerkMiddleware())
 
 
 //ROUTES
->>>>>>> Stashed changes
 /* Routing is most important for the GET and POST intentions aka http requests, with the server.
        we will GET (.get()) from a route to fetch data
        we will POST (.post()) to a route to send data */
 
 
-<<<<<<< Updated upstream
-
-=======
->>>>>>> Stashed changes
 // getting the home('/') route to invoke a response that tells us the Server is working
 app.get("/", (_req, res) => res.send("Server is up and running."));
 app.get("/health", (_req, res) => res.json({ ok: true }));
