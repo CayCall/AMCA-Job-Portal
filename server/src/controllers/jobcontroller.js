@@ -38,14 +38,15 @@ export const getSingleJob = async (request, response) => {
         }
 
         response.json({
-            success: true,
+            success:true,
             job
         })
     }
     catch (error) {
         response.json({
-            success: false,
+            success:false,
             message: error.message
         })
     }
 }
+

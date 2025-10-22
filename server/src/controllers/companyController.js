@@ -4,18 +4,15 @@ import { v2 as cloudinary } from 'cloudinary';
 import generateToken from "../utils/generateToken.js";
 import Job from "../models/Job.js";
 
-
 //this will be when a user registers a new company - a new recruiter
 export const companyRegister = async (request, response) => {
     const { name, email, password } = request.body;
 
     const imageFile = request.file;
-
     console.log('Incoming file:', request.file);
     console.log('Incoming body:', request.body);
     if (!name || !email || !password || !imageFile) {
         return response.json({ success: false, message: "Missing Details" })
-
     }
 
     try {
@@ -24,8 +21,8 @@ export const companyRegister = async (request, response) => {
             return response
                 .status(409)
                 .json({ success: false, message: "Company already registered" });
-
         }
+
         const hash = await bcrypt.hash(password, 10);
 
         const uploaded = await new Promise((resolve, reject) => {
@@ -60,13 +57,13 @@ export const companyRegister = async (request, response) => {
     }
 
 
-
 }
 
 // when a user logins as recruiter
 export const companyLogin = async (request, response) => {
     const { email, password } = request.body;
     const company = await CompanyUser.findOne({ email });
+
 
     try {
         if (bcrypt.compare(password, company.password)) {
@@ -97,6 +94,7 @@ export const companyLogin = async (request, response) => {
 
 //this will get the companies information for us
 export const getCompanyData = async (request, response) => {
+
     try {
         const company = request.company
         response.json({ success: true, company })
@@ -108,6 +106,7 @@ export const getCompanyData = async (request, response) => {
 //when a recruiter decides to post a new job to the portal
 export const postJob = async (request, response) => {
     const { title, description, location, salary, level, category } = request.body;
+
     const companyId = request.company._id
 
     try {
@@ -133,22 +132,23 @@ export const postJob = async (request, response) => {
 //this will get all the different applicants that applied for jobs
 export const retrieveJobApplicants = async (request, response) => {
 
-
-
-
-
 }
 
 //this will get all the different jobs the recruiter posted
 export const retrieveJobsPosted = async (request, response) => {
     try {
         const companyId = request.company._id
+
         const jobs = await Job.find({ companyId })
+
         response.json({ success: true, jobsData: jobs })
+
+
     }
     catch (error) {
         response.json({ success: false, error: message })
     }
+
 }
 
 //change the status of an applicants job
@@ -159,18 +159,19 @@ export const ChangeJobStatus = async (request, response) => {
 //for a recruiter to show or not show a job
 export const changeJobVisible = async (request, response) => {
     try {
-        const { id } = request.body;
+        const {id} = request.body;
+
         const companyId = request.company._id
 
         const job = await Job.findById(id)
 
-        if (companyId.toString() === job.companyId.toString()) {
+        if (companyId.toString() === job.companyId.toString())
+        {
             job.visible = !job.visible
         }
 
         await job.save()
-
-        response.json({ success: true, job })
+        response.json({ success: true, job})
 
     } catch (error) {
         response.json({ success: false, message: error.message })
