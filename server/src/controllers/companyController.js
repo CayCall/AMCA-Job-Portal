@@ -133,23 +133,23 @@ export const postJob = async (request, response) => {
 
 //this will get all the different applicants that applied for jobs
 export const retrieveJobApplicants = async (request, response) => {
-    try {
-        const companyId = request.company._id
-
-        const jobs = await Job.find({ companyId })
-
-        response.json({ success: true, jobsData: jobs })
 
 
-    }
-    catch (error) {
-        response.json({ success: false, error: message })
-    }
+
+
+
 }
 
 //this will get all the different jobs the recruiter posted
 export const retrieveJobsPosted = async (request, response) => {
-
+    try {
+        const companyId = request.company._id
+        const jobs = await Job.find({ companyId })
+        response.json({ success: true, jobsData: jobs })
+    }
+    catch (error) {
+        response.json({ success: false, error: message })
+    }
 }
 
 //change the status of an applicants job
@@ -160,6 +160,7 @@ export const ChangeJobStatus = async (request, response) => {
 //for a recruiter to show or not show a job
 export const changeJobVisible = async (request, response) => {
     try {
+        const { id } = request.body;
         const companyId = request.company._id
 
         const job = await Job.findById(id)

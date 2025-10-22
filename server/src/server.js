@@ -51,10 +51,9 @@ app.get("/health", (_req, res) => res.json({ ok: true }));
 app.get("/debug-sentry", (_req, _res) => { throw new Error(""); });
 app.get("/db-disconnected", (_req, _res) => { throw new Error("Db disconnected!"); });
 
-app.post('/api/company' , companyRoutes)
-
-
-
+app.use('/api/company', companyRoutes)
+app.use('/api/jobs', jobRoutes)
+app.use('/api/users', userRoutes)
 
 
 Sentry.setupExpressErrorHandler(app);
