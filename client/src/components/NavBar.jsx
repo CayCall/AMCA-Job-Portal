@@ -6,7 +6,6 @@ import { ChevronDown } from "lucide-react";
 import AppContext from '../context/AppContext';
 import AppContextProvider from '../context/AppContextProvider';
 import { useTranslation } from 'react-i18next';
-
 const NavBar = () => {
     const { t, i18n } = useTranslation();
     const { openSignIn } = useClerk();
@@ -50,10 +49,18 @@ const NavBar = () => {
         setLoadingLang(true);
         try {
             await i18n.changeLanguage(lang);
+            localStorage.setItem('lang', lang);
+            window.dispatchEvent(new CustomEvent('lang-change', { detail: lang }));
         } finally {
             setTimeout(() => setLoadingLang(false), 1000);
         }
     };
+
+    //const lang = localStorage.getItem('lang') || 'en';
+    //const res = await fetch(`/api/jobs/${id}?lang=${lang}`);
+    //const { job } = await res.json();
+
+
     return (
         <div className='fixed top-0 left-0 w-full z-50 shadow py-4 bg-white'>
             <div className='container px-4 2xl:px-12 mx-auto flex justify-between items-center'>

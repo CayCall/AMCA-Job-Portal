@@ -1,9 +1,7 @@
-import express from 'express'
-import  { switchLanguage }  from '../controllers/languageController.js'
+import express from "express";
+import { switchLanguage } from "../controllers/languageController.js";
 
-const router = express.Router()
+const router = express.Router();
+router.post("/translate/:target", switchLanguage);
 
-router.post('/translate/:target' , switchLanguage)
-
-
-export default router
+export default router;

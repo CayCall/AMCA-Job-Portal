@@ -11,7 +11,7 @@ import jobRoutes from './routes/jobRoutes.js'
 import userRoutes from './routes/userRoutes.js'
 import languageRoutes from './routes/languageRoute.js';
 import connectCloudinary from './config/cloudinary.js'
-import {clerkMiddleware} from '@clerk/express'
+import { clerkMiddleware } from '@clerk/express'
 /*
     Server Architecture :
     1. Front-End(Client) - to send requests (http intents(POST,GET)) to the server, e.g user signing up or conmpleting form
@@ -55,6 +55,8 @@ app.use('/api/jobs', jobRoutes)
 //job seeker side & and job seeker functionality
 app.use('/api/users', userRoutes)
 
+
+app.use('/api', languageRoutes)
 
 
 

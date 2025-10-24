@@ -3,7 +3,7 @@ export async function translateText(text, target, source = "en") {
   const res = await fetch(`/api/translate/${target}`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ text, source }),
+    body: JSON.stringify({ text, source })
   });
   const data = await res.json().catch(() => ({}));
   return data?.translatedText || text;

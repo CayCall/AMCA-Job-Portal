@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from 'react'
 import Quill from 'quill'
 import 'quill/dist/quill.snow.css'
 import { JobCategories, JobLocations } from '../assets/assets';
+import { translateText } from '../utils/translate'; 
 
 const AddJob = () => {
     const [title, setTitle] = useState("");

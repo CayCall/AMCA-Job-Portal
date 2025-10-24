@@ -1,16 +1,38 @@
-import axios from 'axios';
+import axios from "axios";
+const ALLOWED = new Set(["en", "af", "zu", "st"]);
+
 
 export const switchLanguage = async (req, res) => {
-  const { text } = req.body;
-  const { target } = req.params;
-  if (!text) return res.status(400).json({ error: 'text required' });
+  const { target } = req.params || {};
+  const { text, source = "en" } = req.body || {};
+
+  if (!text?.trim()) return res.status(400).json({ error: "send body { text }" });
+  if (!ALLOWED.has(target) || !ALLOWED.has(source)) {
+    return res.status(400).json({ error: "source/target must be en|af|zu|st" });
+  }
 
   try {
-    const r = await axios.post('https://libretranslate.de/translate', {
-      q: text, source: 'auto', target, format: 'text'
+    const r = await axios.get("https://api.mymemory.translated.net/get", {
+      params: { q: text, langpair: `${source}|${target}` },
+      timeout: 10000
     });
-    return res.json({ ok: true, translatedText: r.data.translatedText });
+    const out = r.data?.responseData?.translatedText;
+    if (!out) return res.status(502).json({ error: "translation failed", raw: r.data });
+    return res.json({ ok: true, from: source, to: target, translatedText: out, engine: "mymemory" });
   } catch (e) {
-    return res.status(502).json({ error: 'translation failed' });
+    return res.status(502).json({ error: "translation failed" });
   }
 };
+
+
+
+
+
+
+
+
+
+
+
+
+
