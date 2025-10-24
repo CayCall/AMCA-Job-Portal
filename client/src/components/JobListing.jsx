@@ -34,7 +34,9 @@ const JobListing = () => {
         let alive = true; const load = async () => {
             try {
                 setLoading(true);
-                const res = await fetch(`/api/jobs?lang=${lang}`);
+                
+                const res = await fetch(`http://localhost:5000/api/jobs?lang=${lang}`);
+
                 const data = await res.json();
                 if (!alive) return;
                 setJobs(Array.isArray(data?.jobs) ? data.jobs : []);

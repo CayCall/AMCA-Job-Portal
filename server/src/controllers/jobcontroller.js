@@ -5,7 +5,7 @@ import Job from "../models/JobDataSchema.js"
 export const getAllJobs = async (request, response) => {
     try {
         const jobs = await Job.find({ visible: true })
-            .populate({ path: 'companyId', select: '-password' })
+            .populate({ path: 'companyId', select: 'name image email -password',  })
 
         response.json({ success: true, jobs })
     }

@@ -11,11 +11,12 @@ import AddJob from './components/AddJob'
 import ViewApplications from './components/ViewApplications'
 import 'quill/dist/quill.snow.css'
 import { Toaster } from 'react-hot-toast';
+import 'react-toastify/dist/ReactToastify.css'
 import BackToTop from './components/BackToTop'
 
 
 const App = () => {
-  const { showRecruiterLogin } = useContext(AppContext)
+  const { showRecruiterLogin, companyToken } = useContext(AppContext)
   return (
     <div>
       <Toaster position="top-right" reverseOrder={false} />
@@ -27,14 +28,20 @@ const App = () => {
         <Route path='/apply-job/:id' element={<ApplyJob />} />
         <Route path='/applications' element={<Applications />} />
         <Route path='/dashboard' element={< RecruiterDashboard />}>
-          <Route path='add-job' element={< AddJob />} />
-          <Route path='manage-jobs' element={< RecruiterManage />} />
-          <Route path='view-applications' element={< ViewApplications />} />
+          {
+            companyToken ? <> <Route path='add-job' element={< AddJob />} />
+              <Route path='manage-jobs' element={< RecruiterManage />} />
+              <Route path='view-applications' element={< ViewApplications />} /></>:
+              null
+          }
+
+
+
         </Route>
 
 
       </Routes>
-      <BackToTop/>
+      <BackToTop />
     </div>
   )
 }

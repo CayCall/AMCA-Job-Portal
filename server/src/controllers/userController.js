@@ -131,23 +131,4 @@ export const updateUserResume = async (request, response) => {
         })
     }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 }

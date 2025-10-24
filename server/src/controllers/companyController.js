@@ -62,11 +62,12 @@ export const companyRegister = async (request, response) => {
 // when a user logins as recruiter
 export const companyLogin = async (request, response) => {
     const { email, password } = request.body;
-    const company = await CompanyUser.findOne({ email });
+
 
 
     try {
-        if (bcrypt.compare(password, company.password)) {
+        const company = await CompanyUser.findOne({ email });
+        if (await bcrypt.compare(password, company.password)) {
             response.json({
                 success: true,
                 company: {
@@ -159,19 +160,18 @@ export const ChangeJobStatus = async (request, response) => {
 //for a recruiter to show or not show a job
 export const changeJobVisible = async (request, response) => {
     try {
-        const {id} = request.body;
+        const { id } = request.body;
 
         const companyId = request.company._id
 
         const job = await Job.findById(id)
 
-        if (companyId.toString() === job.companyId.toString())
-        {
+        if (companyId.toString() === job.companyId.toString()) {
             job.visible = !job.visible
         }
 
         await job.save()
-        response.json({ success: true, job})
+        response.json({ success: true, job })
 
     } catch (error) {
         response.json({ success: false, message: error.message })

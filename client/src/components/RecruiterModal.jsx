@@ -1,8 +1,12 @@
 import React, { use, useContext, useEffect, useState } from 'react'
 import { assets } from '../assets/assets'
 import AppContext from '../context/AppContext'
+import axios from 'axios'
+import { useNavigate } from 'react-router-dom'
+import { toast } from 'react-hot-toast';
 
 const RecruiterModal = () => {
+
   const [active, setActive] = useState('Login')
   const [name, setName] = useState('')
   const [password, setPassword] = useState('')
@@ -12,13 +16,62 @@ const RecruiterModal = () => {
 
   const [submitData, SetData] = useState(false)
 
-  const { setRecruiterLogin } = useContext(AppContext);
+  const { setRecruiterLogin, backendUrl, setCompanyToken, setCompanyData } = useContext(AppContext);
+
+  const [hasSubmitted, setSubmit]= useState(false)
+  
+  const navigate = useNavigate();
+  /*useEffect(() => {
+    if (submitData) {
+      toast.success("Account created successfully.");
+    }
+  }, [submitData]);*/
 
   const onSubmitHandler = async (e) => {
     e.preventDefault();
 
+
+
     if (active == "Sign Up" && !submitData) {
-      SetData(true)
+      return SetData(true);
+    }
+
+    try {
+      if (active === "Login") {
+        const { data } = await axios.post(backendUrl + '/api/company/login', { email, password })
+        if (data.success) {
+          setCompanyData(data.company)
+          setCompanyToken(data.token)
+          localStorage.setItem('companyToken', data.token)
+          setRecruiterLogin(false)
+          navigate('/dashboard')
+        }
+        else {
+          toast.error(data.message)
+        }
+      }
+      else {
+        const formInfo = new FormData()
+
+        formInfo.append('name', name)
+        formInfo.append('password', password)
+        formInfo.append('email', email)
+        formInfo.append('image', image)
+
+        const { data } = await axios.post(backendUrl + '/api/company/register', formInfo)
+
+        if (data.success) {
+          setCompanyData(data.company)
+          setCompanyToken(data.token)
+          localStorage.setItem('companyToken', data.token)
+          setRecruiterLogin(false)
+          navigate('/dashboard')
+        } else {
+          toast.error(data.message)
+        }
+      }
+    } catch (error) {
+      toast.error(error.message)
     }
   }
 

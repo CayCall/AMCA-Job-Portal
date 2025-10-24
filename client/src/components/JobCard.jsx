@@ -34,7 +34,11 @@ const JobCard = ({ job }) => {
 
             <div>
                 <div className="flex justify-between items-center">
-                    <img className="h-8" src={assets[job.companyId.image]} alt="Company Logo" />
+                    <img
+                        className="h-8"
+                        src={assets[job?.companyId?.image] || assets.company_icon}
+                        alt={job?.companyId?.name || "Company Logo"}
+                    />
                 </div>
 
                 <h4 className="font-medium text-xl mt-2">{job.title}</h4>
