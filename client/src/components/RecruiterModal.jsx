@@ -5,11 +5,14 @@ import axios from 'axios'
 import { useNavigate } from 'react-router-dom'
 import { toast } from 'react-hot-toast';
 
+
 const RecruiterModal = () => {
 
   const [active, setActive] = useState('Login')
   const [name, setName] = useState('')
   const [password, setPassword] = useState('')
+  const [showPassword, setShowPassword] = useState(false);
+
   const [email, setEmail] = useState('')
 
   const [image, setImage] = useState(null)
@@ -18,8 +21,8 @@ const RecruiterModal = () => {
 
   const { setRecruiterLogin, backendUrl, setCompanyToken, setCompanyData } = useContext(AppContext);
 
-  const [hasSubmitted, setSubmit]= useState(false)
-  
+  const [hasSubmitted, setSubmit] = useState(false)
+
   const navigate = useNavigate();
   /*useEffect(() => {
     if (submitData) {
@@ -67,11 +70,11 @@ const RecruiterModal = () => {
           setRecruiterLogin(false)
           navigate('/dashboard')
         } else {
-          toast.error(data.message)
+          toast.error("Account does not exist, please signup.")
         }
       }
     } catch (error) {
-      toast.error(error.message)
+      toast.error("Account does not exist, please signup.")
     }
   }
 
@@ -82,6 +85,11 @@ const RecruiterModal = () => {
       document.body.style.overflow = 'unset'
     }
   })
+
+
+
+
+
   return (
     <div className="fixed inset-0 z-10 bg-black/30 backdrop-blur-sm flex justify-center items-center p-4">
       <form onSubmit={onSubmitHandler} className="relative bg-white p-6 sm:p-12 rounded-xl text-slate-500 w-full max-w-sm sm:max-w-md max-h-[90vh] sm:h-[480px] flex flex-col justify-start overflow-auto" action="">
@@ -140,8 +148,24 @@ const RecruiterModal = () => {
               </div>
               <div className='border px-4 py-2 flex items-center gap-2 rounded-full mt-5'>
                 <img src={assets.lock_icon} alt="" />
-                <input className='outline-none text-sm ' onChange={e => setPassword(e.target.value)} value={password} type="password" placeholder='Password' required />
+
+                <input
+                  className='outline-none text-sm flex-1'
+                  onChange={e => setPassword(e.target.value)}
+                  value={password}
+                  type={showPassword ? 'text' : 'password'}
+                  placeholder='Password'
+                  required
+                />
+
+                <img
+                  src={showPassword ? assets.show : assets.hide}
+                  alt="toggle password"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className='w-5 h-5 cursor-pointer opacity-70 hover:opacity-100 transition'
+                />
               </div>
+
             </>
         }
         {active === "Login" ? <p className='text-sm text-blue-600 ml-1 my-4 cursor-pointer'>Forgot password?</p> :

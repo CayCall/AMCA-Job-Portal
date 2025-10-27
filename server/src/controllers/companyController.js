@@ -3,6 +3,7 @@ import bcrypt from 'bcrypt';
 import { v2 as cloudinary } from 'cloudinary';
 import generateToken from "../utils/generateToken.js";
 import Job from "../models/JobDataSchema.js";
+import jobApplication from "../models/jobApplicationSchema.js";
 
 //this will be when a user registers a new company - a new recruiter
 export const companyRegister = async (request, response) => {
@@ -108,7 +109,7 @@ export const getCompanyData = async (request, response) => {
 export const postJob = async (request, response) => {
     const { title, description, location, salary, level, category } = request.body;
 
-    const companyId = request.company._id
+    const companyId = request.company._id;
 
     try {
         const newJob = new Job({
@@ -138,16 +139,21 @@ export const retrieveJobApplicants = async (request, response) => {
 //this will get all the different jobs the recruiter posted
 export const retrieveJobsPosted = async (request, response) => {
     try {
-        const companyId = request.company._id
+        const companyId = request.company._id;
+        const jobs = await Job.find({ companyId: request.company._id }).lean();
 
-        const jobs = await Job.find({ companyId })
+        const jobsData = await Promise.all(
+            jobs.map(async (job) => {
+                const applicants = await jobApplication.countDocuments({ jobId: job._id });
+                return { ...job, applicants };
+            })
+        );
 
-        response.json({ success: true, jobsData: jobs })
-
+        response.json({ success: true, jobsData })
 
     }
     catch (error) {
-        response.json({ success: false, error: message })
+        response.json({ success: false, error: error.message })
     }
 
 }

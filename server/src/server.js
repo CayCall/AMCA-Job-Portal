@@ -56,7 +56,7 @@ app.use('/api/jobs', jobRoutes)
 app.use('/api/users', userRoutes)
 
 
-app.use('/api', languageRoutes)
+app.use('/api/language', languageRoutes)
 
 
 

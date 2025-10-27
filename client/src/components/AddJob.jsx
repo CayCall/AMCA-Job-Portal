@@ -1,8 +1,13 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useContext, useEffect, useRef, useState } from 'react'
 import Quill from 'quill'
 import 'quill/dist/quill.snow.css'
 import { JobCategories, JobLocations } from '../assets/assets';
-import { translateText } from '../utils/translate'; 
+import { translateText } from '../utils/translate';
+import axios from 'axios';
+import AppContextProvider from '../context/AppContextProvider';
+import App from '../App';
+import AppContext from '../context/AppContext';
+import toast from 'react-hot-toast';
 
 const AddJob = () => {
     const [title, setTitle] = useState("");
@@ -13,6 +18,32 @@ const AddJob = () => {
 
     const editorRef = useRef(null)
     const quillRef = useRef(null)
+
+    const { backendUrl, companyToken } = useContext(AppContext)
+    const onSubmitHandler = async (e) => {
+        e.preventDefault();
+        try {
+
+            const description = quillRef.current.root.innerHTML;
+            const { data } = await axios.post(backendUrl + '/api/company/post-job',
+
+                { title, description, location, salary, category, level },
+                { headers: { token: companyToken } }
+            )
+
+            if (data.success) {
+                toast.success("Job succesfully posted!")
+                setTitle('')
+                setSalary(0)
+                quillRef.current.root.innerHtml = ""
+            }
+            else {
+                toast.error(data.message)
+            }
+        } catch (error) {
+            toast.error(error.message)
+        }
+    }
 
     useEffect(() => {
         // Quill once
@@ -33,9 +64,9 @@ const AddJob = () => {
 
     }, [])
     return (
-        <form className='container p-4 flex flex-col w-full items-start gap-3'>
+        <form onSubmit={onSubmitHandler} className="block w-full max-w-5xl mx-auto m-0 p-4 flex flex-col items-start gap-3">
             <div className='w-full'>
-                <p className='mb-2'>Job Title</p>
+                <p className='mb-2 font-medium text-lg'>Job Title</p>
                 <input
                     type='text'
                     placeholder='Type here'
@@ -46,7 +77,7 @@ const AddJob = () => {
             </div>
 
             <div className='w-full max-w-lg'>
-                <p className='my-2'>
+                <p className='my-2 font-medium text-lg'>
                     Job Description
                 </p>
                 <div ref={editorRef}>
@@ -56,7 +87,7 @@ const AddJob = () => {
 
             <div className='flex flex-col sm:flex-row gap-2 w-full sm:gap-8'>
                 <div>
-                    <p className='mb-2'>Job Category</p>
+                    <p className='mb-2 font-medium text-lg'>Job Category</p>
                     <select className=' w-full px-3 py-2 border-2 border-gray-300 rounded' onChange={e => setCategory(e.target.value)}>
                         {JobCategories.map((category, index) => (
                             <option key={index} value={category}>{category}</option>
@@ -65,7 +96,7 @@ const AddJob = () => {
                 </div>
 
                 <div>
-                    <p className='mb-2' >Job Location</p>
+                    <p className='mb-2 font-medium text-lg' >Job Location</p>
                     <select className=' w-full px-3 py-2 border-2 border-gray-300 rounded' onChange={e => setCategory(e.target.value)}>
                         {JobLocations.map((Location, index) => (
                             <option key={index} value={Location}>{Location}</option>
@@ -73,15 +104,15 @@ const AddJob = () => {
                     </select>
                 </div>
                 <div>
-                    <p className='mb-2'>Job Level</p>
+                    <p className='mb-2 font-medium text-lg'>Job Level</p>
                     <select className=' w-full px-3 py-2 border-2 border-gray-300 rounded' onChange={e => setCategory(e.target.value)}>
                         <option value="Beginner Level"> Beginner Level</option>
                         <option value="Intermediate Level"> Intermediate Level</option>
-                        <option value="Senior Level"> Beginner Level</option>
+                        <option value="Senior Level"> Senior Level</option>
                     </select>
                 </div>
                 <div>
-                    <p className='mb-2' >Job Salary</p>
+                    <p className='mb-2 font-medium text-lg' >Job Salary</p>
                     <input min={0} className='w-full px-3 py-2 border-2 border-gray-300 rounded-sm:w-[120px]' onChange={e => setSalary(e.target.value)} type='Number' placeholder='30000'></input>
                 </div>
 

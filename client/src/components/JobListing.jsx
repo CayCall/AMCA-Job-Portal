@@ -209,6 +209,7 @@ const JobListing = () => {
                                             title: job.title_t || job.title,
                                             location: job.location_t || job.location,
                                             description: job.description_t || job.description
+                                            
                                         };
                                         return (
                                             <JobCard key={index} job={displayJob} />

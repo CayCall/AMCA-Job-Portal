@@ -5,7 +5,7 @@ import Job from "../models/JobDataSchema.js"
 export const getAllJobs = async (request, response) => {
     try {
         const jobs = await Job.find({ visible: true })
-            .populate({ path: 'companyId', select: 'name image email -password',  })
+            .populate({ path: 'companyId', select: '-password', })
 
         response.json({ success: true, jobs })
     }
@@ -20,33 +20,25 @@ export const getAllJobs = async (request, response) => {
 
 
 // this will allow us to get a single job by the job's ID
-export const getSingleJob = async (request, response) => {
+export const getSingleJob = async (req, res) => {
     try {
-        const { id } = request.params
+        const { id } = req.params;
 
         const job = await Job.findById(id)
-            .populate({
-                path: "companyId",
-                select: "-password"
-            })
+            .populate({ path: 'companyId', select: 'name image email' })
+            .lean();
 
         if (!job) {
-            return response.json({
-                success: false,
-                message: "Job not found"
-            })
+            return res.json({ success: false, message: 'Job not found' });
         }
 
-        response.json({
-            success:true,
-            job
-        })
+        return res.json({ success: true, job });
+    } catch (err) {
+        return res.json({ success: false, message: err.message });
     }
-    catch (error) {
-        response.json({
-            success:false,
-            message: error.message
-        })
-    }
-}
+};
+
+
+
+
 

@@ -4,9 +4,14 @@ import { jobsData } from "../assets/assets"
 import i18n from '../i18n';
 import axios from 'axios';
 import toast from 'react-hot-toast';
+import { useAuth, useUser } from '@clerk/clerk-react';
 const AppContextProvider = (props) => {
   // this will be for connecting our backend to our front end 
   const backendUrl = import.meta.env.VITE_BACKEND_URL
+  
+
+  const {user} = useUser()
+  const {getToken} = useAuth()
   const [searchFilter, setSearchFilter] = useState({
     title: '',
     location: '',
@@ -21,13 +26,31 @@ const AppContextProvider = (props) => {
   const [companyToken, setCompanyToken] = useState(null)
   const [companyData, setCompanyData] = useState(null)
 
+  const [userData, setUserData] = useState(null)
+  const [userApplications, setUserApplications] = useState([])
 
-
-  // fetch jobs
+  // JOB SEEKER SIDE fetch jobs
   const fetchJobs = async () => {
-    setJobs(jobsData);
+    try {
+      const { data } = await axios.get(backendUrl + '/api/jobs/')
+
+      if (data.success) {
+        setJobs(data.jobs);
+        console.log(data.jobs)
+      }
+      else {
+        toast.error(data.message)
+      }
+    } catch (error) {
+      toast.error(error.message)
+    }
+
   };
 
+
+  // RECRUITER SIDE
+
+  //get company data
   const fetchDataCompany = async () => {
     try {
       const { data } = await axios.get(backendUrl + '/api/company/company', { headers: { token: companyToken } })
@@ -51,11 +74,19 @@ const AppContextProvider = (props) => {
     }
   }, []);
 
-  useEffect(()=>{
-    if(companyToken){
+  useEffect(() => {
+    if (companyToken) {
       fetchDataCompany();
     }
-  },[companyToken])
+  }, [companyToken])
+
+   useEffect(() => {
+    if (user) {
+      fetchUserInfo();
+    }
+  }, [user])
+
+
 
   const handleLanguageChange = async (lang) => {
     await i18n.changeLanguage(lang);
@@ -63,7 +94,28 @@ const AppContextProvider = (props) => {
   };
 
 
+  // fetch user info
 
+  const fetchUserInfo = async ()=>{
+    try {
+      const token = await getToken();
+
+      const {data} = await axios.get(backendUrl + '/api/users/user',
+
+        {headers:{Authorization:`Bearer ${token}`}}
+
+      )
+
+      if(data.success){
+        setUserData(data.user)
+      }
+      else{
+        toast.error(data.message)
+      }
+    } catch (error) { 
+      toast.error(error.message)
+    } 
+  }
   const value = {
     setSearchFilter, searchFilter,
     isSearched, setIsSearched,
@@ -72,7 +124,10 @@ const AppContextProvider = (props) => {
     handleLanguageChange,
     companyToken, setCompanyToken,
     companyData, setCompanyData,
-    backendUrl
+    backendUrl,
+    userData,setUserData,
+    userApplications,setUserApplications,
+    fetchUserInfo
   }
   return (
     <AppContext.Provider value={value}>

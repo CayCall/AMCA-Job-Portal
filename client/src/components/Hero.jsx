@@ -1,4 +1,4 @@
-import React, { useContext, useRef } from 'react'
+import React, { useContext, useRef, useEffect, useState } from 'react'
 import { assets } from '../assets/assets'
 import AppContext from '../context/AppContext'
 import AppContextProvider from '../context/AppContextProvider';
@@ -7,12 +7,22 @@ import { useTranslation } from 'react-i18next';
 
 
 const Hero = () => {
-    const { t, i18n} = useTranslation();
+    const { t, i18n } = useTranslation();
     const { setSearchFilter, setIsSearched } = useContext(AppContext);
 
     const titleRef = useRef(null);
     const locationRef = useRef(null);
 
+
+    const [titleIn, setTitleIn] = useState("");
+    const [locationIn, setLocationIn] = useState("");
+    useEffect(() => {
+        const id = setTimeout(() => {
+            setSearchFilter({ title: titleIn, location: locationIn });
+            setIsSearched(true);
+        }, 300);
+        return () => clearTimeout(id);
+    }, [titleIn, locationIn, setSearchFilter, setIsSearched]);
     const onSearch = () => {
         setSearchFilter({
             title: titleRef.current.value,
@@ -38,16 +48,18 @@ const Hero = () => {
                             placeholder={t('Search For Jobs')}
                             className='max-sm:text-xs p-2 rounded outline-none w-full'
                             ref={titleRef}
+                            onChange={(e) => setTitleIn(e.target.value)}
                         />
                     </div>
                     <div className='flex items-center'>
                         <img className='h-4 sm:h-5' src={assets.location_icon} alt='' />
                         <input
                             type='text'
-                            
+
                             placeholder={t('Location')}
                             className='max-sm:text-xs p-2 rounded outline-none w-full'
                             ref={locationRef}
+                            onChange={(e) => setLocationIn(e.target.value)}
                         />
                     </div>
                     <button onClick={onSearch} className='bg-blue-600 px-6 py-2 rounded text-white m-1'>

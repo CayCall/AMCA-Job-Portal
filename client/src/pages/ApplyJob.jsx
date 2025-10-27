@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import AppContext from "../context/AppContext";
 import NavBar from "../components/NavBar";
 import { assets } from "../assets/assets";
@@ -9,18 +9,39 @@ import JobCard from "../components/JobCard";
 import Footer from "../components/Footer";
 import toast from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
-import breadcrum from "../components/Breadcrum";
 import Breadcrum from "../components/Breadcrum";
+import axios from "axios";
 const ApplyJob = () => {
   const { t, i18n } = useTranslation();
   const { id } = useParams();
-  const { jobs } = useContext(AppContext);
+
+  const navigate = useNavigate();
 
   const [jobData, setJobData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [apply, setApply] = useState(true);
 
+  const { jobs, backendUrl, userData, userApplicationsData } = useContext(AppContext);
 
+  const fetchJob = async () => {
+    try {
+      const { data } = await axios.get(backendUrl + `/api/jobs/${id}`)
+
+      if (data.success) {
+        setJobData(data.job)
+      }
+      else {
+        toast.error(data.message)
+      }
+    } catch (error) {
+      toast.error(error.message)
+    }
+  }
+  useEffect(() => {
+    fetchJob()
+  }, [id]);
+
+  //simple timer for loading
   useEffect(() => {
     const timer = setTimeout(() => {
       setLoading(false);
@@ -30,26 +51,22 @@ const ApplyJob = () => {
   }, []);
 
 
-  useEffect(() => {
-    if (jobs.length > 0) {
-      const foundJob = jobs.find((job) => String(job._id) === String(id));
-      if (foundJob) {
-        setJobData(foundJob);
-      }
-    }
-  }, [id, jobs]);
 
-  const handleApply = () => {
-    setApply(true);
-    if (apply) {
-      toast.success('Application submitted successfully!');
-      scrollTo(0, 0);
-      console.log('succesfull')
+
+  //handles when user applies for a job - check resume, and checks if user is currently logged in
+  const applyHandler = async () => {
+    try {
+      if (!userData) {
+        return toast.error('Login required - log in to continue with your application.')
+      }
+      if (!userData.resume) {
+        navigate('/applications')
+        return toast.error('Resume required - upload resume to continue.')
+      }
+    } catch (error) {
+
     }
-    setTimeout(() => {
-      setApply(false)
-    }, 1000)
-  };
+  }
 
   if (loading) {
     return (
@@ -58,19 +75,20 @@ const ApplyJob = () => {
       </div>
     );
   }
-  const translatedDescription = jobData.description
+
+  if (!jobData) return <p>Job not found</p>;
+  const rawDesc = jobData?.description ?? "";
+  const translatedDescription = rawDesc
     .replace("t('Job Description')", t("Job Description"))
     .replace("t('Skills Required')", t("Skills Required"))
     .replace("t('Key Responsibilities')", t("Key Responsibilities"));
 
 
-  if (!jobData) return <p>Job not found</p>;
-
 
   return (
     <>
       <NavBar />
-      <Breadcrum/>
+      <Breadcrum />
       <div className='min-h-screen flex flex-col py-10 container px-4 2x1:px-20 mx-auto'>
         <div className="bg-white text-black rounded-lg w-full">
           <div className="flex justify-center md:justify-between flex-wrap gap-8 px-14 py-20 mb-6 bg-sky-50 border border-sky-400 rounded-xl">
@@ -100,7 +118,7 @@ const ApplyJob = () => {
               </div>
             </div>
             <div className="flex flex-col justify-center text-end text-sm max-md:mx-auto max-md:text-center">
-              <button onClick={handleApply} className="bg-blue-600 p-2.5 px-10 text-white rounded border border-transparent hover:bg-white  hover:border-gray-500 hover:text-gray-500">{t('Apply Now')}</button>
+              <button onClick={applyHandler} className="bg-blue-600 p-2.5 px-10 text-white rounded border border-transparent hover:bg-white  hover:border-gray-500 hover:text-gray-500">{t('Apply Now')}</button>
               <p className="mt-1 text-gray-600"> Posted {moment(jobData.date).fromNow()}</p>
             </div>
           </div>
@@ -111,7 +129,7 @@ const ApplyJob = () => {
                 dangerouslySetInnerHTML={{ __html: translatedDescription }}
               >
               </section>
-              <button onClick={handleApply} className="ml-4 bg-blue-600 p-2.5 px-10 text-white rounded mt-10 border border-transparent hover:bg-white  hover:border-gray-500 hover:text-gray-500"> {t('Apply Now')}</button>
+              <button onClick={applyHandler} className="ml-4 bg-blue-600 p-2.5 px-10 text-white rounded mt-10 border border-transparent hover:bg-white  hover:border-gray-500 hover:text-gray-500"> {t('Apply Now')}</button>
             </div>
 
             <div className="w-full lg:w-1/3 mt-8 lg:mt-0 lg:ml-8 space-y-5">

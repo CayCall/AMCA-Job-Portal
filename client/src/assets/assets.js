@@ -30,6 +30,8 @@ import lock_icon from './lock_icon.svg'
 import fakeCompanyOne from './fakeCompany1.jpeg'
 import fakeCompanyTwo from './fakeCompany2.jpeg'
 import fakeCompanyThree from './fakeCompany3.png'
+import hide from './hide.png'
+import show from './show.png'
 
 export const assets = {
     logo,
@@ -63,7 +65,9 @@ export const assets = {
     lock_icon,
     fakeCompanyOne,
     fakeCompanyTwo,
-    fakeCompanyThree
+    fakeCompanyThree,
+    hide,
+    show
 }
 
 export const JobCategories = [
@@ -75,7 +79,7 @@ export const JobCategories = [
     "Welding",
     "Painting",
     "Masonry",
-    "Mechanics"
+    "Cleaner"
 ];
 
 export const JobLocations = [
@@ -494,7 +498,7 @@ export const jobsData = [
     },
     {
         _id: '11',
-        title: "General Laborer",
+        title: "    ",
         location: "East Rand",
         level: "Beginner Level",
         companyId: {
