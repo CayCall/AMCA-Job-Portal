@@ -4,6 +4,8 @@ import User from "../models/userSchema.js";
 import app from "../server.js";
 import { v2 as cloudinary } from 'cloudinary'
 import { getAuth } from '@clerk/express';
+import * as streamifier from "streamifier";
+
 // this is to get the users data
 export const getDataOfUser = async (request, response) => {
 
@@ -96,21 +98,37 @@ export const getAppliedJobs = async (request, response) => {
 
 //this will be to update the user's current resume
 export const updateUserResume = async (request, response) => {
-    const { userId } = getAuth(request);
-    if (!userId) return response.status(401).json({ success: false, message: 'Not authenticated' });
 
     try {
-        const resumeFile = request.file;
-        const userInfo = await User.findById(userId);
-        if (!userInfo) return response.status(404).json({ success: false, message: 'User not found' });
+        const { userId } = getAuth(request);
+        console.log("User ID:", userId);
+        console.log("File received:", request.file?.originalname, request.file?.mimetype);
 
-        if (resumeFile) {
-            const upload = await cloudinary.uploader.upload(resumeFile.path);
-            userInfo.resume = upload.secure_url;
-        }
-        await userInfo.save();
-        return response.json({ success: true, message: 'Resume Updated' });
-    } catch (error) {
-        return response.status(500).json({ success: false, message: error.message });
+        if (!userId) return response.status(401).json({ success: false, message: "Please sign in to upload your resume." });
+
+        const file = request.file;
+        if (!file) return response.status(400).json({ success: false, message: "No resume uploaded." });
+
+        const user = await User.findOne({ clerkId: userId }); // change to match your schema
+        if (!user) return response.status(404).json({ success: false, message: "User not found." });
+
+        const uploadToCloudinary = () =>
+            new Promise((resolve, reject) => {
+                const upload = cloudinary.uploader.upload_stream(
+                    { resource_type: "raw", folder: "resumes" },
+                    (err, result) => (err ? reject(err) : resolve(result))
+                );
+                streamifier.createReadStream(file.buffer).pipe(upload);
+            });
+
+        const uploaded = await uploadToCloudinary();
+        user.resume = uploaded.secure_url;
+        await user.save();
+
+        return response.json({ success: true, message: "Resume updated." });
+    } catch (err) {
+        console.error("Upload error:", err);
+        return response.status(500).json({ success: false, message: err.message || "Upload failed." });
     }
+
 }

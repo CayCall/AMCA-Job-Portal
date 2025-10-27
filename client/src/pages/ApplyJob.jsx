@@ -64,7 +64,7 @@ const ApplyJob = () => {
         return toast.error('Resume required - upload resume to continue.')
       }
     } catch (error) {
-
+      toast.error(error.message)
     }
   }
 

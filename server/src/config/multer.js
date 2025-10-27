@@ -2,18 +2,20 @@ import multer from "multer";
 
 const storage = multer.memoryStorage();
 
-const fileFilter = (req, file, cb) => {
-  if (/^image\/(png|jpe?g|webp|pdf)$/.test(file.mimetype)) {
-    cb(null, true);
-  } else {
-    cb(new Error("Only image files are allowed"));
-  }
-};
-
-const upload = multer({
+export const imageOnly = multer({
   storage,
-  fileFilter,
-  limits: { fileSize: 5 * 1024 * 1024 }, 
+  fileFilter: (_req, file, cb) =>
+    /^image\/(png|jpe?g|webp)$/.test(file.mimetype)
+      ? cb(null, true)
+      : cb(new Error("Only image files are allowed (jpg, png, webp).")),
+  limits: { fileSize: 5 * 1024 * 1024 },
 });
 
-export default upload;
+export const resumeOnly = multer({
+  storage,
+  fileFilter: (_req, file, cb) =>
+    file.mimetype === "application/pdf"
+      ? cb(null, true)
+      : cb(new Error("Only PDF files are allowed for resumes.")),
+  limits: { fileSize: 10 * 1024 * 1024 },
+});

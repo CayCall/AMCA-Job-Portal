@@ -70,15 +70,17 @@ const Applications = () => {
   //Resume section
   const updateResume = async () => {
     try {
-      const formData = new FormData()
-      formData.append('resume', resume)
+      const fd = new FormData()
+      fd.append('resume', resume)
 
       const token = await getToken()
 
-      const { data } = await axios.post(backendUrl + '/api/users/update-resume',
-        formData,
+      const { data } = await axios.post(
+        `${backendUrl}/api/users/update-resume`,
+        fd,
         { headers: { Authorization: `Bearer ${token}` } }
-      )
+      );
+
 
       if (data.success) {
         toast.success(data.message)
@@ -144,7 +146,7 @@ const Applications = () => {
                 <button
                   onClick={updateResume}
                   className="bg-green-100 border border-green-400 round-lg px-4 py-2"
-                  
+
                 >
                   {t('Save')}
                 </button>
