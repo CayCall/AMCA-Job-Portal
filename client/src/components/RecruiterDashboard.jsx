@@ -74,7 +74,7 @@ const RecruiterDashboard = () => {
                 </div>
 
 
-                <div className="flex-1 p-6">
+                <div className="flex-1 p-6 h-6 sm:p-5">
                     <div className="w-full max-w-5xl mx-auto">   {/* <- normalize here */}
                         <Outlet />
                     </div>

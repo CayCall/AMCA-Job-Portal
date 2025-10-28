@@ -10,6 +10,7 @@ import AppContext from '../context/AppContext';
 import { useAuth, useUser } from '@clerk/clerk-react';
 import axios from 'axios'
 import toast from 'react-hot-toast';
+import resumeInlineUrl from '../utils/resumeUrl';
 
 // marked as favourites section
 const FAVS_KEY = 'favs';
@@ -35,7 +36,7 @@ const Applications = () => {
   const [resume, setResume] = useState(null);
 
 
-  const { jobs, backendUrl, userData, userApplications, fetchUserInfo } = useContext(AppContext);
+  const { jobs, backendUrl, userData, userApplications, fetchUserInfo, fetchApplications } = useContext(AppContext);
   const applied = Array.isArray(userApplications)
     ? userApplications
     : Array.isArray(userApplications?.appliedJobs)
@@ -77,38 +78,46 @@ const Applications = () => {
   //Resume section
   const updateResume = async () => {
 
-    try {
-      const fd = new FormData()
-      fd.append('resume', resume)
+    if (!resume) {
+      toast.error(t("Please select a PDF first."));
+      return;
+    }
 
-      const token = await getToken()
+    try {
+      const fd = new FormData();
+      fd.append("resume", resume);
+
+      const token = await getToken();
       const { data } = await axios.post(
-        backendUrl + '/api/users/update-resume',
+        `${backendUrl}/api/users/update-resume`,
         fd,
         { headers: { Authorization: `Bearer ${token}` } }
       );
 
-
-      if (data.success) {
-        toast.success(data.message)
-        await fetchUserInfo()
+      if (data?.success) {
+        toast.success(data.message);
+        await fetchUserInfo();
+      } else {
+        toast.error(data?.message || t("Upload failed"));
       }
-      else {
-        toast.error(data.message)
-      }
-
     } catch (error) {
-      toast.error(error.message)
+      toast.error(error?.response?.data?.message || error.message);
+    } finally {
+      setEdit(false);
+      setResume(null);
     }
 
-    setEdit(false)
-    setResume(null)
   }
 
-
+  useEffect(() => {
+    if (user) {
+      fetchApplications()
+    }
+  }, [user])
   return (
     <>
       <NavBar />
+      <div className="h-16 md:h-[72px]" />
       <Breadcrum />
       <div className="container px-4 min-h-[65vh] 2xl:px-20 mx-auto my-10">
         <div className="flex items-center justify-between">
@@ -133,17 +142,17 @@ const Applications = () => {
           </div>
         </div>
 
+
         <div className="flex gap-2 mb-6 mt-3">
-          {isEdited || userData && userData.resume === ""
-            ?
+          {isEdited || !userData?.resume ? (
             <>
               <label className="flex items-center" htmlFor="resumeUpload">
-                <p className="bg-blue-100 text-blue-600 px-4 py-2 round-lg mr-2 cursor-pointer">
-                  {resume ? resume.name : t('Select Resume')}
+                <p className="bg-blue-100 text-blue-600 px-4 py-2 rounded-lg mr-2 cursor-pointer">
+                  {resume ? resume.name : t("Select Resume")}
                 </p>
                 <input
                   id="resumeUpload"
-                  onChange={(e) => setResume(e.target.files[0])}
+                  onChange={(e) => setResume(e.target.files?.[0] || null)}
                   accept="application/pdf"
                   type="file"
                   hidden
@@ -152,25 +161,44 @@ const Applications = () => {
               </label>
               <button
                 onClick={updateResume}
-                className="bg-green-100 border border-green-400 round-lg px-4 py-2"
-
+                className="bg-green-100 border border-green-400 rounded-lg px-4 py-2"
+                disabled={!resume}
               >
-                {t('Save')}
+                {t("Save")}
               </button>
             </>
-            :
+          ) : (
             <div className="flex gap-2">
-              <a className="bg-blue-100 text-blue-600 px-4 py-2 rounded-lg" href="">
-                {t('Resume')}
+              <a
+                className="bg-blue-100 text-blue-600 px-4 py-2 rounded-lg flex items-center justify-center gap-1 transition-all duration-300 group"
+                href={userData.resume}
+                target="_blank"
+                rel="noreferrer"
+              >
+                <span className="transition-all duration-300 group-hover:-translate-x-1">
+                  {t("My Resume")}
+                </span>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  strokeWidth={2}
+                  stroke="currentColor"
+                  className="w-4 h-4 opacity-0 -translate-x-2 transition-all duration-300 group-hover:opacity-100 group-hover:translate-x-0"
+                >
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+                </svg>
               </a>
+
               <button
                 onClick={() => setEdit(true)}
-                className="text-gray-500 border border-gray-300 px-4 py-2 rounded-lg"
+                className="text-gray-500 border border-gray-300 px-4 py-2 rounded-lg hover:bg-gray-50 transition-all duration-200"
               >
-                {t('Edit')}
+                {t("Edit")}
               </button>
             </div>
-          }
+
+          )}
         </div>
 
         {tab === 'applied' ? (
@@ -186,110 +214,109 @@ const Applications = () => {
                   <th className="py-3 px-4 border-b text-left">{t('Status')}</th>
                 </tr>
               </thead>
-             
-             
-             <tbody>
-  {applied.length > 0 ? (
-    applied.map((app, index) => (
-      <tr key={app?._id ?? index}>
-        <td className="py-3 px-4 border-b">
-          <div className="flex items-center gap-2">
-            <img
-              className="w-8 h-8 object-contain"
-              src={app?.companyId?.image}
-              alt={app?.companyId?.name || 'Company'}
-            />
-            <span className="text-gray-800">{app?.companyId?.name || '—'}</span>
-          </div>
-        </td>
-        <td className="px-2 py-4 border-b">{app?.jobId?.title || '—'}</td>
-        <td className="px-2 py-4 border-b max-sm:hidden">{app?.jobId?.location || '—'}</td>
-        <td className="px-2 py-4 border-b">{moment(app?.date ?? Date.now()).format('ll')}</td>
-        <td className="px-2 py-4 border-b">
-          <span
-            className={`${
-              app?.status === 'Accepted'
-                ? 'bg-green-100'
-                : app?.status === 'Rejected'
-                ? 'bg-red-100'
-                : 'bg-blue-100'
-            } px-4 py-1.5 rounded`}
-          >
-            {app?.status ?? 'Pending'}
-          </span>
-        </td>
-      </tr>
-    ))
-  ) : (
-    <tr>
-      <td colSpan={5} className="py-8 text-center text-gray-500">
-        {t('No applications found.')}
-      </td>
-    </tr>
-  )}
-</tbody>
-             
-            
-          </table>
-      </>
-      ) : (
-      <>
-        <h2 className="text-xl font-semibold mb-4">{t('Favourites')}</h2>
-        <table className="min-w-full bg-white border rounded-lg">
-          <thead>
-            <tr>
-              <th className="py-3 px-4 border-b text-left">{t('Company')}</th>
-              <th className="py-3 px-4 border-b text-left">{t('Job Title')}</th>
-              <th className="py-3 px-4 border-b text-left max-sm:hidden">{t('Location')}</th>
-              <th className="py-3 px-4 border-b text-left">{t('Action')}</th>
-            </tr>
-          </thead>
-          <tbody>
-            {favJobs.length === 0 ? (
-              <tr>
-                <td colSpan={4} className="py-8 text-center text-gray-500">
-                  {t('No favourites yet. Tap the heart on a job to save it.')}
-                </td>
-              </tr>
-            ) : (
-              favJobs.map((job) => (
-                <tr key={job._id}>
-                  <td className="py-3 px-4 border-b">
-                    <div className="flex items-center gap-2">
-                      <img
-                        className="w-8 h-8 rounded border object-cover"
-                        src={job?.companyId?.image}
-                        alt={job?.companyId?.name || 'Company'}
-                      />
-                      <span className="text-gray-800">{job?.companyId?.name || '—'}</span>
-                    </div>
-                  </td>
-                  <td className="px-2 py-4 border-b">{job.title}</td>
-                  <td className="px-2 py-4 border-b max-sm:hidden">{job.location}</td>
-                  <td className="px-2 py-4 border-b">
-                    <div className="flex gap-2">
-                      <Link
-                        to={`/apply-job/${job._id}`}
-                        className="px-3 py-1 rounded border hover:bg-gray-50"
-                      >
-                        {t('View')}
-                      </Link>
-                      <button
-                        onClick={() => removeFav(job._id)}
-                        className="px-3 py-1 rounded border text-red-600 hover:bg-red-50"
-                      >
-                        {t('Remove')}
-                      </button>
-                    </div>
-                  </td>
+
+
+              <tbody>
+                {applied.length > 0 ? (
+                  applied.map((app, index) => (
+                    <tr key={app?._id ?? index}>
+                      <td className="py-3 px-4 border-b">
+                        <div className="flex items-center gap-2">
+                          <img
+                            className="w-8 h-8 object-contain"
+                            src={app?.companyId?.image}
+                            alt={app?.companyId?.name || 'Company'}
+                          />
+                          <span className="text-gray-800">{app?.companyId?.name || '—'}</span>
+                        </div>
+                      </td>
+                      <td className="px-2 py-4 border-b">{app?.jobId?.title || '—'}</td>
+                      <td className="px-2 py-4 border-b max-sm:hidden">{app?.jobId?.location || '—'}</td>
+                      <td className="px-2 py-4 border-b">{moment(app?.date ?? Date.now()).format('ll')}</td>
+                      <td className="px-2 py-4 border-b">
+                        <span
+                          className={`${app?.status === 'Accepted'
+                            ? 'bg-green-100'
+                            : app?.status === 'Rejected'
+                              ? 'bg-red-100'
+                              : 'bg-blue-100'
+                            } px-4 py-1.5 rounded`}
+                        >
+                          {app?.status ?? 'Pending'}
+                        </span>
+                      </td>
+                    </tr>
+                  ))
+                ) : (
+                  <tr>
+                    <td colSpan={5} className="py-8 text-center text-gray-500">
+                      {t('No applications found.')}
+                    </td>
+                  </tr>
+                )}
+              </tbody>
+
+
+            </table>
+          </>
+        ) : (
+          <>
+            <h2 className="text-xl font-semibold mb-4">{t('Favourites')}</h2>
+            <table className="min-w-full bg-white border rounded-lg">
+              <thead>
+                <tr>
+                  <th className="py-3 px-4 border-b text-left">{t('Company')}</th>
+                  <th className="py-3 px-4 border-b text-left">{t('Job Title')}</th>
+                  <th className="py-3 px-4 border-b text-left max-sm:hidden">{t('Location')}</th>
+                  <th className="py-3 px-4 border-b text-left">{t('Action')}</th>
                 </tr>
-              ))
-            )}
-          </tbody>
-        </table>
-      </>
+              </thead>
+              <tbody>
+                {favJobs.length === 0 ? (
+                  <tr>
+                    <td colSpan={4} className="py-8 text-center text-gray-500">
+                      {t('No favourites yet. Tap the heart on a job to save it.')}
+                    </td>
+                  </tr>
+                ) : (
+                  favJobs.map((job) => (
+                    <tr key={job._id}>
+                      <td className="py-3 px-4 border-b">
+                        <div className="flex items-center gap-2">
+                          <img
+                            className="w-8 h-8 rounded border object-cover"
+                            src={job?.companyId?.image}
+                            alt={job?.companyId?.name || 'Company'}
+                          />
+                          <span className="text-gray-800">{job?.companyId?.name || '—'}</span>
+                        </div>
+                      </td>
+                      <td className="px-2 py-4 border-b">{job.title}</td>
+                      <td className="px-2 py-4 border-b max-sm:hidden">{job.location}</td>
+                      <td className="px-2 py-4 border-b">
+                        <div className="flex gap-2">
+                          <Link
+                            to={`/apply-job/${job._id}`}
+                            className="px-3 py-1 rounded border hover:bg-gray-50"
+                          >
+                            {t('View')}
+                          </Link>
+                          <button
+                            onClick={() => removeFav(job._id)}
+                            className="px-3 py-1 rounded border text-red-600 hover:bg-red-50"
+                          >
+                            {t('Remove')}
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  ))
+                )}
+              </tbody>
+            </table>
+          </>
         )}
-    </div >
+      </div >
       <Footer />
     </>
   );

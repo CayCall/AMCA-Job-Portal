@@ -62,7 +62,7 @@ const NavBar = () => {
 
 
     return (
-        <div className='fixed top-0 left-0 w-full z-50 shadow py-4 bg-white'>
+        <div className='fixed top-0 left-0 w-full z-50 shadow py-4 bg-white '>
             <div className='container px-4 2xl:px-12 mx-auto flex justify-between items-center'>
 
                 {/* Logo */}
@@ -87,7 +87,7 @@ const NavBar = () => {
                         </div>
                     ) : (
                         <div className='flex items-center gap-2 sm:gap-4 text-xs sm:text-sm'>
-                            <button onClick={() => setRecruiterLogin(true)} className='text-gray-600 hover:underline'>{t('Recruiter Login')}</button>
+                            <button onClick={() => setRecruiterLogin(true)} className='text-gray-600 hover:underline'>{t('Recruiter Portal')}</button>
                             <button
                                 onClick={openSignIn}
                                 className='border bg-blue-600 text-white px-4 sm:px-6 py-1.5 sm:py-2 rounded-full hover:bg-white hover:text-black hover:border hover:border-black transition'

@@ -10,8 +10,9 @@ import companyRoutes from './routes/companyRoutes.js'
 import jobRoutes from './routes/jobRoutes.js'
 import userRoutes from './routes/userRoutes.js'
 import languageRoutes from './routes/languageRoute.js';
-import connectCloudinary from './config/cloudinary.js'
 import { clerkMiddleware } from '@clerk/express'
+import { connectCloudinary, cloudinary } from './config/cloudinary.js';
+
 /*
     Server Architecture :
     1. Front-End(Client) - to send requests (http intents(POST,GET)) to the server, e.g user signing up or conmpleting form
@@ -26,8 +27,13 @@ const app = express()
 
 
 await connectCloudinary();
-await connectDB();
+await cloudinary.api.ping()
+    .then(() => console.log("✅ Cloudinary connected"))
+    .catch((err) => console.error("❌ Cloudinary misconfigured:", err.message));
 
+
+
+await connectDB();
 
 //Middleware - transition layer (req(), res(), next())- sits between the http request and the response
 //Runs after a request comes in but before the server sends a response.
@@ -57,7 +63,7 @@ app.use('/api/company', companyRoutes)
 app.use('/api/jobs', jobRoutes)
 
 //job seeker side & and job seeker functionality
-app.use('/api/users',userRoutes)
+app.use('/api/users', userRoutes)
 
 
 app.use('/api/language', languageRoutes)
@@ -77,6 +83,7 @@ app.get('/__routes', (_req, res) => {
     });
     res.json(routes);
 });
+
 
 Sentry.setupExpressErrorHandler(app);
 

@@ -110,21 +110,39 @@ export const updateUserResume = async (request, response) => {
         const user = await User.findById(userId);
         if (!user) return response.status(404).json({ success: false, message: "User not found." });
 
+        const originalName = (request.file.originalname?.trim().replace(/\s+/g, "_")) || "resume.pdf";
+
         const uploaded = await new Promise((resolve, reject) => {
-            const upload = cloudinary.uploader.upload_stream(
-                { resource_type: 'raw', folder: 'resumes' },
+            const up = cloudinary.uploader.upload_stream(
+                { resource_type: "raw", folder: "resumes", use_filename: true, unique_filename: false, filename_override: originalName },
                 (err, result) => (err ? reject(err) : resolve(result))
             );
-            streamifier.createReadStream(file.buffer).pipe(upload);
+            streamifier.createReadStream(request.file.buffer).pipe(up);
         });
 
         user.resume = uploaded.secure_url;
+        user.resumePublicId = uploaded.public_id;
         await user.save();
 
-        return response.json({ success: true, message: 'Resume updated.' });
+        response.json({ success: true, message: "Resume uploaded successfully.", resumeUrl: user.resume });
+
+
     } catch (err) {
         console.error("Upload error:", err);
-        return response.status(500).json({ success: false, message: err.message || "Upload failed." });
+        return response
+            .status(500)
+            .json({ success: false, message: err.message || "Server error." });
     }
+};
 
-}
+
+
+
+
+
+
+
+
+
+
+

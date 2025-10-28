@@ -119,6 +119,7 @@ const ApplyJob = () => {
   return (
     <>
       <NavBar />
+      <div className="h-16 md:h-[72px]" />
       <Breadcrum />
       <div className='min-h-screen flex flex-col py-10 container px-4 2x1:px-20 mx-auto'>
         <div className="bg-white text-black rounded-lg w-full">
@@ -168,7 +169,7 @@ const ApplyJob = () => {
               {
                 jobs.filter(job => job.id !== jobData._id && job.companyId._id === jobData.companyId._id)
                   .filter(job => {
-                    const appliedJobsIds = new Set(userApplications.map(app=>app.jobId && app.jobId._id)) 
+                    const appliedJobsIds = new Set(userApplications.map(app => app.jobId && app.jobId._id))
                     return !appliedJobsIds.has(job._id) // returns true if the user has not already applied for a job
                   }).slice(0, 4)
                   .map((job, index) => <JobCard key={index} job={job} />)

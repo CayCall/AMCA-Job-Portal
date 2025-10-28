@@ -4,6 +4,7 @@ import { v2 as cloudinary } from 'cloudinary';
 import generateToken from "../utils/generateToken.js";
 import Job from "../models/JobDataSchema.js";
 import jobApplication from "../models/jobApplicationSchema.js";
+import { application } from "express";
 
 //this will be when a user registers a new company - a new recruiter
 export const companyRegister = async (request, response) => {
@@ -133,7 +134,19 @@ export const postJob = async (request, response) => {
 
 //this will get all the different applicants that applied for jobs
 export const retrieveJobApplicants = async (request, response) => {
+    try {
 
+        const companyId = request.company._id;
+
+        const applications = await jobApplication.find({ companyId })
+            .populate('userId', 'name image resume')
+            .populate('jobId', 'title location category level salary')
+            .exec()
+
+        return response.json({ success: true, applications })
+    } catch (error) {
+        response.json({ success: false, message: error.message })
+    }
 }
 
 //this will get all the different jobs the recruiter posted
@@ -160,6 +173,26 @@ export const retrieveJobsPosted = async (request, response) => {
 
 //change the status of an applicants job
 export const ChangeJobStatus = async (request, response) => {
+
+    try {
+        const { id, status } = request.body;
+
+        await jobApplication.findOneAndUpdate({ _id: id }, { status })
+
+        response.json({ success: true, message: 'Status Changed' })
+
+    } catch (error) {
+        response.json({success:false, message: error.message})
+    }
+
+
+
+
+
+
+
+
+
 
 }
 
