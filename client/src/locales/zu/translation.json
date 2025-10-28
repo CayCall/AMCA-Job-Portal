@@ -38,7 +38,6 @@
     "_comment5": "Footer Section",
     "Copyright © 2025 AMCA | All rights reserved.": "Copyright © 2025 AMCA  Wonke amalungelo agodliwe.",
 
-
     "_comment6": "applications page",
     "Your Applications": "Izicelo Zakho",
     "Job Applied": "Izicelo ze-YouJob",
@@ -68,5 +67,6 @@
     "Visible":"Ibonakala",
     "Add New Job":"Faka Umsebenzi Omusha",
     "User Name":"Igama lomsebenzisi",
-    "Action":"Isenzo"
+    "Action":"Isenzo",
+    "Already Applied": "Isivele yafaka isicelo"
 }

@@ -8,10 +8,10 @@ import { useAuth, useUser } from '@clerk/clerk-react';
 const AppContextProvider = (props) => {
   // this will be for connecting our backend to our front end 
   const backendUrl = import.meta.env.VITE_BACKEND_URL
-  
 
-  const {user} = useUser()
-  const {getToken} = useAuth()
+
+  const { user } = useUser()
+  const { getToken } = useAuth()
   const [searchFilter, setSearchFilter] = useState({
     title: '',
     location: '',
@@ -80,13 +80,6 @@ const AppContextProvider = (props) => {
     }
   }, [companyToken])
 
-   useEffect(() => {
-    if (user) {
-      fetchUserInfo();
-    }
-  }, [user])
-
-
 
   const handleLanguageChange = async (lang) => {
     await i18n.changeLanguage(lang);
@@ -95,27 +88,59 @@ const AppContextProvider = (props) => {
 
 
   // fetch user info
-
-  const fetchUserInfo = async ()=>{
+  const fetchUserInfo = async () => {
     try {
       const token = await getToken();
 
-      const {data} = await axios.get(backendUrl + '/api/users/user',
+      const { data } = await axios.get(backendUrl + '/api/users/user',
 
-        {headers:{Authorization:`Bearer ${token}`}}
+        { headers: { Authorization: `Bearer ${token}` } }
 
       )
 
-      if(data.success){
+      if (data.success) {
         setUserData(data.user)
       }
-      else{
+      else {
         toast.error(data.message)
       }
-    } catch (error) { 
+    } catch (error) {
       toast.error(error.message)
-    } 
+    }
   }
+
+  // this gets the data of all the job applications thae users had applied for
+  const fetchApplications = async () => {
+    try {
+      const token = await getToken()
+      if (!token) return;
+
+      const { data } = await axios.get(
+        backendUrl + '/api/users/applications',
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      if (data.success) {
+        setUserApplications(Array.isArray(data.appliedJobs) ? data.appliedJobs : []);
+
+      }
+      else {
+        toast.error(data?.message || 'Failed to load applications.')
+        setUserApplications([]);
+      }
+    } catch (error) {
+      toast.error(error?.response?.data?.message || error.message)
+      setUserApplications([]);
+    }
+  }
+
+  useEffect(() => {
+    if (user) {
+      fetchUserInfo();
+      fetchApplications();
+    }
+  }, [user])
+
+
   const value = {
     setSearchFilter, searchFilter,
     isSearched, setIsSearched,
@@ -125,9 +150,10 @@ const AppContextProvider = (props) => {
     companyToken, setCompanyToken,
     companyData, setCompanyData,
     backendUrl,
-    userData,setUserData,
-    userApplications,setUserApplications,
-    fetchUserInfo
+    userData, setUserData,
+    userApplications, setUserApplications,
+    fetchUserInfo,
+    fetchApplications
   }
   return (
     <AppContext.Provider value={value}>

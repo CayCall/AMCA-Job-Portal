@@ -6,7 +6,7 @@
     "Hi": "Hallo",
     "Language": "Taal",
     "Home" : "Tuis",
-    "Apply" : "Aansoek doen",
+    "Apply" : "Doen Aansoek", 
 
     "_comment2": "Hero",
     "Over 1 000+ Domestic jobs available": "Meer as 1 000+ Binnelandse werke beskikbaar",
@@ -62,5 +62,7 @@
     "Visible": "Sigbaar",
     "Add New Job": "Voeg Nuwe Werk By",
     "User Name": "Gebruikersnaam",
-    "Action": "Aksie"
+    "Action": "Aksie",
+    "Already Applied":"Reeds aansoek gedoen"
 }
+

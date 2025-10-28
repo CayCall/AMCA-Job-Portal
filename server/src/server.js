@@ -32,12 +32,16 @@ await connectDB();
 //Middleware - transition layer (req(), res(), next())- sits between the http request and the response
 //Runs after a request comes in but before the server sends a response.
 app.use(cors())
+
 app.post('/webhooks', express.raw({ type: 'application/json' }), clerkwebHook)
 //browser will send http request to webhook url, and run clerk webhook function 
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }));
 app.use(clerkMiddleware())
-
+app.use((req, _res, next) => {
+    console.log('INCOMING:', req.method, req.originalUrl);
+    next();
+});
 /* Routing is most important for the GET and POST intentions aka http requests, with the server.
        we will GET (.get()) from a route to fetch data
        we will POST (.post()) to a route to send data */
@@ -53,12 +57,26 @@ app.use('/api/company', companyRoutes)
 app.use('/api/jobs', jobRoutes)
 
 //job seeker side & and job seeker functionality
-app.use('/api/users', userRoutes)
+app.use('/api/users',userRoutes)
 
 
 app.use('/api/language', languageRoutes)
 
-
+app.get('/__routes', (_req, res) => {
+    const routes = [];
+    app._router.stack.forEach((m) => {
+        if (m.route) {
+            routes.push(`${Object.keys(m.route.methods).join(',').toUpperCase()} ${m.route.path}`);
+        } else if (m.name === 'router' && m.handle.stack) {
+            m.handle.stack.forEach((h) => {
+                if (h.route) {
+                    routes.push(`${Object.keys(h.route.methods).join(',').toUpperCase()} ${m.regexp} -> ${h.route.path}`);
+                }
+            });
+        }
+    });
+    res.json(routes);
+});
 
 Sentry.setupExpressErrorHandler(app);
 

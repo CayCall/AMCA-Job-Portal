@@ -11,17 +11,22 @@ import toast from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
 import Breadcrum from "../components/Breadcrum";
 import axios from "axios";
+import { useAuth } from "@clerk/clerk-react";
 const ApplyJob = () => {
   const { t, i18n } = useTranslation();
   const { id } = useParams();
+
+  const { getToken } = useAuth();
 
   const navigate = useNavigate();
 
   const [jobData, setJobData] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [apply, setApply] = useState(true);
+  const [apply, setApply] = useState(false);
 
-  const { jobs, backendUrl, userData, userApplicationsData } = useContext(AppContext);
+
+
+  const { jobs, backendUrl, userData, userApplications, fetchApplications } = useContext(AppContext);
 
   const fetchJob = async () => {
     try {
@@ -37,9 +42,21 @@ const ApplyJob = () => {
       toast.error(error.message)
     }
   }
+
+  const jobsApplied = () => {
+    const hasApplied = userApplications.some(item => item.jobId._id === jobData._id)
+    setApply(hasApplied)
+
+  }
   useEffect(() => {
     fetchJob()
   }, [id]);
+
+  useEffect(() => {
+    if (userApplications.length > 0 && jobData) {
+      jobsApplied()
+    }
+  }, [jobData, userApplications, id]);
 
   //simple timer for loading
   useEffect(() => {
@@ -62,6 +79,20 @@ const ApplyJob = () => {
       if (!userData.resume) {
         navigate('/applications')
         return toast.error('Resume required - upload resume to continue.')
+      }
+
+      const token = await getToken()
+
+      const { data } = await axios.post(backendUrl + '/api/users/apply',
+        { jobId: jobData._id },
+        { headers: { Authorization: `Bearer ${token}` } }
+      )
+
+      if (data.success) {
+        toast.success(data.message)
+        fetchApplications()
+      } else {
+        toast.error(data.message)
       }
     } catch (error) {
       toast.error(error.message)
@@ -118,7 +149,7 @@ const ApplyJob = () => {
               </div>
             </div>
             <div className="flex flex-col justify-center text-end text-sm max-md:mx-auto max-md:text-center">
-              <button onClick={applyHandler} className="bg-blue-600 p-2.5 px-10 text-white rounded border border-transparent hover:bg-white  hover:border-gray-500 hover:text-gray-500">{t('Apply Now')}</button>
+              <button onClick={applyHandler} className="bg-blue-600 p-2.5 px-10 text-white rounded border border-transparent hover:bg-white  hover:border-gray-500 hover:text-gray-500">{apply ? t('Already Applied') : t('Apply Now')}</button>
               <p className="mt-1 text-gray-600"> Posted {moment(jobData.date).fromNow()}</p>
             </div>
           </div>
@@ -129,13 +160,17 @@ const ApplyJob = () => {
                 dangerouslySetInnerHTML={{ __html: translatedDescription }}
               >
               </section>
-              <button onClick={applyHandler} className="ml-4 bg-blue-600 p-2.5 px-10 text-white rounded mt-10 border border-transparent hover:bg-white  hover:border-gray-500 hover:text-gray-500"> {t('Apply Now')}</button>
+              <button onClick={applyHandler} className="ml-4 bg-blue-600 p-2.5 px-10 text-white rounded mt-10 border border-transparent hover:bg-white  hover:border-gray-500 hover:text-gray-500"> {apply ? t('Already Applied') : t('Apply Now')}</button>
             </div>
 
             <div className="w-full lg:w-1/3 mt-8 lg:mt-0 lg:ml-8 space-y-5">
               <h2 className="ml-2">{t('More jobs from ')}{jobData.companyId.name}</h2>
               {
-                jobs.filter(job => job.id !== jobData._id && job.companyId._id === jobData.companyId._id).filter(job => true).slice(0, 4)
+                jobs.filter(job => job.id !== jobData._id && job.companyId._id === jobData.companyId._id)
+                  .filter(job => {
+                    const appliedJobsIds = new Set(userApplications.map(app=>app.jobId && app.jobId._id)) 
+                    return !appliedJobsIds.has(job._id) // returns true if the user has not already applied for a job
+                  }).slice(0, 4)
                   .map((job, index) => <JobCard key={index} job={job} />)
               }
             </div>

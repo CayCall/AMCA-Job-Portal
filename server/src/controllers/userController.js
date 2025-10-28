@@ -5,6 +5,8 @@ import app from "../server.js";
 import { v2 as cloudinary } from 'cloudinary'
 import { getAuth } from '@clerk/express';
 import * as streamifier from "streamifier";
+import mongoose from "mongoose";
+import { response } from "express";
 
 // this is to get the users data
 export const getDataOfUser = async (request, response) => {
@@ -36,8 +38,10 @@ export const applyJob = async (request, response) => {
     }
 
     try {
-        const existing = await JobApplication.findOne({ jobId, userId }).lean();
-        if (existing) return response.status(409).json({ success: false, message: 'Already applied' });
+        const existing = await jobApplication.findOne({ jobId, userId }).lean();
+        if (existing) {
+            return response.json({ success: false, message: 'Looks like you’ve already applied for this job!' });
+        }
 
         const jobData = await Job.findById(jobId).lean();
         if (!jobData) return response.status(404).json({ success: false, message: 'Job not found' });
@@ -45,7 +49,7 @@ export const applyJob = async (request, response) => {
             return response.status(422).json({ success: false, message: 'Job missing company' });
         }
 
-        await JobApplication.create({
+        await jobApplication.create({
             companyId: jobData.companyId,
             userId,
             jobId,
@@ -68,64 +72,56 @@ export const applyJob = async (request, response) => {
 //Get data of the jobs user has already applied for 
 export const getAppliedJobs = async (request, response) => {
     try {
-        const userId = request.auth.userId
-
-        const appliedJobs = await jobApplication.find({ userId })
-            .populate('companyId', 'name email image')
-            .populate('jobId', 'title description location category level salary')
-            .exec()
-
-        if (!appliedJobs) {
-            response.json({
-                success: false,
-                message: "no applications found."
-            })
+        const { userId } = getAuth(request);
+        if (!userId) {
+            return response
+                .status(401)
+                .json({ success: false, message: 'Not authenticated' });
         }
 
-        response.json({
-            success: true,
-            appliedJobs
-        })
+        const appliedJobs = await jobApplication
+            .find({ userId })
+            .populate('companyId', 'name email image')
+            .populate('jobId', 'title description location category level salary')
+            .exec();
 
+        return response.json({ success: true, appliedJobs });
     } catch (error) {
-
-        response.json({
-            success: false,
-            message: error.message
-        })
+        return response
+            .status(500)
+            .json({ success: false, message: error.message });
     }
-}
+
+};
+
+
 
 //this will be to update the user's current resume
 export const updateUserResume = async (request, response) => {
 
     try {
         const { userId } = getAuth(request);
-        console.log("User ID:", userId);
-        console.log("File received:", request.file?.originalname, request.file?.mimetype);
 
         if (!userId) return response.status(401).json({ success: false, message: "Please sign in to upload your resume." });
 
         const file = request.file;
         if (!file) return response.status(400).json({ success: false, message: "No resume uploaded." });
 
-        const user = await User.findOne({ clerkId: userId }); // change to match your schema
+        const user = await User.findById(userId);
         if (!user) return response.status(404).json({ success: false, message: "User not found." });
 
-        const uploadToCloudinary = () =>
-            new Promise((resolve, reject) => {
-                const upload = cloudinary.uploader.upload_stream(
-                    { resource_type: "raw", folder: "resumes" },
-                    (err, result) => (err ? reject(err) : resolve(result))
-                );
-                streamifier.createReadStream(file.buffer).pipe(upload);
-            });
+        const uploaded = await new Promise((resolve, reject) => {
+            const upload = cloudinary.uploader.upload_stream(
+                { resource_type: 'raw', folder: 'resumes' },
+                (err, result) => (err ? reject(err) : resolve(result))
+            );
+            streamifier.createReadStream(file.buffer).pipe(upload);
+        });
 
-        const uploaded = await uploadToCloudinary();
         user.resume = uploaded.secure_url;
         await user.save();
 
-        return response.json({ success: true, message: "Resume updated." });
+        return response.json({ success: true, message: 'Resume updated.' });
     } catch (err) {
         console.error("Upload error:", err);
         return response.status(500).json({ success: false, message: err.message || "Upload failed." });

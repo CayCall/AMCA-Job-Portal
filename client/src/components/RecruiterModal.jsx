@@ -161,6 +161,7 @@ const RecruiterModal = () => {
                 <img
                   src={showPassword ? assets.show : assets.hide}
                   alt="toggle password"
+                  onMouseDown={e => e.preventDefault()}
                   onClick={() => setShowPassword(!showPassword)}
                   className='w-5 h-5 cursor-pointer opacity-70 hover:opacity-100 transition'
                 />

@@ -11,7 +11,7 @@ router.post('/apply', applyJob)
 router.get('/applications', getAppliedJobs)
 
 
-router.post("/update-resume", resumeOnly.single("resume"), updateUserResume);
+router.post('/update-resume', resumeOnly.single('resume'), updateUserResume);
 
 
 export default router;
