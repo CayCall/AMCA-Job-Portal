@@ -1,6 +1,6 @@
 import React, { useState, useRef, useContext } from 'react'
 import { assets } from "../assets/assets"
-import { useClerk, UserButton, useUser } from '@clerk/clerk-react'
+import { useClerk, UserButton, useUser, useSignIn } from '@clerk/clerk-react'
 import { Link } from 'react-router-dom'
 import { ChevronDown } from "lucide-react";
 import AppContext from '../context/AppContext';

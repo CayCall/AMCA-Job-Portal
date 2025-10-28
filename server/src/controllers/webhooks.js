@@ -9,7 +9,7 @@ import mongoose from "mongoose";
 // data user fills out must be "posted" - uploaded to DB and this must be the POST ENDPOINT
 export const clerkwebHook = async (req, res) => {
     try {
-  
+
 
         console.log("[Mongo] connected to:", mongoose.connection.name);
         console.log("[Mongo] host:", mongoose.connection.host);

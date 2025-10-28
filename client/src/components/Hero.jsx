@@ -4,6 +4,7 @@ import { assets } from "../assets/assets";
 import AppContext from "../context/AppContext";
 import { useTranslation } from "react-i18next";
 import { useClerk } from '@clerk/clerk-react'
+import Orb from "./orb";
 const ROLE_KEY = "amka_role";
 
 const Hero = () => {
@@ -61,75 +62,86 @@ const Hero = () => {
 
     return (
         <div className="container 2x1:px-20 mx-auto mb-10 mt-24">
-            <div className="bg-gradient-to-r from-slate-400 to-black text-white py-16 text-center mx-2 rounded-xl">
-                <h2 className="text-2xl md:text-2xl lg:text-4xl font-medium mb-4">
-                    {t("Over 1 000+ Domestic jobs available")}
-                </h2>
-                <p className="mb-6 max-w-xl mx-auto text-sm font-light px-5 leading-relaxed">
-                    {t("Meeting people where they are, not just where we wish they were.")}
-                </p>
+            <div className="bg-gradient-to-r from-slate-500 to-black text-white py-16 text-center mx-2 rounded-xl relative">
+                {/* Orb container */}
+                <div className="relative w-full h-[400px] sm:h-[450px] md:h-[300px]">
+                    {/*code for Orb taken from react bits https://reactbits.dev/backgrounds/orb */}
 
-                {/* Role tabs */}
-                <div className="flex items-center justify-center gap-2 mb-4">
-                    <button
-                        onClick={() => updateRole("jobseeker")}
-                        className={`px-4 py-2 rounded-lg border transition ${role === "jobseeker"
-                            ? "bg-blue-600 text-white border-blue-600"
-                            : "bg-white text-gray-800"
-                            }`}
-                    >
-                        {t("I’m a Job Seeker")}
-                    </button>
-                    <button
-                        onClick={() => updateRole("recruiter")}
-                        className={`px-4 py-2 rounded-lg border transition ${role === "recruiter"
-                            ? "bg-blue-600 text-white border-blue-600"
-                            : "bg-white text-gray-800"
-                            }`}
-                    >
-                        {t("I’m a Recruiter")}
-                    </button>
-                </div>
+                    {/* Overlay content */}
+                    <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-4">
+                        <h2 className="text-2xl md:text-2xl lg:text-4xl font-medium mb-4">
+                            {t("Over 1 000+ Domestic jobs available")}
+                        </h2>
+                        <p className="mb-6 max-w-xl mx-auto text-sm font-light px-5 leading-relaxed">
+                            {t("Meeting people where they are, not just where we wish they were.")}
+                        </p>
 
-                <div className="flex items-center justify-between bg-white rounded text-gray-600 max-w-xl pl-4 mx-4 sm:mx-auto">
-                    <div className="flex items-center">
-                        <img className="h-4 sm:h-5" src={assets.search_icon} alt="" />
-                        <input
-                            type="text"
-                            placeholder={t('Search For Jobs')}
-                            className="max-sm:text-xs p-2 rounded outline-none w-full"
-                            ref={titleRef}
-                            onChange={(e) => setTitleIn(e.target.value)}
-                            disabled={role === "recruiter"}
-                        />
+                        {/* Role tabs */}
+                        <div className="flex items-center justify-center gap-2 mb-4">
+                            <button
+                                onClick={() => updateRole("jobseeker")}
+                                className={`px-4 py-2 rounded-lg border transition ${role === "jobseeker"
+                                    ? "bg-blue-600 text-white border-blue-600 animate-pulse"
+                                    : "bg-white text-gray-800"
+                                    }`}
+                            >
+                                {t("I’m a Job Seeker")}
+                            </button>
+                            <button
+                                onClick={() => updateRole("recruiter")}
+                                className={`px-4 py-2 rounded-lg border transition ${role === "recruiter"
+                                    ? "bg-blue-600 text-white border-blue-600 animate-pulse"
+                                    : "bg-white text-gray-800"
+                                    }`}
+                            >
+                                {t("I’m a Recruiter")}
+                            </button>
+                        </div>
+
+                        {/* Search bar */}
+                        <div className="flex items-center justify-between bg-white rounded text-gray-600 max-w-xl pl-4 mx-4 sm:mx-auto">
+                            <div className="flex items-center">
+                                <img className="h-4 sm:h-5" src={assets.search_icon} alt="" />
+                                <input
+                                    type="text"
+                                    placeholder={t('Search For Jobs')}
+                                    className="max-sm:text-xs p-2 rounded outline-none w-full"
+                                    ref={titleRef}
+                                    onChange={(e) => setTitleIn(e.target.value)}
+                                    disabled={role === "recruiter"}
+                                />
+                            </div>
+                            <div className="flex items-center">
+                                <img className="h-4 sm:h-5" src={assets.location_icon} alt="" />
+                                <input
+                                    type="text"
+                                    placeholder={t('Location')}
+                                    className="max-sm:text-xs p-2 rounded outline-none w-full"
+                                    ref={locationRef}
+                                    onChange={(e) => setLocationIn(e.target.value)}
+                                    disabled={role === "recruiter"}
+                                />
+                            </div>
+                            <button
+                                onClick={onSearch}
+                                className="bg-blue-600 px-6 py-2 rounded text-white m-1"
+                            >
+                                {t('Search')}
+                            </button>
+                        </div>
+
+                        <p className="mt-3 text-xs opacity-80">
+                            {role === "recruiter"
+                                ? t("Post a job, manage applicants, and hire talent.")
+                                : t("Search, filter, save, and apply to jobs.")}
+                        </p>
                     </div>
-                    <div className="flex items-center">
-                        <img className="h-4 sm:h-5" src={assets.location_icon} alt="" />
-                        <input
-                            type="text"
-                            placeholder={t('Location')}
-                            className="max-sm:text-xs p-2 rounded outline-none w-full"
-                            ref={locationRef}
-                            onChange={(e) => setLocationIn(e.target.value)}
-                            disabled={role === "recruiter"}
-                        />
-                    </div>
-                    <button
-                        onClick={onSearch}
-                        className="bg-blue-600 px-6 py-2 rounded text-white m-1"
-                    >
-                        {t('Search')}
-                    </button>
                 </div>
-
-                <p className="mt-3 text-xs opacity-80">
-                    {role === "recruiter"
-                        ? t("Post a job, manage applicants, and hire talent.")
-                        : t("Search, filter, save, and apply to jobs.")}
-                </p>
             </div>
         </div>
     );
+
+
 };
 
 export default Hero;

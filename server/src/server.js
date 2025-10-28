@@ -12,7 +12,6 @@ import userRoutes from './routes/userRoutes.js'
 import languageRoutes from './routes/languageRoute.js';
 import { clerkMiddleware } from '@clerk/express'
 import { connectCloudinary, cloudinary } from './config/cloudinary.js';
-
 /*
     Server Architecture :
     1. Front-End(Client) - to send requests (http intents(POST,GET)) to the server, e.g user signing up or conmpleting form
@@ -25,14 +24,10 @@ import { connectCloudinary, cloudinary } from './config/cloudinary.js';
 //will allows the app to process http requests, manage certain routes and incorporate middleware("transition layer" - DB, sign ins)
 const app = express()
 
-
 await connectCloudinary();
 await cloudinary.api.ping()
-    .then(() => console.log("✅ Cloudinary connected"))
-    .catch((err) => console.error("❌ Cloudinary misconfigured:", err.message));
-
-
-
+    .then(() => console.log(" Cloudinary connected"))
+    .catch((err) => console.error(" Cloudinary misconfigured:", err.message));
 await connectDB();
 
 //Middleware - transition layer (req(), res(), next())- sits between the http request and the response

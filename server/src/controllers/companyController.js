@@ -187,13 +187,6 @@ export const ChangeJobStatus = async (request, response) => {
 
 
 
-
-
-
-
-
-
-
 }
 
 //for a recruiter to show or not show a job
