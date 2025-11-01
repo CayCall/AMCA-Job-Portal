@@ -110,7 +110,7 @@ const RecruiterManage = () => {
               <th className="py-2 px-4 border-b text-left max-sm:hidden">Location</th>
               <th className="py-2 px-4 border-b text-center">Applicants</th>
               <th className="py-2 px-4 border-b text-left">Visible</th>
-              <th className="py-2 px-4 border-b text-left">Actions</th> {/* NEW */}
+              <th className="py-2 px-4 border-b text-left">Actions</th> 
             </tr>
           </thead>
           <tbody>

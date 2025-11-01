@@ -69,18 +69,19 @@ export const assets = {
     hide,
     show
 }
-
 export const JobCategories = [
-    "Construction",
-    "Plumbing",
-    "Electrical",
-    "Carpentry",
-    "Landscaping",
-    "Welding",
-    "Painting",
-    "Masonry",
-    "Cleaner"
+    // Core trades
+    "Construction", "Plumbing", "Electrical", "Carpentry",
+    "Painting", "Welding",
+
+    // Domestic & service
+    "Housekeeper", "Nanny / Childminder", "Gardener",
+    "Cook / Home Chef", "Driver", "Handyman", "Cleaner",
+
+    // Home & repair
+    "Security Guard", "Appliance Repair", "Pest Control"
 ];
+
 
 export const JobLocations = [
     "Johannesburg",
@@ -89,8 +90,12 @@ export const JobLocations = [
     "Pretoria",
     "Port Elizabeth",
     "Bloemfontein",
+    "Polokwane",
+    "Nelspruit",
+    "Kimberley",
     "East London"
 ];
+
 
 // Sample data for Manage Jobs Page
 export const manageJobsData = [
@@ -913,7 +918,7 @@ export const jobsData = [
             _id: "671a9e45cf7c3a9e2bf367d7",
             name: "Pretoria Electricals",
             email: "contact@pretoriaelectricals.co.za",
-            image:"fakeCompanyTwo",
+            image: "fakeCompanyTwo",
         },
         description: `
     <p>Install, maintain, and repair electrical wiring, equipment, and fixtures in residential and commercial buildings.  <!-- more -->  </p>

@@ -1,7 +1,7 @@
 {
     "_comment1": "Navbar",
     "Login": "Ngena",
-    "Recruiter Login": "Ukungena komqashi",
+    "Recruiter Portal": "Isango Lomqashi",
     "Applied Jobs": "Imisebenzi Efakiwe",
     "Hi": "Sawubona",
     "Language": "Ulimi",
@@ -33,6 +33,9 @@
     "I’m a Job Seeker": "Ngingumfuna msebenzi",
     "I’m a Recruiter": "Ngingumqashi",
     "Post a job, manage applicants, and hire talent.": "Faka umsebenzi, phatha abafakizicelo, bese uqasha ithalente.",
+    "Search categories...": "Sesha izigaba...",
+    "Search locations...": "Sesha izindawo...",
+    "Loading jobs…": "Ilayisha imisebenzi…",
     "_comment4": "Apply Job Section",
     "Job Description": " Incazelo Yomsebenzi",
     "Posted on": "Kuthunyelwe ngo",

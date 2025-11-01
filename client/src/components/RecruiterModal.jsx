@@ -24,11 +24,11 @@ const RecruiterModal = () => {
   const [hasSubmitted, setSubmit] = useState(false)
 
   const navigate = useNavigate();
-  /*useEffect(() => {
-    if (submitData) {
-      toast.success("Account created successfully.");
-    }
-  }, [submitData]);*/
+
+
+
+
+
 
   const onSubmitHandler = async (e) => {
     e.preventDefault();
@@ -48,6 +48,7 @@ const RecruiterModal = () => {
           localStorage.setItem('companyToken', data.token)
           setRecruiterLogin(false)
           navigate('/dashboard')
+          toast.success("Successfully logged in.")
         }
         else {
           toast.error(data.message)
@@ -69,6 +70,7 @@ const RecruiterModal = () => {
           localStorage.setItem('companyToken', data.token)
           setRecruiterLogin(false)
           navigate('/dashboard')
+          toast.success("Account created successfully.");
         } else {
           toast.error("Account does not exist, please signup.")
         }
@@ -93,7 +95,7 @@ const RecruiterModal = () => {
   return (
     <div className="fixed inset-0 z-10 bg-black/30 backdrop-blur-sm flex justify-center items-center p-4">
       <form onSubmit={onSubmitHandler} className="relative bg-white p-6 sm:p-12 rounded-xl text-slate-500 w-full max-w-sm sm:max-w-md max-h-[90vh] sm:h-[480px] flex flex-col justify-start overflow-auto" action="">
-        <h1 className='text-center text-2xl text-neutral-700 font-medium'>Recruiter {active}</h1>
+        <h1 className='text-center text-2xl text-neutral-700 font-medium'> Recruiter {active}</h1>
 
         {active === "Login"
           ? <p className='text-sm text-center'> Welcome back ! Please sign in to continue</p>

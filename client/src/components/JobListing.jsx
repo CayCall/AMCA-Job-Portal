@@ -10,6 +10,7 @@ const JobListing = () => {
     const { isSearched, searchFilter, setSearchFilter, backendUrl } = useContext(AppContext)
     const [showFilter, setShowFilter] = useState(false);
 
+    //state for search numerous jobs with same string 
     const [selectedCategories, setSelectedCategories] = useState([]);
     const [selectedLocations, setSelectedLocations] = useState([]);
 
@@ -19,9 +20,16 @@ const JobListing = () => {
     const [jobs, setJobs] = useState([]);
     const [loading, setLoading] = useState(true);
 
+    // job listings
     const { job, applicantCount } = useState(null);
     const [lang, setLang] = useState(localStorage.getItem('lang') || 'en');;
     const sourceJobs = jobs.length ? jobs : jobsData;
+
+    //filters sections
+    const [catQuery, setCatQuery] = useState("");
+    const [locQuery, setLocQuery] = useState("");
+    const [showFilters, setShowFilters] = useState(false)
+
     const handleCategoryChange = (category) => {
         setSelectedCategories(
             prev => prev.includes(category) ? prev.filter(c => c !== category) : [...prev, category]
@@ -160,11 +168,19 @@ const JobListing = () => {
                     </button>
                 </div>
 
+                        
                 {/* Category filter */}
-                <div className={showFilter ? '' : 'max-lg:hidden'}>
-                    <h4 className="font-medium text-lg py-4">{t('Search by Categories')}</h4>
-                    <ul className="space-y-4 text-gray-600">
-                        {JobCategories.map((category, index) => (
+                <input
+                    type="text"
+                    placeholder={t('Search categories...')}
+                    className="w-52 px-2 py-1 border rounded text-sm mb-2 mt-2"
+                    value={catQuery}
+                    onChange={(e) => setCatQuery(e.target.value)}
+                />
+
+                <ul className="space-y-4 text-gray-600">
+                    {JobCategories.filter(c => c.toLowerCase().includes(catQuery.toLowerCase()))
+                        .map((category, index) => (
                             <li key={index} className="flex gap-3 items-center">
                                 <input
                                     type="checkbox"
@@ -176,12 +192,22 @@ const JobListing = () => {
                                 <label htmlFor={`category-${index}`}>{category}</label>
                             </li>
                         ))}
-                    </ul>
-                </div>
+                </ul>
+
 
                 {/* Location filter */}
                 <div className={showFilter ? '' : 'lg:hidden'}>
+
+
+
                     <h4 className="font-medium text-lg py-4">{t('Search by Location')}</h4>
+                    <input
+                        type="text"
+                        placeholder={t('Search locations...')}
+                        className="w-52 px-2 py-1 border rounded text-sm mb-2 mt-2"
+                        value={locQuery}
+                        onChange={(e) => setLocQuery(e.target.value)}
+                    />
                     <ul className="space-y-4 text-gray-600">
                         {JobLocations.map((location, index) => (
                             <li key={index} className="flex gap-3 items-center">

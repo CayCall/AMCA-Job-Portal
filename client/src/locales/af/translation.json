@@ -1,7 +1,7 @@
 {
     "_comment1": "Navbar",
     "Login": "Teken In",
-    "Recruiter Login": "Werwer Teken In",
+    "Recruiter Portal": "Werweringsportaal",
     "Applied Jobs": "Aangewese Werk",
     "Hi": "Hallo",
     "Language": "Taal",
@@ -34,6 +34,9 @@
     "Mark As Favorite ☆": "Merk as gunsteling ☆",
     "Apply Now": "Aansoek Nou",
     "Learn More": "Leer Meer",
+    "Loading jobs…": "Laai poste…",
+    "Search categories...": "Soek kategorieë...",
+    "Search locations...": "Soek plekke...",
     "_comment4": "Apply Job Section",
     "Job Description": "Beskrywing van Werk",
     "_comment5": "Footer Section",

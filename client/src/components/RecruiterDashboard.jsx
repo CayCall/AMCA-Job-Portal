@@ -2,6 +2,7 @@ import React, { useContext, useEffect } from 'react'
 import { NavLink, Outlet, useNavigate } from 'react-router-dom'
 import { assets } from '../assets/assets'
 import AppContext from '../context/AppContext';
+import {toast} from 'react-hot-toast';
 
 const RecruiterDashboard = () => {
     const navigate = useNavigate();
@@ -13,6 +14,7 @@ const RecruiterDashboard = () => {
         localStorage.removeItem('companyToken')
         setCompanyData(null)
         navigate('/')
+        toast.success("Successfully logged out.")
     }
 
     useEffect(() => {
