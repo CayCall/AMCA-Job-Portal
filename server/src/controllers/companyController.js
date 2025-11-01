@@ -4,7 +4,7 @@ import { v2 as cloudinary } from 'cloudinary';
 import generateToken from "../utils/generateToken.js";
 import Job from "../models/JobDataSchema.js";
 import jobApplication from "../models/jobApplicationSchema.js";
-import { application } from "express";
+import { application, response } from "express";
 
 //this will be when a user registers a new company - a new recruiter
 export const companyRegister = async (request, response) => {
@@ -171,6 +171,49 @@ export const retrieveJobsPosted = async (request, response) => {
 
 }
 
+
+// retrieve top 3 most applied for jobs
+
+export const retrieveMostApplied = async (request, response) => {
+    //get all 
+
+    try {
+        const companyId = request.company._id;
+        // using lean function as i will just be displaying data on the client, no modifications needed and offers great performance optimisation
+        const jobs = await Job.find({ companyId }).lean();
+
+        const jobData = await Promise.all(
+            jobs.map(async (job) => {
+                const applicants = await jobApplication.countDocuments({ jobId: job._id });
+                return { ...job, applicants };
+            })
+        );
+
+        if (jobData.length > 0) {
+            return response.json({
+                success: true,
+                message: "Jobs retrieved successfully.",
+                jobs: jobData,
+            });
+        } else {
+            return response.json({
+                success: false,
+                message: "No jobs or applications found.",
+                jobs: [],
+            });
+        }
+
+    } catch (error) {
+        console.error("Error retrieving most applied jobs:", error);
+        return res.status(500).json({
+            success: false,
+            message: "Server error while retrieving job data.",
+            error: error.message,
+        });
+    }
+
+}
+
 //change the status of an applicants job
 export const ChangeJobStatus = async (request, response) => {
 
@@ -182,7 +225,7 @@ export const ChangeJobStatus = async (request, response) => {
         response.json({ success: true, message: 'Status Changed' })
 
     } catch (error) {
-        response.json({success:false, message: error.message})
+        response.json({ success: false, message: error.message })
     }
 
 
@@ -211,7 +254,22 @@ export const changeJobVisible = async (request, response) => {
 }
 
 
+export const deleteJob = async (request, response) => {
+    try {
+        const { id } = request.params;
+        const companyId = request.company._id
 
+        const deleted = await Job.findOneAndDelete({ _id: id, companyId });
+        if (!deleted) return response.json({ success: false, message: 'Job not found' });
+
+
+        // await Application.deleteMany({ jobId: id });
+
+        return response.json({ success: true, message: 'Job deleted' });
+    } catch (e) {
+        return response.json({ success: false, message: e.message });
+    }
+};
 
 
 

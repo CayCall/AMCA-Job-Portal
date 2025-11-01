@@ -1,7 +1,8 @@
 import express from "express";
-import { switchLanguage } from "../controllers/languageController.js";
+import { getJobs , getSingleJob } from "../controllers/languageController.js";
 
 const router = express.Router();
-router.post("/translate/:target", switchLanguage);
 
+router.get("/jobs", getJobs);
+router.get("/jobs/:id", getSingleJob);
 export default router;

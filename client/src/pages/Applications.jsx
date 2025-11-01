@@ -235,14 +235,14 @@ const Applications = () => {
                       <td className="px-2 py-4 border-b">{moment(app?.date ?? Date.now()).format('ll')}</td>
                       <td className="px-2 py-4 border-b">
                         <span
-                          className={`${app?.status === 'Accepted'
+                          className={`${app?.status === t('Accepted')
                             ? 'bg-green-100'
-                            : app?.status === 'Rejected'
+                            : app?.status === t('Rejected')
                               ? 'bg-red-100'
                               : 'bg-blue-100'
                             } px-4 py-1.5 rounded`}
                         >
-                          {app?.status ?? 'Pending'}
+                          {app?.status ?? t('Pending')}
                         </span>
                       </td>
                     </tr>

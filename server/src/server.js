@@ -9,9 +9,10 @@ import { clerkwebHook } from './controllers/webhooks.js'
 import companyRoutes from './routes/companyRoutes.js'
 import jobRoutes from './routes/jobRoutes.js'
 import userRoutes from './routes/userRoutes.js'
-import languageRoutes from './routes/languageRoute.js';
+import languageRoutes from "./routes/languageRoute.js";
 import { clerkMiddleware } from '@clerk/express'
 import { connectCloudinary, cloudinary } from './config/cloudinary.js';
+
 /*
     Server Architecture :
     1. Front-End(Client) - to send requests (http intents(POST,GET)) to the server, e.g user signing up or conmpleting form
@@ -60,8 +61,7 @@ app.use('/api/jobs', jobRoutes)
 //job seeker side & and job seeker functionality
 app.use('/api/users', userRoutes)
 
-
-app.use('/api/language', languageRoutes)
+app.use("/api/lang", languageRoutes);
 
 app.get('/__routes', (_req, res) => {
     const routes = [];
@@ -79,7 +79,7 @@ app.get('/__routes', (_req, res) => {
     res.json(routes);
 });
 
-
+console.log('GOOGLE_TRANSLATE_KEY set?', !!process.env.GOOGLE_TRANSLATE_KEY);
 Sentry.setupExpressErrorHandler(app);
 
 export default app;

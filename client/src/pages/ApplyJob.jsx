@@ -14,6 +14,10 @@ import axios from "axios";
 import { useAuth } from "@clerk/clerk-react";
 const ApplyJob = () => {
   const { t, i18n } = useTranslation();
+  useEffect(() => {
+    moment.locale((i18n.language || 'en').split('-')[0]);
+  }, [i18n.language]);
+
   const { id } = useParams();
 
   const { getToken } = useAuth();
@@ -21,6 +25,8 @@ const ApplyJob = () => {
   const navigate = useNavigate();
 
   const [jobData, setJobData] = useState(null);
+  const [originalJob, setOriginalJob] = useState(null);
+  const [translating, setTranslating] = useState(false);
   const [loading, setLoading] = useState(true);
   const [apply, setApply] = useState(false);
 
@@ -34,6 +40,7 @@ const ApplyJob = () => {
 
       if (data.success) {
         setJobData(data.job)
+        return data.job;
       }
       else {
         toast.error(data.message)
@@ -42,6 +49,49 @@ const ApplyJob = () => {
       toast.error(error.message)
     }
   }
+  const translateJob = async (lang) => {
+    try {
+      setTranslating(true);
+      const { data } = await axios.get(`${backendUrl}/api/lang/jobs/${id}?lang=${lang}`);
+      if (data.success) setJobData(data.job);
+      else toast.error(data.message);
+    } catch (err) {
+      toast.error(err.message);
+    } finally {
+      setTranslating(false);
+    }
+  };
+
+  const ensureOriginal = async () => {
+    if (originalJob) return;
+    const job = await fetchJob();
+    if (job) setOriginalJob(job);
+    return job;
+  };
+  useEffect(() => {
+    const onLangChange = async (e) => {
+      const lang = (e.detail || 'en').split('-')[0];
+
+      if (lang === 'en') {
+        if (!originalJob) {
+
+          await ensureOriginal();
+        }
+
+        if (originalJob) setJobData(originalJob);
+        return;
+      }
+
+
+      if (!originalJob) await ensureOriginal();
+      await translateJob(lang);
+    };
+
+    window.addEventListener('lang-change', onLangChange);
+    return () => window.removeEventListener('lang-change', onLangChange);
+
+  }, [originalJob, jobData, id]);
+
 
   const jobsApplied = () => {
     const hasApplied = userApplications.some(item => item.jobId._id === jobData._id)
@@ -151,7 +201,7 @@ const ApplyJob = () => {
             </div>
             <div className="flex flex-col justify-center text-end text-sm max-md:mx-auto max-md:text-center">
               <button onClick={applyHandler} className="bg-blue-600 p-2.5 px-10 text-white rounded border border-transparent hover:bg-white  hover:border-gray-500 hover:text-gray-500">{apply ? t('Already Applied') : t('Apply Now')}</button>
-              <p className="mt-1 text-gray-600"> Posted {moment(jobData.date).fromNow()}</p>
+              <p className="mt-1 text-center text-gray-600"> {t('Posted on')} {moment(jobData.date).format('D MMMM YYYY')}</p>
             </div>
           </div>
           <div className="flex flex-col lg:flex-row justify-between items-start">
@@ -164,7 +214,7 @@ const ApplyJob = () => {
               <button onClick={applyHandler} className="ml-4 bg-blue-600 p-2.5 px-10 text-white rounded mt-10 border border-transparent hover:bg-white  hover:border-gray-500 hover:text-gray-500"> {apply ? t('Already Applied') : t('Apply Now')}</button>
             </div>
 
-            <div className="w-full lg:w-1/3 mt-8 lg:mt-0 lg:ml-8 space-y-5">
+            <div className="w-full lg:w-1/3 mt-8 lg:mt-0 space-y-5">
               <h2 className="ml-2">{t('More jobs from ')}{jobData.companyId.name}</h2>
               {
                 jobs.filter(job => job.id !== jobData._id && job.companyId._id === jobData.companyId._id)

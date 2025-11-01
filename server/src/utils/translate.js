@@ -1,10 +1,30 @@
-export async function translateText(text, target, source = "en") {
-  if (!text || target === source) return text;
-  const res = await fetch(`/api/translate/${target}`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ text, source })
-  });
-  const data = await res.json().catch(() => ({}));
-  return data?.translatedText || text;
+import axios from "axios";
+
+const URL = "https://translation.googleapis.com/language/translate/v2";
+const KEY = process.env.GOOGLE_TRANSLATE_KEY;
+
+export async function gTranslate(text, target, source = "en", format = "html") {
+  if (!text?.trim() || source === target) return text;
+
+  try {
+    const response = await axios.post(
+      `${URL}?key=${KEY}`,
+      {
+        q: text,
+        source,
+        target,
+        format,
+      },
+      {
+        headers: { "Content-Type": "application/json" },
+        timeout: 10000,
+      }
+    );
+
+    const translated = response.data?.data?.translations?.[0]?.translatedText;
+    return translated || text;
+  } catch (err) {
+    console.error("Google Translate error:", err.response?.data || err.message);
+    return text;
+  }
 }

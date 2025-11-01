@@ -19,6 +19,7 @@ const AppContextProvider = (props) => {
   const [isSearched, setIsSearched] = useState(false);
 
   const [jobs, setJobs] = useState([]);
+  const [lang, setLang] = useState(localStorage.getItem('lang') || 'en');
 
   const [showRecruiterLogin, setRecruiterLogin] = useState(false)
 
@@ -46,7 +47,19 @@ const AppContextProvider = (props) => {
     }
 
   };
+  const fetchJobsLang = async (l = lang) => {
+    const { data } = await axios.get(`${backendUrl}/api/jobs?lang=${l}`);
+    setJobs(data.jobs || []);
+  };
+  useEffect(() => {
+    fetchJobs(lang);
+  }, [lang]);
 
+  useEffect(() => {
+    const onLang = (e) => setLang(e.detail || 'en');   // updates state -> triggers fetch
+    window.addEventListener('lang-change', onLang);
+    return () => window.removeEventListener('lang-change', onLang);
+  }, []);
 
   // RECRUITER SIDE
 
@@ -153,7 +166,9 @@ const AppContextProvider = (props) => {
     userData, setUserData,
     userApplications, setUserApplications,
     fetchUserInfo,
-    fetchApplications
+    fetchApplications,
+    lang,
+    fetchJobsLang
   }
   return (
     <AppContext.Provider value={value}>

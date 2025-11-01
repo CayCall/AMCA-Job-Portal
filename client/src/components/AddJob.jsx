@@ -1,3 +1,4 @@
+//recruiter view applications
 import React, { useContext, useEffect, useRef, useState } from 'react'
 import Quill from 'quill'
 import 'quill/dist/quill.snow.css'
@@ -11,9 +12,9 @@ import toast from 'react-hot-toast';
 
 const AddJob = () => {
     const [title, setTitle] = useState("");
-    const [location, setLocation] = useState("Johannesburg")
-    const [category, setCategory] = useState("Plumber")
-    const [level, setLevel] = useState('Experienced')
+    const [location, setLocation] = useState(JobLocations[0]);
+    const [category, setCategory] = useState(JobCategories[0]);
+    const [level, setLevel] = useState("Beginner Level");
     const [salary, setSalary] = useState(0)
 
     const editorRef = useRef(null)
@@ -23,7 +24,6 @@ const AddJob = () => {
     const onSubmitHandler = async (e) => {
         e.preventDefault();
         try {
-
             const description = quillRef.current.root.innerHTML;
             const { data } = await axios.post(backendUrl + '/api/company/post-job',
 
@@ -35,7 +35,7 @@ const AddJob = () => {
                 toast.success("Job succesfully posted!")
                 setTitle('')
                 setSalary(0)
-                quillRef.current.root.innerHtml = ""
+                quillRef.current.root.innerHTML = "";
             }
             else {
                 toast.error(data.message)
@@ -97,7 +97,7 @@ const AddJob = () => {
 
                 <div>
                     <p className='mb-2 font-medium text-lg' >Job Location</p>
-                    <select className=' w-full px-3 py-2 border-2 border-gray-300 rounded' onChange={e => setCategory(e.target.value)}>
+                    <select className=' w-full px-3 py-2 border-2 border-gray-300 rounded' onChange={e => setLocation(e.target.value)}>
                         {JobLocations.map((Location, index) => (
                             <option key={index} value={Location}>{Location}</option>
                         ))}
@@ -105,7 +105,7 @@ const AddJob = () => {
                 </div>
                 <div>
                     <p className='mb-2 font-medium text-lg'>Job Level</p>
-                    <select className=' w-full px-3 py-2 border-2 border-gray-300 rounded' onChange={e => setCategory(e.target.value)}>
+                    <select className=' w-full px-3 py-2 border-2 border-gray-300 rounded' onChange={e => setLevel(e.target.value)}>
                         <option value="Beginner Level"> Beginner Level</option>
                         <option value="Intermediate Level"> Intermediate Level</option>
                         <option value="Senior Level"> Senior Level</option>
@@ -113,7 +113,7 @@ const AddJob = () => {
                 </div>
                 <div>
                     <p className='mb-2 font-medium text-lg' >Job Salary</p>
-                    <input min={0} className='w-full px-3 py-2 border-2 border-gray-300 rounded-sm:w-[120px]' onChange={e => setSalary(e.target.value)} type='Number' placeholder='30000'></input>
+                    <input min={0} className='w-full px-3 py-2 border-2 border-gray-300 rounded-sm:w-[120px]' onChange={e => setSalary(e.target.value)} type='number' placeholder='30000'></input>
                 </div>
 
             </div>

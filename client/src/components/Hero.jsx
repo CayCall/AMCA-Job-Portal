@@ -4,7 +4,7 @@ import { assets } from "../assets/assets";
 import AppContext from "../context/AppContext";
 import { useTranslation } from "react-i18next";
 import { useClerk } from '@clerk/clerk-react'
-import Orb from "./orb";
+
 const ROLE_KEY = "amka_role";
 
 const Hero = () => {
@@ -26,10 +26,6 @@ const Hero = () => {
         if (next == "recruiter") {
             setRecruiterLogin(true);
         }
-
-
-
-
 
 
     };
@@ -80,7 +76,7 @@ const Hero = () => {
                         <div className="flex items-center justify-center gap-2 mb-4">
                             <button
                                 onClick={() => updateRole("jobseeker")}
-                                className={`px-4 py-2 rounded-lg border transition ${role === "jobseeker"
+                                className={`px-7 py-2 rounded-lg border transition ${role === "jobseeker"
                                     ? "bg-blue-600 text-white border-blue-600 animate-pulse"
                                     : "bg-white text-gray-800"
                                     }`}
@@ -89,7 +85,7 @@ const Hero = () => {
                             </button>
                             <button
                                 onClick={() => updateRole("recruiter")}
-                                className={`px-4 py-2 rounded-lg border transition ${role === "recruiter"
+                                className={`px-7 py-2 rounded-lg border transition ${role === "recruiter"
                                     ? "bg-blue-600 text-white border-blue-600 animate-pulse"
                                     : "bg-white text-gray-800"
                                     }`}

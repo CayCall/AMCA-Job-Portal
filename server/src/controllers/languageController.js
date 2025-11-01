@@ -1,34 +1,69 @@
-import axios from "axios";
-const ALLOWED = new Set(["en", "af", "zu", "st"]);
 
+import Job from '../models/JobDataSchema.js';
+import { gTranslate } from '../utils/translate.js';
 
-export const switchLanguage = async (req, res) => {
-  const { target } = req.params || {};
-  const { text, source = "en" } = req.body || {};
+const SUPPORTED = new Set(['en', 'af', 'zu', 'st']);
 
-  if (!text?.trim()) return res.status(400).json({ error: "send body { text }" });
-  if (!ALLOWED.has(target) || !ALLOWED.has(source)) {
-    return res.status(400).json({ error: "source/target must be en|af|zu|st" });
-  }
+async function translateField(value, target) {
+  if (!value) return value;
 
+  return gTranslate(String(value), target, 'en', 'html');
+}
+
+async function translateJobDoc(doc, target) {
+
+  const job = doc.toObject ? doc.toObject() : doc;
+
+  job.title = await translateField(job.title, target);
+  job.description = await translateField(job.description, target);
+  job.category = await translateField(job.category, target);
+  job.location = await translateField(job.location, target);
+  job.level = await translateField(job.level, target);
+
+  return job;
+}
+
+export const getJobs = async (request, response) => {
   try {
-    const r = await axios.get("https://api.mymemory.translated.net/get", {
-      params: { q: text, langpair: `${source}|${target}` },
-      timeout: 10000
-    });
-    const out = r.data?.responseData?.translatedText;
-    if (!out) return res.status(502).json({ error: "translation failed", raw: r.data });
-    return res.json({ ok: true, from: source, to: target, translatedText: out, engine: "mymemory" });
+    const lang = String(request.query.lang || 'en').toLowerCase();
+
+    const jobs = await Job.find({ visible: true })
+      .populate({ path: 'companyId', select: '-password -apiKeys -secrets' });
+
+
+    if (!SUPPORTED.has(lang) || lang === 'en') {
+      return response.json({ success: true, jobs });
+    }
+
+    const translated = await Promise.all(jobs.map(j => translateJobDoc(j, lang)));
+    return response.json({ success: true, jobs: translated });
   } catch (e) {
-    return res.status(502).json({ error: "translation failed" });
+    console.error('getJobs error:', e.message);
+    return response.status(500).json({ success: false, error: 'server error' });
   }
 };
 
 
 
+//this translates one single job for the apply page 
+export const getSingleJob = async (req, res) => {
+  try {
+    const lang = String(req.query.lang || 'en').toLowerCase();
+    const job = await Job.findById(req.params.id)
+      .populate({ path: 'companyId', select: '-password -apiKeys -secrets' });
 
+    if (!job) return res.status(404).json({ success: false, message: 'Job not found' });
 
+    if (lang === 'en' || !SUPPORTED.has(lang)) {
+      return res.json({ success: true, job });
+    }
 
+    const translated = await translateJobDoc(job, lang);
+    return res.json({ success: true, job: translated });
+  } catch (e) {
+    return res.status(500).json({ success: false, message: 'server error' });
+  }
+};
 
 
 

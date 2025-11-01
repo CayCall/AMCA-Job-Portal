@@ -16,7 +16,7 @@ const readFavs = () => {
 const writeFavs = (ids) => {
   try {
     localStorage.setItem(FAVS_KEY, JSON.stringify(ids.map(String)));
-  } catch {}
+  } catch { }
 };
 
 const JobCard = ({ job }) => {
@@ -24,12 +24,15 @@ const JobCard = ({ job }) => {
   const [bookmarked, setBookmarked] = useState(false);
   const navigate = useNavigate();
 
-  const getPreview = (description) => {
-    if (!description) return '';
-    return description.includes('<!-- more -->')
-      ? description.split('<!-- more -->')[0]
-      : description.slice(0, 150);
+
+
+  const toPreview = (html) => {
+    if (!html) return "";
+    if (html.includes("<!-- more -->")) return html.split("<!-- more -->")[0];
+    return html.slice(0, 150);
   };
+
+
 
   useEffect(() => {
     const favs = readFavs();
@@ -43,10 +46,10 @@ const JobCard = ({ job }) => {
     const next = favs.includes(id) ? favs.filter((x) => x !== id) : [...favs, id];
     writeFavs(next);
     setBookmarked(next.includes(id));
-     };
+  };
 
   return (
-    <div className="relative border p-8 m-2 shadow rounded h-[350px] flex flex-col justify-between bg-white">
+    <div className="relative border p-8 m-2 shadow rounded h-[370px] flex flex-col justify-between bg-white">
       {/* Bookmark button */}
       <button
         onClick={toggleBookmark}
@@ -76,10 +79,11 @@ const JobCard = ({ job }) => {
           </span>
         </div>
 
-        <div className="mt-7 min-h-[72px] text-base/7 text-gray-500">
-          <p
+        <div className="mt-6 min-h-[72px] ">
+          <p className='text-base/7 text-gray-500'
             dangerouslySetInnerHTML={{
-              __html: getPreview(job.description),
+              __html: toPreview(job.description),
+
             }}
           />
         </div>

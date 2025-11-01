@@ -1,3 +1,6 @@
+//recruiter view applications
+
+
 import React, { useContext, useEffect, useState } from 'react'
 import { assets, viewApplicationsPageData } from '../assets/assets'
 import { useTranslation } from 'react-i18next';

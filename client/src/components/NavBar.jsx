@@ -1,39 +1,21 @@
-import React, { useState, useRef, useContext } from 'react'
+import React, { useState, useRef, useContext, useEffect } from 'react'
 import { assets } from "../assets/assets"
-import { useClerk, UserButton, useUser, useSignIn } from '@clerk/clerk-react'
+import { useClerk, UserButton, useUser } from '@clerk/clerk-react'
 import { Link } from 'react-router-dom'
 import { ChevronDown } from "lucide-react";
 import AppContext from '../context/AppContext';
 import AppContextProvider from '../context/AppContextProvider';
 import { useTranslation } from 'react-i18next';
+import axios from 'axios';
+import moment from 'moment/min/moment-with-locales';
 const NavBar = () => {
     const { t, i18n } = useTranslation();
     const { openSignIn } = useClerk();
     const { user } = useUser();
 
 
-    // drop down
-    const [dropdown, setDropDown] = useState(false);
-    const timeoutRef = useRef(null);
-    const handleMouseEnter = () => {
-
-        if (timeoutRef.current) {
-            clearTimeout(timeoutRef.current);
-            timeoutRef.current = null;
-        }
-        setDropDown(true);
-    };
-
-    const handleMouseLeave = () => {
-
-        timeoutRef.current = setTimeout(() => {
-            setDropDown(false);
-        }, 300);
-    };
-
-
     //Login Modal 
-    const { setRecruiterLogin, handleLanguageChange } = useContext(AppContext)
+    const { setRecruiterLogin, handleLanguageChange, backendUrl, setJobs, } = useContext(AppContext)
     //this is the hamburger menu for responsiveness
 
     const toggleMenu = () => setMenuOpen(!menuOpen);
@@ -44,17 +26,82 @@ const NavBar = () => {
     const languages = ["en", "zu", "af", "st"];
     const languageNames = { en: "English", zu: "isiZulu", af: "Afrikaans", st: "Sesotho" };
     const [loadingLang, setLoadingLang] = useState(false);
+    const [pauseSpin, setPauseSpin] = useState(false);
+
+    const delay = (ms) => new Promise((r) => setTimeout(r, ms));
+
 
     const changeLanguage = async (lang) => {
-        setLoadingLang(true);
         try {
+            await delay(100)
             await i18n.changeLanguage(lang);
-            localStorage.setItem('lang', lang);
-            window.dispatchEvent(new CustomEvent('lang-change', { detail: lang }));
-        } finally {
-            setTimeout(() => setLoadingLang(false), 1000);
+            localStorage.setItem("lang", lang);
+            moment.locale(lang.split("-")[0]);
+            window.dispatchEvent(new CustomEvent("lang-change", { detail: lang }));
+            setDropDown(false);
+            setLoadingLang(true);
+            await delay(1000);
+            setTimeout(() => {
+                setLoadingLang(false);
+            }, 3000);
+        } catch (e) {
+            setLoadingLang(false);
+            console.error(e);
         }
     };
+
+
+
+
+    useEffect(() => {
+        return () => {
+            if (timeoutRef.current) clearTimeout(timeoutRef.current);
+        };
+    }, []);
+
+
+
+
+    // drop down
+    const [dropdown, setDropDown] = useState(false);
+    const timeoutRef = useRef(null);
+    const handleMouseEnter = () => {
+        if (timeoutRef.current) {
+            clearTimeout(timeoutRef.current);
+            timeoutRef.current = null;
+        }
+        setDropDown(true);
+    };
+    const handleMouseLeave = () => {
+        timeoutRef.current = setTimeout(() => {
+            setDropDown(false);
+        }, 300);
+    };
+
+    useEffect(() => {
+        let alive = true;
+
+        const fetchForLang = async (lang) => {
+            try {
+                const { data } = await axios.get(`${backendUrl}/api/lang/jobs?lang=${lang}`);
+                if (alive) setJobs(data.jobs || []);
+            } catch (err) {
+                if (alive) setJobs([]);
+
+                console.error('lang fetch failed:', err?.message || err);
+            }
+        };
+
+
+        const initialLang = localStorage.getItem('lang') || i18n.language || 'en';
+        fetchForLang(initialLang);
+        const handleLangChange = (e) => fetchForLang(e.detail);
+        window.addEventListener('lang-change', handleLangChange);
+        return () => {
+            alive = false;
+            window.removeEventListener('lang-change', handleLangChange);
+        };
+    }, [backendUrl, i18n.language, setJobs]);
 
     //const lang = localStorage.getItem('lang') || 'en';
     //const res = await fetch(`/api/jobs/${id}?lang=${lang}`);
@@ -79,7 +126,7 @@ const NavBar = () => {
 
                     {/* Login or User Info */}
                     {user ? (
-                        <div className='flex items-center gap-3 text-sm sm:text-base'>
+                        <div className='flex items-center gap-4 text-sm sm:text-base'>
                             <Link to="/applications" className='hover:underline'>{t('Applied Jobs')}</Link>
                             <span className='hidden sm:inline'>|</span>
                             <p className='hidden sm:inline'>{t('Hi')}, {user.firstName} {user.lastName}</p>
@@ -128,7 +175,7 @@ const NavBar = () => {
                         )}
                         {loadingLang && (
                             <div className="fixed inset-0 bg-white bg-opacity-90 flex items-center justify-center z-50">
-                                <div className="h-12 w-12 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+                                <div className="h-12 w-12 border-4 border-blue-500 border-t-transparent rounded-full animate-[spin_3s_linear_infinite]" />
                             </div>
                         )}
 

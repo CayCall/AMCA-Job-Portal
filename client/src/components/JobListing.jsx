@@ -4,9 +4,10 @@ import { assets, JobCategories, JobLocations, jobsData } from '../assets/assets'
 import JobCard from './JobCard';
 import { useTranslation } from 'react-i18next';
 
+const PAGE_SIZE = 5;
 const JobListing = () => {
     const { t, i18n } = useTranslation();
-    const { isSearched, searchFilter, setSearchFilter } = useContext(AppContext)
+    const { isSearched, searchFilter, setSearchFilter, backendUrl } = useContext(AppContext)
     const [showFilter, setShowFilter] = useState(false);
 
     const [selectedCategories, setSelectedCategories] = useState([]);
@@ -17,7 +18,9 @@ const JobListing = () => {
     const [filteredJobs, setFilteredJobs] = useState(jobsData);
     const [jobs, setJobs] = useState([]);
     const [loading, setLoading] = useState(true);
-    const lang = localStorage.getItem('lang') || 'en';
+
+    const { job, applicantCount } = useState(null);
+    const [lang, setLang] = useState(localStorage.getItem('lang') || 'en');;
     const sourceJobs = jobs.length ? jobs : jobsData;
     const handleCategoryChange = (category) => {
         setSelectedCategories(
@@ -34,8 +37,8 @@ const JobListing = () => {
         let alive = true; const load = async () => {
             try {
                 setLoading(true);
-                
-                const res = await fetch(`http://localhost:5000/api/jobs?lang=${lang}`);
+
+                const res = await fetch(`${backendUrl}/api/lang/jobs?lang=${lang}`);
 
                 const data = await res.json();
                 if (!alive) return;
@@ -52,7 +55,9 @@ const JobListing = () => {
         load();
 
         const onLangChange = (evt) => {
-            load();
+            const newLang = evt?.detail || 'en';
+            localStorage.setItem('lang', newLang);
+            setLang(newLang);
         };
         window.addEventListener('lang-change', onLangChange);
 
@@ -63,68 +68,89 @@ const JobListing = () => {
     }, [lang]);
 
     useEffect(() => {
-        const matchesCategory = job => selectedCategories.length === 0 || selectedCategories.includes(job.category)
-        const matchesLocation = job => selectedLocations.length === 0 || selectedLocations.includes(job.location)
+        const norm = (s) => (s ?? "").toString().trim().toLowerCase();
 
-        const MatchesTitle = job => searchFilter.title === "" || job.title.toLowerCase().includes(searchFilter.title.toLowerCase())
+        const allCatsSelected = selectedCategories.length === JobCategories.length;
+        const allLocsSelected = selectedLocations.length === JobLocations.length;
 
-        const matchesSearchLocation = job => searchFilter.location === "" || job.location.toLowerCase().includes(searchFilter.location.toLowerCase());
+        const matchesCategory = (job) => {
+            if (!job?.category) return false;
+            if (selectedCategories.length === 0 || allCatsSelected) return true;
+            return selectedCategories.some((c) => norm(c) === norm(job.category));
+        };
 
-        const newFilteredJobs = sourceJobs.slice().reverse().filter(
-            job => matchesCategory(job) && matchesLocation(job) && MatchesTitle(job) && matchesSearchLocation(job)
-        )
+        const matchesLocation = (job) => {
+            if (!job?.location) return false;
+            if (selectedLocations.length === 0 || allLocsSelected) return true;
+            return selectedLocations.some((l) => norm(l) === norm(job.location));
+        };
 
-        setFilteredJobs(newFilteredJobs)
-        setPage(1)
+        const matchesTitle = (job) =>
+            !searchFilter?.title?.trim() || norm(job.title).includes(norm(searchFilter.title));
 
-    }, [
-        // jobsData,                      
-        selectedCategories,
-        selectedLocations,
-        searchFilter,
-        sourceJobs
-    ])
+        const matchesSearchLocation = (job) =>
+            !searchFilter?.location?.trim() || norm(job.location).includes(norm(searchFilter.location));
 
+        const newFiltered = (sourceJobs ?? [])
+            .slice()
+            .reverse()
+            .filter((job) => matchesCategory(job) && matchesLocation(job) && matchesTitle(job) && matchesSearchLocation(job));
+
+        setFilteredJobs(newFiltered);
+        setPage(1);
+    }, [selectedCategories, selectedLocations, searchFilter, sourceJobs]);
+
+
+    useEffect(() => {
+
+    }, [])
     //don't forget to store the data from the job card into a object that represents the data of the favourite job
     const [userFavourites, setUserFavourites] = useState({});
-
     return (
-        <div className='container 2x2:px-20 mx-auto flex flex-col lg:flex-row max-lg:space-y-8 py-8'>
-            {/* This will be for the side bar*/}
+        <div className="container 2x2:px-20 mx-auto flex flex-col lg:flex-row max-lg:space-y-8 py-8">
+            {/* Sidebar */}
+            <div className="w-full lg:w-1/4 bg-white px-4">
+                {isSearched && (searchFilter.title || searchFilter.location) && (
+                    <>
+                        <h3 className="font-medium text-lg mb-4">{t('Current Search')}</h3>
+                        <div className="mb-4 text-gray-600">
+                            {searchFilter.title && (
+                                <span className="inline-flex items-center gap-2.5 bg-blue-50 border border-blue-200 px-4 py-1.5 rounded">
+                                    {searchFilter.title}
+                                    <img
+                                        onClick={() => setSearchFilter((prev) => ({ ...prev, title: '' }))}
+                                        className="cursor-pointer"
+                                        src={assets.cross_icon}
+                                        alt=""
+                                    />
+                                </span>
+                            )}
+                            {searchFilter.location && (
+                                <span className="ml-3 inline-flex items-center gap-2.5 bg-red-50 border border-red-200 px-4 py-1.5 rounded">
+                                    {searchFilter.location}
+                                    <img
+                                        onClick={() => setSearchFilter((prev) => ({ ...prev, location: '' }))}
+                                        className="cursor-pointer"
+                                        src={assets.cross_icon}
+                                        alt=""
+                                    />
+                                </span>
+                            )}
+                        </div>
+                    </>
+                )}
 
-            <div className='w-full lg:w-1/4 bg-white px-4'>
-                {/* This will be for the Search Filter from the Hero component*/}
-
-                {
-                    isSearched && (searchFilter.title !== "" || searchFilter.location !== "") && (
-                        <>
-                            <h3 className='font-medium text-lg mb-4'>{t('Current Search')}</h3>
-                            <div className='mb-4 text-gray-600'>
-                                {
-                                    searchFilter.title && (
-                                        <span className='inline-flex items-center gap-2.5 bg-blue-50 border border-blue-200 px-4 py-1.5 rounded '>
-                                            {searchFilter.title}
-                                            <img onClick={() => setSearchFilter(prev => ({ ...prev, title: "" }))} className='cursor-pointer' src={assets.cross_icon} alt='' />
-                                        </span>
-                                    )}
-                                {
-                                    searchFilter.location && (
-                                        <span className='ml-3 inline-flex items-center gap-2.5 bg-red-50 border border-red-200 px-4 py-1.5 rounded'>
-                                            {searchFilter.location}
-                                            <img onClick={() => setSearchFilter(prev => ({ ...prev, location: "" }))} className='cursor-pointer' src={assets.cross_icon} alt='' />
-                                        </span>
-                                    )}
-                            </div>
-                        </>
-                    )
-
-                }
                 <div>
-                    <h3 className='font-medium text-lg py-1'>{t('Filters')}</h3>
-                    <button className='px-6 py-1.5 rounded border border-gray-400 text-gray-500' onClick={() => setShowFilter(prev => !prev)} > {showFilter ? t("Close") : t("Show More")} </button>
+                    <h3 className="font-medium text-lg py-1">{t('Filters')}</h3>
+                    <button
+                        className="px-6 py-1.5 rounded border border-gray-400 text-gray-500"
+                        onClick={() => setShowFilter((prev) => !prev)}
+                    >
+                        {showFilter ? t('Close') : t('Show More')}
+                    </button>
                     <button
                         onClick={() => {
-                            setSearchFilter({ title: "", location: "" });
+                            setSearchFilter({ title: '', location: '' });
                             setSelectedCategories([]);
                             setSelectedLocations([]);
                         }}
@@ -134,127 +160,278 @@ const JobListing = () => {
                     </button>
                 </div>
 
-                {/* Job Category Filter*/}
-                {
-                    <div className={showFilter ? "" : "max-lg:hidden"}>
-                        <h4 className='font-medium text-lg py-4'>{t('Search by Categories')}</h4>
-                        <ul className='space-y-4 text-gray-600'>
-                            {
-                                JobCategories.map((category, index) => (
-                                    <li key={index} className='flex gap-3 items-center '>
-                                        <input
-                                            type='checkbox'
-                                            id={`category-${index}`}
-                                            name={category}
-                                            checked={selectedCategories.includes(category)}
-                                            onChange={() => handleCategoryChange(category)}
-                                            className='cursor-pointer'
-                                        />
-                                        <label htmlFor={`category-${index}`}>{category}</label>
-                                    </li>
-                                ))
-                            }
-                        </ul>
-                    </div>
-                }
-                {/* Location search Filter*/}
-                {
-                    <div className={showFilter ? "" : "lg:hidden"}>
-                        <h4 className='font-medium text-lg py-4'>{t('Search by Location')}</h4>
-                        <ul className='space-y-4 text-gray-600'>
-                            {
-                                JobLocations.map((location, index) => (
-                                    <li key={index} className='flex gap-3 items-center'>
-                                        <input
-                                            type='checkbox'
-                                            id={`category-${index}`}
-                                            name={location}
-                                            checked={selectedLocations.includes(location)}
-                                            onChange={() => handleLocationChange(location)}
-                                            className='cursor-pointer'
-                                        />
-                                        <label htmlFor={`category-${index}`}>{location}</label>
-                                    </li>
-                                ))
-                            }
-                        </ul>
-                    </div>
-                }
+                {/* Category filter */}
+                <div className={showFilter ? '' : 'max-lg:hidden'}>
+                    <h4 className="font-medium text-lg py-4">{t('Search by Categories')}</h4>
+                    <ul className="space-y-4 text-gray-600">
+                        {JobCategories.map((category, index) => (
+                            <li key={index} className="flex gap-3 items-center">
+                                <input
+                                    type="checkbox"
+                                    id={`category-${index}`}
+                                    value={category}
+                                    checked={selectedCategories.includes(category)}
+                                    onChange={(e) => handleCategoryChange(e.target.value)}
+                                />
+                                <label htmlFor={`category-${index}`}>{category}</label>
+                            </li>
+                        ))}
+                    </ul>
+                </div>
 
+                {/* Location filter */}
+                <div className={showFilter ? '' : 'lg:hidden'}>
+                    <h4 className="font-medium text-lg py-4">{t('Search by Location')}</h4>
+                    <ul className="space-y-4 text-gray-600">
+                        {JobLocations.map((location, index) => (
+                            <li key={index} className="flex gap-3 items-center">
+
+                                <input
+                                    type="checkbox"
+                                    id={`location-${index}`}
+                                    value={location}
+                                    checked={selectedLocations.includes(location)}
+                                    onChange={(e) => handleLocationChange(e.target.value)}
+                                />
+                                <label htmlFor={`location-${index}`}>{location}</label>
+                            </li>
+                        ))}
+                    </ul>
+                </div>
             </div>
-            {/* Job Listings*/}
-            <section className='w-full lg:w-3/4 text-gray-800 max-lg:px-4'>
-                <h3 className='font-medium text-3xl pb-2 pt-3 ml-3' id='job-list'>{t('Latest Jobs')}</h3>
-                <p className='mb-8 ml-3'>{t('Get your desired job today')}</p>
 
-                {
+            {/* Job listings */}
+            <section className="w-full lg:w-3/4 text-gray-800 max-lg:px-4">
+                <h3 className="font-medium text-3xl pb-2 pt-3 ml-3" id="job-list">
+                    {t('Latest Jobs')}
+                </h3>
+                <p className="mb-8 ml-3">{t('Get your desired job today')}</p>
 
-                    loading ? (
-                        <div className="text-center text-gray-500 m-10">{t('Loading jobs…')}</div>
-                    ) : filteredJobs.length === 0 ? (
-
-                        <div className="text-center text-gray-500 m-10">
-                            <p className="text-lg font-medium">{t('No results found')}</p>
-                            <p className="text-sm">{t('Try adjusting your filters or search terms')}</p>
-                        </div>
-                    ) : (
-                        <>
-                            <div className='grid grid-cols-1= sm:grid-cols-2 xl:grid-cols-1 gap-4'>
-                                {filteredJobs
-                                    .slice((currentPage - 1) * 5, currentPage * 5)
-                                    .map((job, index) => {
-
-                                        const displayJob = {
+                {loading ? (
+                    <div className="text-center text-gray-500 m-10">{t('Loading jobs…')}</div>
+                ) : filteredJobs.length === 0 ? (
+                    <div className="text-center text-gray-500 m-10">
+                        <p className="text-lg font-medium">{t('No results found')}</p>
+                        <p className="text-sm">{t('Try adjusting your filters or search terms')}</p>
+                    </div>
+                ) : (
+                    <>
+                        <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-1 gap-4">
+                            {filteredJobs
+                                .slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE)
+                                .map((job) => (
+                                    <JobCard
+                                        key={job._id}
+                                        job={{
                                             ...job,
-                                            title: job.title_t || job.title,
-                                            location: job.location_t || job.location,
-                                            description: job.description_t || job.description
-                                            
-                                        };
-                                        return (
-                                            <JobCard key={index} job={displayJob} />
-                                        );
-                                    })}
-                            </div>
-
-                            {/* Pagination */}
-                            <div className='flex items-center justify-center space-x-2 mt-10'>
-                                <a href='#job-list'>
-                                    <img
-                                        onClick={() => setPage(Math.max(currentPage - 1, 1))}
-                                        src={assets.left_arrow_icon}
-                                        alt=''
+                                            image: job.companyId?.image,
+                                        }}
                                     />
-                                </a>
-                                {Array.from({ length: Math.ceil(filteredJobs.length / 6) }).map((_, index) => (
-                                    <a key={index} href='#job-list'>
-                                        <button
-                                            onClick={() => setPage(index + 1)}
-                                            className={`w-10 h-10 flex items-center justify-center border border-gray-300 rounded ${currentPage === index + 1
-                                                ? 'bg-blue-100 text-blue-500'
-                                                : 'text-gray-500'
-                                                }`}
-                                        >
-                                            {index + 1}
-                                        </button>
-                                    </a>
                                 ))}
-                                <a href='#job-list'>
-                                    <img
-                                        onClick={() =>
-                                            setPage(Math.min(currentPage + 1, Math.ceil(filteredJobs.length / 6)))
-                                        }
-                                        src={assets.right_arrow_icon}
-                                        alt=''
-                                    />
+                        </div>
+
+                        {/* Pagination */}
+                        <div className="flex items-center justify-center space-x-2 mt-10">
+                            <a href="#job-list">
+                                <img
+                                    onClick={() => setPage(Math.max(currentPage - 1, 1))}
+                                    src={assets.left_arrow_icon}
+                                    alt=""
+                                />
+                            </a>
+                            {Array.from({ length: Math.ceil(filteredJobs.length / PAGE_SIZE) }).map((_, index) => (
+                                <a key={index} href="#job-list">
+                                    <button
+                                        onClick={() => setPage(index + 1)}
+                                        className={`w-10 h-10 flex items-center justify-center border border-gray-300 rounded ${currentPage === index + 1 ? 'bg-blue-100 text-blue-500' : 'text-gray-500'
+                                            }`}
+                                    >
+                                        {index + 1}
+                                    </button>
                                 </a>
-                            </div>
-                        </>
-                    )
-                }
+                            ))}
+                            <a href="#job-list">
+                                <img
+                                    onClick={() =>
+                                        setPage(Math.min(currentPage + 1, Math.ceil(filteredJobs.length / PAGE_SIZE)))
+                                    }
+                                    src={assets.right_arrow_icon}
+                                    alt=""
+                                />
+                            </a>
+                        </div>
+                    </>
+                )}
             </section>
         </div>
-    )
-}
+    );
+};
 
-export default JobListing
+export default JobListing;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
