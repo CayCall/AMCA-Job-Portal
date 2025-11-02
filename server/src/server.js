@@ -61,6 +61,7 @@ app.use('/api/jobs', jobRoutes)
 //job seeker side & and job seeker functionality
 app.use('/api/users', userRoutes)
 
+//job seeker side - translating languages
 app.use("/api/lang", languageRoutes);
 
 app.get('/__routes', (_req, res) => {

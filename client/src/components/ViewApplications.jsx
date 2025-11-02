@@ -70,7 +70,7 @@ const ViewApplications = () => {
     return (
       <div className='flex items-center justify-center h-[70vh]'>
         <p className='text-xl sm:text 2xl'>
-          You haven’t applied for any jobs yet.”
+          You haven’t received any applications yet.
         </p>
       </div>
     );
