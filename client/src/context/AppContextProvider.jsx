@@ -7,7 +7,10 @@ import toast from 'react-hot-toast';
 import { useAuth, useUser } from '@clerk/clerk-react';
 const AppContextProvider = (props) => {
   // this will be for connecting our backend to our front end 
-  const backendUrl = import.meta.env.VITE_BACKEND_URL
+  const backendUrl =
+    import.meta.env.MODE === 'development'
+      ? 'http://localhost:5000'
+      : '/api';
 
 
   const { user } = useUser()
