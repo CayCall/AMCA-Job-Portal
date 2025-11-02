@@ -4,7 +4,7 @@ import { imageOnly } from '../config/multer.js';
 import { protectCompany } from '../middelware/MiddleWareAuth.js'
 
 const router = express.Router();
-
+router.get('/__ping', (req, res) => res.json({ ok: true, scope: 'company' }));
 //same order as company controller top to bottom
 router.post('/register', imageOnly.single('image'), companyRegister)
 

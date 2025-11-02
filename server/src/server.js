@@ -3,13 +3,12 @@ import express from 'express'
 import 'dotenv/config'
 import connectDB from './config/database.js'
 import './config/instrument.js'
-import "./config/instrument.js";
 import * as Sentry from "@sentry/node";
 import { clerkwebHook } from './controllers/webhooks.js'
 import companyRoutes from './routes/companyRoutes.js'
 import jobRoutes from './routes/jobRoutes.js'
 import userRoutes from './routes/userRoutes.js'
-import languageRoutes from "./routes/languageRoute.js";
+import languageRoutes from './routes/languageRoute.js';
 import { clerkMiddleware } from '@clerk/express'
 import { connectCloudinary, cloudinary } from './config/cloudinary.js';
 
