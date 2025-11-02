@@ -4,6 +4,7 @@ import { resumeOnly } from '../config/multer.js';
 
 const router = express.Router()
 
+router.get('/__ping', (req, res) => res.json({ ok: true, scope: 'users' }));
 router.get('/user', getDataOfUser)
 
 router.post('/apply', applyJob)
