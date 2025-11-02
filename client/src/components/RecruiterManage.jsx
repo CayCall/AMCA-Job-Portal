@@ -8,7 +8,7 @@ import Loader from './Loader';
 import { useConfirm } from "./ConfirmModal";
 
 const RecruiterManage = () => {
-  const { backendUrl, companyToken } = useContext(AppContext);
+  const { API_BASE , companyToken } = useContext(AppContext);
   const navigate = useNavigate();
 
   const [jobs, setJobs] = useState(false);
@@ -20,7 +20,7 @@ const RecruiterManage = () => {
   const fetchJobs = async () => {
     try {
       const { data } = await axios.get(
-        backendUrl + "/api/company/list-jobs",
+        `${API_BASE}/api/company/list-jobs`,
         { headers: { token: companyToken } }
       );
       if (data.success) {
@@ -38,7 +38,7 @@ const RecruiterManage = () => {
     if (companyToken) {
       fetchJobs();
     }
-  }, [companyToken, backendUrl]);
+  }, [companyToken, API_BASE]);
 
   const changeVisible = async (id, nextValue) => {
 
@@ -48,7 +48,7 @@ const RecruiterManage = () => {
 
     try {
       const { data } = await axios.post(
-        `${backendUrl}/api/company/change-visibility`,
+        `${API_BASE}/api/company/change-visibility`,
         { id, visible: nextValue },
         { headers: { token: companyToken } }
       );
@@ -80,7 +80,7 @@ const RecruiterManage = () => {
     setJobs((prev) => prev.filter((j) => j._id !== id));
 
     try {
-      const { data } = await axios.delete(`${backendUrl}/api/company/job/${id}`, {
+      const { data } = await axios.delete(`${API_BASE}/api/company/job/${id}`, {
         headers: { token: companyToken },
       });
       if (!data?.success) throw new Error(data?.message || "Failed to delete job");

@@ -7,12 +7,7 @@ import toast from 'react-hot-toast';
 import { useAuth, useUser } from '@clerk/clerk-react';
 const AppContextProvider = (props) => {
   // this will be for connecting our backend to our front end 
-  const backendUrl =
-    import.meta.env.MODE === 'development'
-      ? 'http://localhost:5000'
-      : '/api';
-
-
+  const API_BASE = import.meta.env.PROD ? "" : (import.meta.env.VITE_BACKEND_URL || "");
   const { user } = useUser()
   const { getToken } = useAuth()
   const [searchFilter, setSearchFilter] = useState({
@@ -36,7 +31,7 @@ const AppContextProvider = (props) => {
   // JOB SEEKER SIDE fetch jobs
   const fetchJobs = async () => {
     try {
-      const { data } = await axios.get(backendUrl + '/api/jobs/')
+      const { data } = await axios.get(`${API_BASE}/api/jobs/`)
 
       if (data.success) {
         setJobs(data.jobs);
@@ -51,7 +46,7 @@ const AppContextProvider = (props) => {
 
   };
   const fetchJobsLang = async (l = lang) => {
-    const { data } = await axios.get(`${backendUrl}/api/jobs?lang=${l}`);
+    const { data } = await axios.get(`${API_BASE}/api/jobs?lang=${l}`);
     setJobs(data.jobs || []);
   };
   useEffect(() => {
@@ -69,7 +64,7 @@ const AppContextProvider = (props) => {
   //get company data
   const fetchDataCompany = async () => {
     try {
-      const { data } = await axios.get(backendUrl + '/api/company/company', { headers: { token: companyToken } })
+      const { data } = await axios.get(`${API_BASE}'/api/company/company`, { headers: { token: companyToken } })
 
       if (data.success) {
         setCompanyData(data.company)
@@ -108,7 +103,7 @@ const AppContextProvider = (props) => {
     try {
       const token = await getToken();
 
-      const { data } = await axios.get(backendUrl + '/api/users/user',
+      const { data } = await axios.get(`${API_BASE}/api/users/user`,
 
         { headers: { Authorization: `Bearer ${token}` } }
 
@@ -132,7 +127,7 @@ const AppContextProvider = (props) => {
       if (!token) return;
 
       const { data } = await axios.get(
-        backendUrl + '/api/users/applications',
+        `${API_BASE}/api/users/applications`,
         { headers: { Authorization: `Bearer ${token}` } }
       );
       if (data.success) {
@@ -165,7 +160,7 @@ const AppContextProvider = (props) => {
     handleLanguageChange,
     companyToken, setCompanyToken,
     companyData, setCompanyData,
-    backendUrl,
+    API_BASE,
     userData, setUserData,
     userApplications, setUserApplications,
     fetchUserInfo,

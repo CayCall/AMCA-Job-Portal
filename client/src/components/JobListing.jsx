@@ -7,7 +7,7 @@ import { useTranslation } from 'react-i18next';
 const PAGE_SIZE = 5;
 const JobListing = () => {
     const { t, i18n } = useTranslation();
-    const { isSearched, searchFilter, setSearchFilter, backendUrl } = useContext(AppContext)
+    const { isSearched, searchFilter, setSearchFilter,  API_BASE } = useContext(AppContext)
     const [showFilter, setShowFilter] = useState(false);
 
     //state for search numerous jobs with same string 
@@ -46,7 +46,7 @@ const JobListing = () => {
             try {
                 setLoading(true);
 
-                const res = await fetch(`${backendUrl}/api/lang/jobs?lang=${lang}`);
+                const res = await fetch(`${API_BASE}/api/lang/jobs?lang=${lang}`);
 
                 const data = await res.json();
                 if (!alive) return;

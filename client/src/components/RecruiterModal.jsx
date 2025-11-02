@@ -19,7 +19,7 @@ const RecruiterModal = () => {
 
   const [submitData, SetData] = useState(false)
 
-  const { setRecruiterLogin, backendUrl, setCompanyToken, setCompanyData } = useContext(AppContext);
+  const { setRecruiterLogin, API_BASE, setCompanyToken, setCompanyData } = useContext(AppContext);
 
   const [hasSubmitted, setSubmit] = useState(false)
 
@@ -41,7 +41,7 @@ const RecruiterModal = () => {
 
     try {
       if (active === "Login") {
-        const { data } = await axios.post(backendUrl + '/api/company/login', { email, password })
+        const { data } = await axios.post(`${API_BASE} /api/company/login`, { email, password })
         if (data.success) {
           setCompanyData(data.company)
           setCompanyToken(data.token)
@@ -61,8 +61,7 @@ const RecruiterModal = () => {
         formInfo.append('password', password)
         formInfo.append('email', email)
         formInfo.append('image', image)
-
-        const { data } = await axios.post(backendUrl + '/api/company/register', formInfo)
+        const { data } = await axios.post(`${API_BASE}/api/company/register`, formInfo)
 
         if (data.success) {
           setCompanyData(data.company)

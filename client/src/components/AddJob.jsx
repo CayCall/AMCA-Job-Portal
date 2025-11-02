@@ -20,12 +20,12 @@ const AddJob = () => {
     const editorRef = useRef(null)
     const quillRef = useRef(null)
 
-    const { backendUrl, companyToken } = useContext(AppContext)
+    const { API_BASE, companyToken } = useContext(AppContext)
     const onSubmitHandler = async (e) => {
         e.preventDefault();
         try {
             const description = quillRef.current.root.innerHTML;
-            const { data } = await axios.post(backendUrl + '/api/company/post-job',
+            const { data } = await axios.post( `${API_BASE}/api/company/post-job`,
 
                 { title, description, location, salary, category, level },
                 { headers: { token: companyToken } }

@@ -32,11 +32,11 @@ const ApplyJob = () => {
 
 
 
-  const { jobs, backendUrl, userData, userApplications, fetchApplications } = useContext(AppContext);
+  const { jobs, API_BASE, userData, userApplications, fetchApplications } = useContext(AppContext);
 
   const fetchJob = async () => {
     try {
-      const { data } = await axios.get(backendUrl + `/api/jobs/${id}`)
+      const { data } = await axios.get(`${API_BASE}/api/jobs/${id}`)
 
       if (data.success) {
         setJobData(data.job)
@@ -52,7 +52,7 @@ const ApplyJob = () => {
   const translateJob = async (lang) => {
     try {
       setTranslating(true);
-      const { data } = await axios.get(`${backendUrl}/api/lang/jobs/${id}?lang=${lang}`);
+      const { data } = await axios.get(`${API_BASE} /api/lang/jobs/${id}?lang=${lang}`);
       if (data.success) setJobData(data.job);
       else toast.error(data.message);
     } catch (err) {
@@ -133,7 +133,7 @@ const ApplyJob = () => {
 
       const token = await getToken()
 
-      const { data } = await axios.post(backendUrl + '/api/users/apply',
+      const { data } = await axios.post(`${API_BASE} /api/users/apply`,
         { jobId: jobData._id },
         { headers: { Authorization: `Bearer ${token}` } }
       )

@@ -36,7 +36,7 @@ const Applications = () => {
   const [resume, setResume] = useState(null);
 
 
-  const { jobs, backendUrl, userData, userApplications, fetchUserInfo, fetchApplications } = useContext(AppContext);
+  const { jobs, API_BASE, userData, userApplications, fetchUserInfo, fetchApplications } = useContext(AppContext);
   const applied = Array.isArray(userApplications)
     ? userApplications
     : Array.isArray(userApplications?.appliedJobs)
@@ -89,7 +89,7 @@ const Applications = () => {
 
       const token = await getToken();
       const { data } = await axios.post(
-        `${backendUrl}/api/users/update-resume`,
+        `${API_BASE} /api/users/update-resume`,
         fd,
         { headers: { Authorization: `Bearer ${token}` } }
       );

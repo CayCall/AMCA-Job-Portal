@@ -14,8 +14,9 @@ const NavBar = () => {
     const { user } = useUser();
 
 
+
     //Login Modal 
-    const { setRecruiterLogin, handleLanguageChange, backendUrl, setJobs, } = useContext(AppContext)
+    const { setRecruiterLogin, handleLanguageChange, API_BASE,setJobs, } = useContext(AppContext)
     //this is the hamburger menu for responsiveness
 
     const toggleMenu = () => setMenuOpen(!menuOpen);
@@ -83,7 +84,7 @@ const NavBar = () => {
 
         const fetchForLang = async (lang) => {
             try {
-                const { data } = await axios.get(`${backendUrl}/api/lang/jobs?lang=${lang}`);
+                const { data } = await axios.get(`${API_BASE}/api/lang/jobs?lang=${lang}`);
                 if (alive) setJobs(data.jobs || []);
             } catch (err) {
                 if (alive) setJobs([]);
@@ -101,7 +102,7 @@ const NavBar = () => {
             alive = false;
             window.removeEventListener('lang-change', handleLangChange);
         };
-    }, [backendUrl, i18n.language, setJobs]);
+    }, [, i18n.language, setJobs]);
 
     //const lang = localStorage.getItem('lang') || 'en';
     //const res = await fetch(`/api/jobs/${id}?lang=${lang}`);

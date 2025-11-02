@@ -15,14 +15,14 @@ const ViewApplications = () => {
 
   const { t, i18n } = useTranslation();
 
-  const { backendUrl, companyToken, ChangeJobStatus } = useContext(AppContext);
+  const {API_BASE, companyToken, ChangeJobStatus } = useContext(AppContext);
   const [applicants, setApplicants] = useState(null);
 
   //this will fetch all applications data
 
   const fetchJobApplications = async () => {
     try {
-      const { data } = await axios.get(backendUrl + '/api/company/applicants',
+      const { data } = await axios.get(`${API_BASE} /api/company/applicants`,
         { headers: { token: companyToken } }
       )
 
@@ -49,7 +49,7 @@ const ViewApplications = () => {
 
     try {
       const { data } = await axios.post(
-        backendUrl + '/api/company/change-status',
+        `${API_BASE} /api/company/change-status`,
         { id, status },
         { headers: { token: companyToken } }
       )
