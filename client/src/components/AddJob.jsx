@@ -19,13 +19,13 @@ const AddJob = () => {
 
     const editorRef = useRef(null)
     const quillRef = useRef(null)
-
+    const [charCount, setCharCount] = useState(0);
     const { API_BASE, companyToken } = useContext(AppContext)
     const onSubmitHandler = async (e) => {
         e.preventDefault();
         try {
             const description = quillRef.current.root.innerHTML;
-            const { data } = await axios.post( `${API_BASE}/api/company/post-job`,
+            const { data } = await axios.post(`${API_BASE}/api/company/post-job`,
 
                 { title, description, location, salary, category, level },
                 { headers: { token: companyToken } }
@@ -45,24 +45,23 @@ const AddJob = () => {
         }
     }
 
+
     useEffect(() => {
-        // Quill once
         if (!quillRef.current && editorRef.current) {
-            quillRef.current = new Quill(editorRef.current, {
-                theme: 'snow',
-                placeholder: 'Write job description here...',
-                modules: {
-                    toolbar: [
-                        ['bold', 'italic', 'underline'],
-                        [{ 'list': 'ordered' }, { 'list': 'bullet' }],
-                        ['link']
-                    ]
-                }
-            })
+            quillRef.current = new Quill(editorRef.current, { theme: 'snow' });
+            const quill = quillRef.current;
+            const limit = 750;
+
+            quill.on('text-change', () => {
+                const len = quill.getText().trim().length;
+                setCharCount(len);
+                if (len > limit) quill.deleteText(limit, len);
+            });
         }
+    }, []);
 
 
-    }, [])
+
     return (
         <form onSubmit={onSubmitHandler} className="block w-full max-w-5xl mx-auto m-0 p-4 flex flex-col items-start gap-3">
             <div className='w-full'>
@@ -80,9 +79,12 @@ const AddJob = () => {
                 <p className='my-2 font-medium text-lg'>
                     Job Description
                 </p>
-                <div ref={editorRef}>
+                <div ref={editorRef}></div>
+                <p style={{ textAlign: 'right', fontSize: '0.9rem', color: charCount > 500 ? 'red' : '#555' }}>
+                    {charCount}/750
+                </p>
 
-                </div>
+
             </div>
 
             <div className='flex flex-col sm:flex-row gap-2 w-full sm:gap-8'>

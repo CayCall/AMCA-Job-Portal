@@ -18,21 +18,17 @@ const writeFavs = (ids) => {
     localStorage.setItem(FAVS_KEY, JSON.stringify(ids.map(String)));
   } catch { }
 };
+const toPreview = (html, limit = 220) => {
+  if (!html) return "";
+  const text = html.replace(/<[^>]+>/g, '').trim();
+  if (text.length <= limit) return text;
+  return text.slice(0, limit).replace(/\s+\S*$/, '') + '...';
+};
 
 const JobCard = ({ job }) => {
   const { t } = useTranslation();
   const [bookmarked, setBookmarked] = useState(false);
   const navigate = useNavigate();
-
-
-
-  const toPreview = (html) => {
-    if (!html) return "";
-    if (html.includes("<!-- more -->")) return html.split("<!-- more -->")[0];
-    return html.slice(0, 150);
-  };
-
-
 
   useEffect(() => {
     const favs = readFavs();
@@ -80,12 +76,9 @@ const JobCard = ({ job }) => {
         </div>
 
         <div className="mt-6 min-h-[72px] ">
-          <p className='text-base/7 text-gray-500'
-            dangerouslySetInnerHTML={{
-              __html: toPreview(job.description),
-
-            }}
-          />
+          <p className="text-base/7 text-gray-500">
+            {toPreview(job.description)}
+          </p>
         </div>
       </div>
 

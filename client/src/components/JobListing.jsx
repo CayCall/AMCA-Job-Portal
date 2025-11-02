@@ -7,7 +7,7 @@ import { useTranslation } from 'react-i18next';
 const PAGE_SIZE = 5;
 const JobListing = () => {
     const { t, i18n } = useTranslation();
-    const { isSearched, searchFilter, setSearchFilter,  API_BASE } = useContext(AppContext)
+    const { isSearched, searchFilter, setSearchFilter, API_BASE } = useContext(AppContext)
     const [showFilter, setShowFilter] = useState(false);
 
     //state for search numerous jobs with same string 
@@ -168,7 +168,7 @@ const JobListing = () => {
                     </button>
                 </div>
 
-                        
+
                 {/* Category filter */}
                 <input
                     type="text"
@@ -196,10 +196,8 @@ const JobListing = () => {
 
 
                 {/* Location filter */}
+
                 <div className={showFilter ? '' : 'lg:hidden'}>
-
-
-
                     <h4 className="font-medium text-lg py-4">{t('Search by Location')}</h4>
                     <input
                         type="text"
@@ -209,21 +207,24 @@ const JobListing = () => {
                         onChange={(e) => setLocQuery(e.target.value)}
                     />
                     <ul className="space-y-4 text-gray-600">
-                        {JobLocations.map((location, index) => (
-                            <li key={index} className="flex gap-3 items-center">
-
-                                <input
-                                    type="checkbox"
-                                    id={`location-${index}`}
-                                    value={location}
-                                    checked={selectedLocations.includes(location)}
-                                    onChange={(e) => handleLocationChange(e.target.value)}
-                                />
-                                <label htmlFor={`location-${index}`}>{location}</label>
-                            </li>
-                        ))}
+                        {JobLocations
+                            .filter(l => l.toLowerCase().includes(locQuery.toLowerCase()))
+                            .map((location, index) => (
+                                <li key={index} className="flex gap-3 items-center">
+                                    <input
+                                        type="checkbox"
+                                        id={`location-${index}`}
+                                        value={location}
+                                        checked={selectedLocations.includes(location)}
+                                        onChange={(e) => handleLocationChange(e.target.value)}
+                                    />
+                                    <label htmlFor={`location-${index}`}>{location}</label>
+                                </li>
+                            ))}
                     </ul>
                 </div>
+
+
             </div>
 
             {/* Job listings */}
