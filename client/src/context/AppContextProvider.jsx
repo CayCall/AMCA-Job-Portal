@@ -5,21 +5,20 @@ import i18n from '../i18n';
 import axios from 'axios';
 import toast from 'react-hot-toast';
 import { useAuth, useUser } from '@clerk/clerk-react';
-import axios from 'axios';
 
 
+axios.defaults.baseURL =
+  (import.meta.env.VITE_BACKEND_URL || '').replace(/\/+$/, '') ||
+  (import.meta.env.DEV ? 'http://localhost:5000' : '');
+
+const API_BASE = axios.defaults.baseURL;
 
 
 const AppContextProvider = (props) => {
   // this will be for connecting our backend to our front end 
-  axios.defaults.baseURL =
-    (import.meta.env.VITE_BACKEND_URL || '').replace(/\/+$/, '') ||
-    (import.meta.env.DEV ? 'http://localhost:5000' : '');
 
-  const API_BASE =
-    import.meta.env.PROD
-      ? ""
-      : (import.meta.env.VITE_BACKEND_URL?.trim().replace(/\/+$/, "") || "");
+
+  const API_BASE = axios.defaults.baseURL;
 
   const { user } = useUser()
   const { getToken } = useAuth()
