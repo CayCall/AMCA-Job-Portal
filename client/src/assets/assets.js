@@ -79,7 +79,10 @@ export const JobCategories = [
     "Cook / Home Chef", "Driver", "Handyman", "Cleaner",
 
     // Home & repair
-    "Security Guard", "Appliance Repair", "Pest Control"
+    "Security Guard", "Appliance Repair", "Pest Control",
+
+    //Other
+    "Other"
 ];
 
 

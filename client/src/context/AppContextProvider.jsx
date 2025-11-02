@@ -5,13 +5,22 @@ import i18n from '../i18n';
 import axios from 'axios';
 import toast from 'react-hot-toast';
 import { useAuth, useUser } from '@clerk/clerk-react';
+import axios from 'axios';
+
+
+
+
 const AppContextProvider = (props) => {
   // this will be for connecting our backend to our front end 
-const API_BASE = 
-  import.meta.env.PROD
-    ? "" 
-    : (import.meta.env.VITE_BACKEND_URL?.trim().replace(/\/+$/, "") || "");
-    
+  axios.defaults.baseURL =
+    (import.meta.env.VITE_BACKEND_URL || '').replace(/\/+$/, '') ||
+    (import.meta.env.DEV ? 'http://localhost:5000' : '');
+
+  const API_BASE =
+    import.meta.env.PROD
+      ? ""
+      : (import.meta.env.VITE_BACKEND_URL?.trim().replace(/\/+$/, "") || "");
+
   const { user } = useUser()
   const { getToken } = useAuth()
   const [searchFilter, setSearchFilter] = useState({
@@ -50,7 +59,7 @@ const API_BASE =
 
   };
   const fetchJobsLang = async (l = lang) => {
-    const { data } = await axios.get(`${API_BASE}/api/jobs?lang=${l}`);
+    const { data } = await axios.get(`${API_BASE}/api/lang/jobs?lang=${l}`);
     setJobs(data.jobs || []);
   };
   useEffect(() => {
