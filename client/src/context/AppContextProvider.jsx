@@ -7,10 +7,11 @@ import toast from 'react-hot-toast';
 import { useAuth, useUser } from '@clerk/clerk-react';
 const AppContextProvider = (props) => {
   // this will be for connecting our backend to our front end 
-  const API_BASE =
-    import.meta.env.VITE_BACKEND_URL?.trim()
-      ? import.meta.env.VITE_BACKEND_URL
-      : (import.meta.env.DEV ? (import.meta.env.VITE_BACKEND_URL || "") : "");
+const API_BASE = 
+  import.meta.env.PROD
+    ? "" 
+    : (import.meta.env.VITE_BACKEND_URL?.trim().replace(/\/+$/, "") || "");
+    
   const { user } = useUser()
   const { getToken } = useAuth()
   const [searchFilter, setSearchFilter] = useState({
