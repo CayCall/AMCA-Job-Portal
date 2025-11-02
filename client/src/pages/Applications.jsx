@@ -89,7 +89,7 @@ const Applications = () => {
 
       const token = await getToken();
       const { data } = await axios.post(
-        `${API_BASE} /api/users/update-resume`,
+        `${API_BASE}/api/users/update-resume`,
         fd,
         { headers: { Authorization: `Bearer ${token}` } }
       );

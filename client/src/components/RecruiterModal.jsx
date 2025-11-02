@@ -41,7 +41,7 @@ const RecruiterModal = () => {
 
     try {
       if (active === "Login") {
-        const { data } = await axios.post(`${API_BASE} /api/company/login`, { email, password })
+        const { data } = await axios.post(`${API_BASE}/api/company/login`, { email, password })
         if (data.success) {
           setCompanyData(data.company)
           setCompanyToken(data.token)

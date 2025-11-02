@@ -22,7 +22,7 @@ const ViewApplications = () => {
 
   const fetchJobApplications = async () => {
     try {
-      const { data } = await axios.get(`${API_BASE} /api/company/applicants`,
+      const { data } = await axios.get(`${API_BASE}/api/company/applicants`,
         { headers: { token: companyToken } }
       )
 
@@ -49,7 +49,7 @@ const ViewApplications = () => {
 
     try {
       const { data } = await axios.post(
-        `${API_BASE} /api/company/change-status`,
+        `${API_BASE}/api/company/change-status`,
         { id, status },
         { headers: { token: companyToken } }
       )
