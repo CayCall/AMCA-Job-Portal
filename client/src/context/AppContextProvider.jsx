@@ -64,7 +64,7 @@ const AppContextProvider = (props) => {
   //get company data
   const fetchDataCompany = async () => {
     try {
-      const { data } = await axios.get(`${API_BASE}'/api/company/company`, { headers: { token: companyToken } })
+      const { data } = await axios.get(`${API_BASE}/api/company/company`, { headers: { token: companyToken } })
 
       if (data.success) {
         setCompanyData(data.company)
