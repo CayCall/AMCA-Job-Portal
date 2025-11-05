@@ -16,6 +16,7 @@ const AddJob = () => {
     const [category, setCategory] = useState(JobCategories[0]);
     const [level, setLevel] = useState("Beginner Level");
     const [salary, setSalary] = useState(0)
+    const TITLE_LIMIT = 80;
 
     const editorRef = useRef(null)
     const quillRef = useRef(null)
@@ -64,27 +65,48 @@ const AddJob = () => {
 
     return (
         <form onSubmit={onSubmitHandler} className="block w-full max-w-5xl mx-auto m-0 p-4 flex flex-col items-start gap-3">
-            <div className='w-full'>
-                <p className='mb-2 font-medium text-lg'>Job Title</p>
+            <div className="w-full max-w-lg">
+                <p className="mb-2 font-medium text-lg">Job Title</p>
+
                 <input
-                    type='text'
-                    placeholder='Type here'
-                    onChange={e => setTitle(e.target.value)} value={title}
+                    type="text"
+                    placeholder="Type here"
+                    value={title}
+                    onChange={(e) => {
+                        const value = e.target.value;
+                        if (value.length <= TITLE_LIMIT) {
+                            setTitle(value);
+                        } else {
+                            toast.error(`Title cannot exceed ${TITLE_LIMIT} characters.`);
+                        }
+                    }}
                     required
-                    className='w-full max-w-lg px-3 py-2 border-2 border-gray-300 rounded'
+                    className="w-full px-3 py-2 border-2 border-gray-300 rounded"
                 />
+
+                <p
+                    style={{
+                        textAlign: 'right',
+                        fontSize: '0.9rem',
+                        color: title.length > TITLE_LIMIT * 0.9 ? 'red' : '#555',
+                    }}
+                >
+                    {title.length}/{TITLE_LIMIT}
+                </p>
             </div>
 
-            <div className='w-full max-w-lg'>
-                <p className='my-2 font-medium text-lg'>
-                    Job Description
-                </p>
+            <div className="w-full max-w-lg">
+                <p className="my-2 font-medium text-lg">Job Description</p>
                 <div ref={editorRef}></div>
-                <p style={{ textAlign: 'right', fontSize: '0.9rem', color: charCount > 500 ? 'red' : '#555' }}>
+                <p
+                    style={{
+                        textAlign: 'right',
+                        fontSize: '0.9rem',
+                        color: charCount > 500 ? 'red' : '#555',
+                    }}
+                >
                     {charCount}/750
                 </p>
-
-
             </div>
 
             <div className='flex flex-col sm:flex-row gap-2 w-full sm:gap-8'>

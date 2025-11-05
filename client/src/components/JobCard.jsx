@@ -45,7 +45,7 @@ const JobCard = ({ job }) => {
   };
 
   return (
-    <div className="relative border p-8 m-2 shadow rounded h-[370px] flex flex-col justify-between bg-white">
+    <div className="relative border p-9 m-2 shadow rounded flex flex-col justify-between bg-white h-[400px] sm:h-[380px]">
       {/* Bookmark button */}
       <button
         onClick={toggleBookmark}
@@ -75,9 +75,9 @@ const JobCard = ({ job }) => {
           </span>
         </div>
 
-        <div className="mt-6 min-h-[72px] ">
+        <div className="mt-6 min-h-[7px] ">
           <p className="text-base/7 text-gray-500">
-            {toPreview(job.description)}
+            {toPreview(job.description, 175)}
           </p>
         </div>
       </div>

@@ -105,3 +105,10 @@ input[type="password"]::-webkit-textfield-decoration-container {
 .spin-slow {
     animation: spin-slow 5s linear infinite;
 }
+
+@media screen and (max-width: 640px) {
+    body {
+        padding-top: 50px;
+        /* adjust as needed */
+    }
+}
