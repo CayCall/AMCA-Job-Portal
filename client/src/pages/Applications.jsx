@@ -45,8 +45,8 @@ const Applications = () => {
   const applied = Array.isArray(userApplications)
     ? userApplications
     : Array.isArray(userApplications?.appliedJobs)
-    ? userApplications.appliedJobs
-    : [];
+      ? userApplications.appliedJobs
+      : [];
 
   // keep favs reactive across tabs/windows
   useEffect(() => {
@@ -86,7 +86,7 @@ const Applications = () => {
         { headers: { Authorization: `Bearer ${token}` } }
       );
       if (data?.success) {
-        toast.success(data.message);
+        toast.success(t('CV uploaded successfully'));
         await fetchUserInfo();
       } else {
         toast.error(data?.message || t('Upload failed'));
@@ -112,8 +112,8 @@ const Applications = () => {
       v === t('Accepted')
         ? 'bg-green-100 text-green-700'
         : v === t('Rejected')
-        ? 'bg-red-100 text-red-700'
-        : 'bg-blue-100 text-blue-700';
+          ? 'bg-red-100 text-red-700'
+          : 'bg-blue-100 text-blue-700';
     return <span className={`${cls} px-2.5 py-1 rounded text-xs md:text-sm`}>{v}</span>;
   };
 
@@ -137,11 +137,10 @@ const Applications = () => {
               role="tab"
               aria-selected={tab === 'applied'}
               onClick={() => setTab('applied')}
-              className={`flex-1 px-3 py-2 text-sm transition-all ${
-                tab === 'applied'
+              className={`flex-1 px-3 py-2 text-sm transition-all ${tab === 'applied'
                   ? 'bg-blue-600 text-white'
                   : 'bg-white text-gray-700 hover:bg-blue-50'
-              }`}
+                }`}
             >
               {t('Applied')}
             </button>
@@ -149,11 +148,10 @@ const Applications = () => {
               role="tab"
               aria-selected={tab === 'favourites'}
               onClick={() => setTab('favourites')}
-              className={`flex-1 px-3 py-2 text-sm transition-all ${
-                tab === 'favourites'
+              className={`flex-1 px-3 py-2 text-sm transition-all ${tab === 'favourites'
                   ? 'bg-blue-600 text-white'
                   : 'bg-white text-gray-700 hover:bg-blue-50'
-              }`}
+                }`}
             >
               {t('Favourites')} {favJobs.length ? `(${favJobs.length})` : ''}
             </button>

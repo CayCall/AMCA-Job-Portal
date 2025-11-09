@@ -74,5 +74,14 @@
     "Add New Job": "Faka Umsebenzi Omusha",
     "User Name": "Igama lomsebenzisi",
     "Action": "Isenzo",
-    "Already Applied": "ususifakile isicelo salo msebenzi"
+    "Already Applied": "ususifakile isicelo salo msebenzi",
+    "Select CV": "Khetha i-CV",
+    "Please select a PDF first.": "Sicela ukhethe i-PDF kuqala.",
+    "Upload failed": "Ukulayishwa kwehlulekile",
+    "Login required - log in to continue with your application.": "Kudingeka ungene ngemvume - ngena ukuze uqhubeke nesicelo, sakho.",
+    "Resume required - upload resume to continue.": "I-CV iyadingeka - layisha i-CV ukuze uqhubeke.",
+    "Application Submitted": "Isicelo sithunyelwe",
+    "CV uploaded successfully": "I-CV ilayishwe ngempumelelo",
+    "Something went wrong": "Kukhona okungahambanga kahle",
+    "An unexpected error occurred.": "Kuvele iphutha elingalindelekile."
 }

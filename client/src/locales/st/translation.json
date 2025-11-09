@@ -74,5 +74,14 @@
     "Add New Job": "Kenya Mosebetsi o Mocha",
     "User Name": "Lebitso la mosebedisi",
     "Action": "Tsebo",
-    "Already Applied": "E se e kentse kopo"
+    "Already Applied": "E se e kentse kopo",
+    "Select CV": "Kies CV",
+    "Please select a PDF first.": "Kies asseblief eers ’n PDF.",
+    "Upload failed": "Oplaai het misluk",
+    "Login required - log in to continue with your application.": "Aanmelding vereis - meld aan om voort te gaan met jou aansoek.",
+    "Resume required - upload resume to continue.": "CV vereis - laai jou CV op om voort te gaan.",
+    "Application Submitted": "Aansoek ingedien",
+    "CV uploaded successfully": "CV suksesvol opgelaai",
+    "Something went wrong": "Iets het verkeerd gegaan",
+    "An unexpected error occurred.": "’n Onverwagte fout het voorgekom."
 }
