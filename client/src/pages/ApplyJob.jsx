@@ -124,11 +124,11 @@ const ApplyJob = () => {
   const applyHandler = async () => {
     try {
       if (!userData) {
-        return toast.error(t('Login required - log in to continue with your application.'))
+        return toast.error('Login required - log in to continue with your application.')
       }
       if (!userData.resume) {
         navigate('/applications')
-        return toast.error(t('Resume required - upload resume to continue.'))
+        return toast.error('Resume required - upload resume to continue.')
       }
 
       const token = await getToken()
@@ -139,13 +139,13 @@ const ApplyJob = () => {
       )
 
       if (data.success) {
-        toast.success(t('Application Submitted'));
+        toast.success(data.message)
         fetchApplications()
       } else {
-        toast.error(t(data.message) || t('Something went wrong'));
+        toast.error(data.message)
       }
     } catch (error) {
-      toast.error(t('An unexpected error occurred.'));
+      toast.error(error.message)
     }
   }
 
@@ -208,7 +208,7 @@ const ApplyJob = () => {
             <div className="w-full lg:w-2/3">
               <h2 className="font-bold text-2xl mb-4 ml-3 text-[#2e2e2e]">{t('Job Description')}</h2>
               <section className="rich-text"
-                dangerouslySetInnerHTML={{ __html: jobData.description }}
+                dangerouslySetInnerHTML={{ __html: translatedDescription }}
               >
               </section>
               <button onClick={applyHandler} className="ml-4 bg-blue-600 p-2.5 px-10 text-white rounded mt-10 border border-transparent hover:bg-white  hover:border-gray-500 hover:text-gray-500"> {apply ? t('Already Applied') : t('Apply Now')}</button>

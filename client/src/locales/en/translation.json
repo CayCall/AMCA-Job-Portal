@@ -74,14 +74,5 @@
     "Add New Job": "Add New Job",
     "User Name": "User Name",
     "Action": "Action",
-    "Already Applied": "Already Applied",
-    "Select CV": "Select CV",
-    "Please select a PDF first.": "Please select a PDF first.",
-    "Upload failed": "Upload failed",
-    "Login required - log in to continue with your application.": "Login required - log in to continue with your application.",
-    "Resume required - upload resume to continue.": "Resume required - upload resume to continue.",
-    "Application Submitted": "Application Submitted",
-    "CV uploaded successfully": "CV uploaded successfully",
-    "Something went wrong": "Something went wrong",
-    "An unexpected error occurred.": "An unexpected error occurred.",
+    "Already Applied": "Already Applied"
 }

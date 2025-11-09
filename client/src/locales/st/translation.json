@@ -74,14 +74,5 @@
     "Add New Job": "Kenya Mosebetsi o Mocha",
     "User Name": "Lebitso la mosebedisi",
     "Action": "Tsebo",
-    "Already Applied": "E se e kentse kopo",
-    "Select CV": "Khetha CV",
-    "Please select a PDF first.": "Ka kopo khetha PDF pele.",
-    "Upload failed": "Ho kenya ha hloleha",
-    "Login required - log in to continue with your application.": "Ho kena hoa hlokahala - kena ho tsoela pele ka kopo ea hau.",
-    "Resume required - upload resume to continue.": "CV e hlokahala - kenya CV ho tsoela pele.",
-    "Application Submitted": "Kopo e rometsoe",
-    "CV uploaded successfully": "CV e kentsoe ka katleho",
-    "Something went wrong": "Ho na le phoso e etsahetseng",
-    "An unexpected error occurred.": "Phoso e sa lebelloang e etsahetse."
+    "Already Applied": "E se e kentse kopo"
 }
