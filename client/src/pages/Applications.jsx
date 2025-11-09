@@ -86,7 +86,7 @@ const Applications = () => {
         { headers: { Authorization: `Bearer ${token}` } }
       );
       if (data?.success) {
-        toast.success(data.message);
+        toast.success(t('CV uploaded successfully'));
         await fetchUserInfo();
       } else {
         toast.error(data?.message || t('Upload failed'));
