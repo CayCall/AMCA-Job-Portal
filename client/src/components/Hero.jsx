@@ -9,8 +9,10 @@ const ROLE_KEY = "amka_role";
 
 const Hero = () => {
     const { t } = useTranslation();
-    const navigate = useNavigate();
-    const { setSearchFilter, setIsSearched, setRecruiterLogin } = useContext(AppContext);
+
+    const { setSearchFilter, setIsSearched, setRecruiterLogin, scrollToResults } = useContext(AppContext);
+    const titleRef = useRef();
+    const locationRef = useRef();
 
     const { openSignIn } = useClerk();
 
@@ -31,8 +33,6 @@ const Hero = () => {
     };
 
 
-    const titleRef = useRef(null);
-    const locationRef = useRef(null);
 
     const [titleIn, setTitleIn] = useState("");
     const [locationIn, setLocationIn] = useState("");
@@ -46,14 +46,16 @@ const Hero = () => {
     }, [titleIn, locationIn, setSearchFilter, setIsSearched]);
 
     const onSearch = () => {
-
         setSearchFilter({
             title: titleRef.current.value,
             location: locationRef.current.value,
         });
         setIsSearched(true);
-
+        scrollToResults();
     };
+
+
+
 
 
     return (
@@ -66,7 +68,7 @@ const Hero = () => {
                     {/* Overlay content */}
                     <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-4">
                         <h2 className="text-2xl md:text-2xl lg:text-4xl font-medium mb-4">
-                            {t("Over 1 000+ Domestic jobs available")}
+                            {t("Connecting opportunities across languages")}
                         </h2>
                         <p className="mb-6 max-w-xl mx-auto text-sm font-light px-5 leading-relaxed">
                             {t("Meeting people where they are, not just where we wish they were.")}
@@ -96,36 +98,66 @@ const Hero = () => {
 
                         {/* Search bar */}
                         <div className="flex items-center justify-between bg-white rounded text-gray-600 max-w-xl pl-4 mx-4 sm:mx-auto">
-                            <div className="flex items-center">
+                            <div className="flex items-center relative">
                                 <img className="h-4 sm:h-5" src={assets.search_icon} alt="" />
                                 <input
                                     type="text"
                                     placeholder={t('Search For Jobs')}
-                                    className="max-sm:text-xs p-2 rounded outline-none w-full"
+                                    className="max-sm:text-xs p-2 rounded outline-none w-full pr-5"
                                     ref={titleRef}
                                     onChange={(e) => setTitleIn(e.target.value)}
-                                    disabled={role === "recruiter"}
+                                    value={titleIn}
+                                    disabled={role === 'recruiter'}
                                 />
+                                {titleIn && (
+                                    <button
+                                        type="button"
+                                        onClick={() => {
+                                            setTitleIn('');
+                                            setSearchFilter((prev) => ({ ...prev, title: '' }));
+                                        }}
+                                        className="absolute right-1 text-gray-400 hover:text-red-500 transition-colors duration-150"
+                                        title={t('Clear job title')}
+                                    >
+                                        ×
+                                    </button>
+                                )}
                             </div>
-                            <div className="flex items-center">
+
+                            <div className="w-px h-6 bg-gray-300 mx-2" />
+                            <div className="flex items-center relative">
                                 <img className="h-4 sm:h-5" src={assets.location_icon} alt="" />
                                 <input
                                     type="text"
-                                    placeholder={t('Location')}
-                                    className="max-sm:text-xs p-2 rounded outline-none w-full"
+                                    placeholder={t('Search For Location')}
+                                    className="max-sm:text-xs p-2 rounded outline-none w-full pr-5"
                                     ref={locationRef}
                                     onChange={(e) => setLocationIn(e.target.value)}
-                                    disabled={role === "recruiter"}
+                                    value={locationIn}
+                                    disabled={role === 'recruiter'}
                                 />
+                                {locationIn && (
+                                    <button
+                                        type="button"
+                                        onClick={() => {
+                                            setLocationIn('');
+                                            setSearchFilter((prev) => ({ ...prev, location: '' }));
+                                        }}
+                                        className="absolute right-1 text-gray-400 hover:text-red-500 transition-colors duration-150"
+                                        title={t('Clear location')}
+                                    >
+                                        ×
+                                    </button>
+                                )}
                             </div>
-                            <button
-                                onClick={onSearch}
-                                className="bg-blue-600 px-6 py-2 rounded text-white m-1"
-                            >
-                                {t('Search')}
-                            </button>
                         </div>
 
+                        <button
+                            onClick={onSearch}
+                            className="bg-blue-600 px-6 py-2 rounded text-white m-1 block md:hidden border border-transparent hover:border-solid hover:border-gray-500 transition-all duration-200"
+                        >
+                            {t('Search')}
+                        </button>
                         <p className="mt-3 text-xs opacity-80">
                             {role === "recruiter"
                                 ? t("Post a job, manage applicants, and hire talent.")

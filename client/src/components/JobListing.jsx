@@ -7,7 +7,7 @@ import { useTranslation } from 'react-i18next';
 const PAGE_SIZE = 5;
 const JobListing = () => {
     const { t, i18n } = useTranslation();
-    const { isSearched, searchFilter, setSearchFilter, API_BASE } = useContext(AppContext)
+    const { isSearched, searchFilter, setSearchFilter, API_BASE, resultsRef } = useContext(AppContext)
     const [showFilter, setShowFilter] = useState(false);
 
     //state for search numerous jobs with same string 
@@ -188,6 +188,7 @@ const JobListing = () => {
                                     value={category}
                                     checked={selectedCategories.includes(category)}
                                     onChange={(e) => handleCategoryChange(e.target.value)}
+                                    className='cursor-pointer'
                                 />
                                 <label htmlFor={`category-${index}`}>{category}</label>
                             </li>
@@ -228,7 +229,7 @@ const JobListing = () => {
             </div>
 
             {/* Job listings */}
-            <section className="w-full lg:w-3/4 text-gray-800 max-lg:px-4">
+            <section className="w-full lg:w-3/4 text-gray-800 max-lg:px-4" ref={resultsRef}>
                 <h3 className="font-medium text-3xl pb-2 pt-3 ml-3" id="job-list">
                     {t('Latest Jobs')}
                 </h3>

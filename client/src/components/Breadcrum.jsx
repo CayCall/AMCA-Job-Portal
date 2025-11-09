@@ -8,7 +8,7 @@ const Breadcrum = () => {
     <nav aria-label="Breadcrumb" className="mt-5 ml-5 mb-0">
       <ol className="flex items-center space-x-2 text-m">
         <li>
-          <Link to="/" className="text-gray-500 hover:text-gray-700 transition">
+          <Link to="/" className="text-gray-500 hover:text-blue-600 hover:font-bo transition">
             {t('Home')}
           </Link>
         </li>

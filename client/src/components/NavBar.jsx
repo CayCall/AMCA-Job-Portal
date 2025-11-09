@@ -102,7 +102,7 @@ const NavBar = () => {
             alive = false;
             window.removeEventListener('lang-change', handleLangChange);
         };
-    }, [, i18n.language, setJobs]);
+    }, [i18n.language, setJobs]);
 
     //const lang = localStorage.getItem('lang') || 'en';
     //const res = await fetch(`/api/jobs/${id}?lang=${lang}`);

@@ -71,11 +71,11 @@ const RecruiterModal = () => {
           navigate('/dashboard')
           toast.success("Account created successfully.");
         } else {
-          toast.error("Account does not exist, please signup.")
+          toast.error(data.message || "Something went wrong during signup.")
         }
       }
     } catch (error) {
-      toast.error("Account does not exist, please signup.")
+      toast.error(error.response?.data?.message ||"An unexpected error occurred. Please try again.")
     }
   }
 

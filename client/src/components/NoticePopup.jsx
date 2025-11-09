@@ -16,7 +16,7 @@ const NoticePopup = () => {
 
   return (
     <div
-      className={`fixed bottom-5 right-5 bg-white/95 backdrop-blur-sm text-gray-700 border border-gray-300 shadow-lg rounded-md p-3 max-w-sm w-[90%] sm:w-[360px] z-50 text-sm flex items-start justify-between gap-3 transition-all duration-500 ${
+      className={`fixed bottom-5 right-5 opacity-70 bg-white/95 backdrop-blur-sm text-gray-700 border border-gray-300 shadow-lg rounded-md p-3 max-w-sm w-[90%] sm:w-[360px] z-50 text-sm flex items-start justify-between gap-3 transition-all duration-500 ${
         faded ? "opacity-70" : "opacity-100"
       }`}
     >

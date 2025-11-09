@@ -86,7 +86,7 @@ const ViewApplications = () => {
               <th className='py-2 px-4 text-left'>{t('User Name')}</th>
               <th className='py-2 px-4 text-left max-sm:hidden'>{t('Job Title')}</th>
               <th className='py-2 px-4 text-left max-sm:hidden'>{t('Location')}</th>
-              <th className='py-2 px-4 text-left'>{t('Resume')}</th>
+              <th className='py-2 px-4 text-left'>{t('CV')}</th>
               <th className='py-2 px-4 text-left'>{t('Action')}</th>
             </tr>
           </thead>
@@ -107,7 +107,7 @@ const ViewApplications = () => {
                   <a href={application.userId.resume} target='_blank' rel="noreferrer"
                     className='bg-blue-50 text-blue-400 px-3 py-1 rounded inline-flex gap-2 items-center'
                   >
-                    {t('Resume')}<img src={assets.resume_download_icon} alt='' />
+                    {t('View CV')}<img src={assets.resume_download_icon} alt='' />
                   </a>
                 </td>
                 <td className='py-2 px-4 border-b relative'>

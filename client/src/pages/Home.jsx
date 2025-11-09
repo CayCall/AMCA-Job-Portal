@@ -4,7 +4,7 @@ import Hero from '../components/Hero'
 import JobListing from '../components/JobListing'
 import Footer from '../components/Footer'
 import { Import } from 'lucide-react'
-import NoticePopup from '../components/NoticePopup'
+import NoticePopup from '../components/NoticePopup.jsx'
 
 
 const Home = () => {

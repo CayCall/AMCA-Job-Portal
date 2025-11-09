@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState,useRef } from 'react';
 import AppContext from './AppContext';
 import { jobsData } from "../assets/assets"
 import i18n from '../i18n';
@@ -40,6 +40,14 @@ const AppContextProvider = (props) => {
   const [userData, setUserData] = useState(null)
   const [userApplications, setUserApplications] = useState([])
 
+  //mobile scroll
+
+  const resultsRef = useRef(null);
+  const scrollToResults = () => {
+    resultsRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  };
+
+
   // JOB SEEKER SIDE fetch jobs
   const fetchJobs = async () => {
     try {
@@ -47,7 +55,7 @@ const AppContextProvider = (props) => {
 
       if (data.success) {
         setJobs(data.jobs);
-        console.log(data.jobs)
+
       }
       else {
         toast.error(data.message)
@@ -80,7 +88,6 @@ const AppContextProvider = (props) => {
 
       if (data.success) {
         setCompanyData(data.company)
-        console.log(data)
       }
       else {
         toast.error(data.message)
@@ -178,7 +185,9 @@ const AppContextProvider = (props) => {
     fetchUserInfo,
     fetchApplications,
     lang,
-    fetchJobsLang
+    fetchJobsLang,
+    resultsRef,
+    scrollToResults
   }
   return (
     <AppContext.Provider value={value}>

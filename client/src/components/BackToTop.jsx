@@ -23,6 +23,7 @@ const BackToTop = () => {
       top: 0,
       behavior: "smooth",
     });
+
   };
 
   return (
@@ -30,7 +31,7 @@ const BackToTop = () => {
       {visible && (
         <button
           onClick={scrollToTop}
-          className="fixed bottom-5 right-5 p-4 rounded-lg bg-blue-600 text-white shadow-lg hover:bg-blue-400 transition duration-300"
+          className="fixed bottom-12 right-10 p-4 rounded-lg bg-blue-600 opacity-90 text-white shadow-lg hover:bg-blue-400 transition duration-300 sm:fixed bottom-4 right-4"
         >
           ↑
         </button>
